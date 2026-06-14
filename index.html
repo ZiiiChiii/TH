@@ -2,11 +2,11 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>璀璨寶石 — 精英爭奪戰 (15分標準版)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>璀璨寶石 — 精英爭奪戰 (手機優化版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
 /* ── Reset & Base ──────────────────────────────────────────── */
@@ -19,16 +19,16 @@
   --card-border: #2A2A48;
   --text:        #F0F0F5;
   --text-muted:  #8A8AAB;
-  --radius:      12px;
-  --radius-sm:   6px;
+  --radius:      10px;
+  --radius-sm:   5px;
   
   /* Gem Colors */
-  --c-diamond:   #E4F0FF; /* 白 */
-  --c-sapphire:  #3A86FF; /* 藍 */
-  --c-emerald:   #06D6A0; /* 綠 */
-  --c-ruby:      #EF476F; /* 紅 */
-  --c-onyx:      #A5A5A5; /* 黑 */
-  --c-gold:      #FFD166; /* 黃金 */
+  --c-diamond:   #E4F0FF;
+  --c-sapphire:  #3A86FF;
+  --c-emerald:   #06D6A0;
+  --c-ruby:      #EF476F;
+  --c-onyx:      #A5A5A5;
+  --c-gold:      #FFD166;
 }
 
 html, body {
@@ -36,7 +36,7 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', sans-serif;
-  padding: 0 12px 60px;
+  padding: 8px;
 }
 
 .shell {
@@ -44,77 +44,81 @@ html, body {
   margin: 0 auto;
 }
 
-/* ── Header ────────────────────────────────────────────────── */
+/* ── Top Info Wrapper (手機端並排減少空間) ─────────────────── */
+.top-meta-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
 .header {
-  padding: 20px 0;
+  padding: 4px 0;
   text-align: center;
   border-bottom: 1px solid var(--card-border);
-  margin-bottom: 20px;
 }
 .game-title {
   font-family: 'Cinzel', serif;
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1.4rem;
+  font-weight: 900;
   letter-spacing: .06em;
   background: linear-gradient(120deg, var(--c-gold), #FFF, var(--c-sapphire));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.status-bar { display: flex; gap: 20px; justify-content: center; margin-top: 10px; }
+.status-bar { display: flex; gap: 10px; justify-content: center; margin-top: 4px; }
 .status-pill {
   background: var(--surface);
   border: 1px solid var(--card-border);
   border-radius: 999px;
-  padding: 4px 16px;
-  font-size: 0.9rem;
+  padding: 2px 12px;
+  font-size: 0.8rem;
 }
 .status-pill strong { font-family: 'Cinzel', serif; color: var(--c-gold); }
 
-/* ── Nobles ────────────────────────────────────────────────── */
-.nobles-section { margin-bottom: 20px; }
-.section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 8px; }
-.nobles-grid { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+/* ── Nobles (手機改為極小並排) ────────────────────────────────── */
+.nobles-section { margin-bottom: 8px; }
+.section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
+.nobles-grid { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
 .noble-card {
   background: var(--surface);
   border: 1px solid #5C4010;
   border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  min-width: 140px;
-  position: relative;
+  padding: 4px 8px;
+  min-width: 95px;
+  flex: 1;
 }
-.noble-card.completed { opacity: 0.4; border-color: var(--text-muted); }
-.noble-name { font-family: 'Cinzel', serif; font-size: 0.75rem; color: var(--c-gold); font-weight: 600; }
-.noble-pts { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #FFF; float: right; }
-.noble-reqs { margin-top: 6px; display: flex; gap: 6px; font-size: 0.7rem; font-weight: bold; }
+.noble-card.completed { opacity: 0.2; border-color: var(--text-muted); }
+.noble-name { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--c-gold); font-weight: 600; }
+.noble-pts { font-family: 'Cinzel', serif; font-size: 0.9rem; color: #FFF; float: right; }
+.noble-reqs { margin-top: 2px; display: flex; gap: 4px; font-size: 0.65rem; font-weight: bold; }
 
-/* ── Player Dashboard (Resources) ──────────────────────────── */
+/* ── Player Dashboard (極致壓縮) ──────────────────────────── */
 .dashboard {
   background: var(--surface);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 24px;
+  padding: 8px;
+  margin-bottom: 8px;
 }
 .res-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  gap: 4px;
 }
-@media (max-width: 600px) { .res-grid { grid-template-columns: repeat(3, 1fr); } }
-
 .res-block {
   background: rgba(255,255,255,0.02);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
-  padding: 8px;
+  padding: 4px 2px;
   text-align: center;
 }
 .res-circle {
-  width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px;
-  display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: bold; color: #000;
+  width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 2px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #000;
 }
-.res-count { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700; display: block; }
-.res-bonus { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+.res-count { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; display: block; line-height: 1.1; }
+.res-bonus { font-size: 0.6rem; color: var(--text-muted); scale: 0.9; }
 
 /* Token Colors mapping */
 .bg-w { background: var(--c-diamond); color: #111; }
@@ -124,88 +128,96 @@ html, body {
 .bg-k { background: var(--c-onyx); color: #FFF; }
 .bg-o { background: var(--c-gold); color: #111; }
 
-.cap-bar { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; text-align: right; }
+.cap-bar { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; text-align: right; }
 
-/* ── Action Panel ──────────────────────────────────────────── */
+/* ── Action Panel (手機端並排，高度大縮減) ──────────────────── */
 .action-panel {
   background: rgba(255,255,255,0.01);
   border: 1px dashed var(--card-border);
   border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 24px;
+  padding: 8px;
+  margin-bottom: 12px;
 }
-.action-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; color: var(--c-gold); }
-.action-row { display: flex; flex-wrap: wrap; gap: 10px; }
-.act-group { flex: 1; min-width: 250px; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); }
-.act-desc { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; height: 36px; }
-.token-selectors { display: flex; gap: 4px; margin-bottom: 8px; }
+.action-title { font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--c-gold); }
+.action-row { display: flex; gap: 6px; }
+.act-group { flex: 1; background: var(--surface); padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); }
+.act-desc { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; display: none; } /* 手機端隱藏說明省空間 */
+.token-selectors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 6px; }
 .token-btn {
-  flex: 1; padding: 6px 0; border: 1px solid var(--card-border); background: var(--card-bg);
-  border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+  padding: 4px 0; border: 1px solid var(--card-border); background: var(--card-bg);
+  border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: var(--text-muted);
+  text-align: center;
 }
-.token-btn.selected { border-color: #FFF; color: #FFF; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+.token-btn.selected { border-color: #FFF; color: #FFF; box-shadow: 0 0 6px rgba(255,255,255,0.3); }
 
 .btn-primary {
-  width: 100%; padding: 8px; border: none; border-radius: 4px; background: var(--c-sapphire); color: white;
-  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  width: 100%; padding: 6px; border: none; border-radius: 4px; background: var(--c-sapphire); color: white;
+  font-weight: 700; font-size: 0.75rem; cursor: pointer;
 }
-.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-primary:disabled { opacity: 0.2; cursor: not-allowed; }
 
-.msg-box { font-size: 0.8rem; color: var(--c-ruby); text-align: center; margin-top: 8px; min-height: 18px; }
+.msg-box { font-size: 0.7rem; color: var(--c-ruby); text-align: center; margin-top: 2px; min-height: 12px; }
 
 /* ── Matrix 3x4 Board ──────────────────────────────────────── */
-.board-row { margin-bottom: 24px; }
-.row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; border-left: 3px solid var(--c-sapphire); padding-left: 8px; }
+.board-row { margin-bottom: 10px; }
+.row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; border-left: 3px solid var(--c-sapphire); padding-left: 6px; }
 .row-header.lv3 { border-color: var(--c-ruby); }
 .row-header.lv2 { border-color: var(--c-gold); }
 .row-header.lv1 { border-color: var(--c-emerald); }
-.deck-count { font-size: 0.75rem; color: var(--text-muted); }
+.deck-count { font-size: 0.65rem; color: var(--text-muted); }
 
 .grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 6px;
 }
-@media (max-width: 768px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .grid-4 { grid-template-columns: 1fr; } }
 
-/* ── Splendor Card UI ──────────────────────────────────────── */
+/* ── Splendor Card UI (針對手機高度再優化) ─────────────────── */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 12px;
+  border-radius: var(--radius-sm);
+  padding: 6px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 155px;
+  min-height: 95px;
   position: relative;
-  transition: transform 0.2s;
 }
-.card:hover { transform: translateY(-2px); border-color: #555; }
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.card-pts { font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 800; color: #FFF; line-height: 1; }
-.card-gem-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; }
+.card-top { display: flex; justify-content: space-between; align-items: center; }
+.card-pts { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 800; color: #FFF; line-height: 1; }
+.card-gem-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: bold; }
 
-.card-costs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: 10px; }
+.card-costs { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 4px; }
 .cost-dot {
-  display: flex; align-items: center; gap: 3px; font-size: 0.75rem; font-weight: 700;
-  padding: 2px 6px; border-radius: 4px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; gap: 1px; font-size: 0.65rem; font-weight: 700;
+  padding: 1px 3px; border-radius: 3px; background: rgba(0,0,0,0.4);
 }
-.cost-dot.free { opacity: 0.3; border-color: var(--c-emerald); }
+.cost-dot.free { opacity: 0.2; }
 
-.card-actions { display: flex; gap: 4px; margin-top: 8px; }
+.card-actions { display: flex; gap: 2px; margin-top: 4px; }
 .btn-card {
-  flex: 1; padding: 4px 0; border: 1px solid var(--card-border); background: var(--surface);
-  color: var(--text); border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  flex: 1; padding: 3px 0; border: 1px solid var(--card-border); background: var(--surface);
+  color: var(--text); border-radius: 3px; font-size: 0.65rem; font-weight: 600; cursor: pointer;
 }
-.btn-card:hover:not(:disabled) { background: #222238; border-color: #666; }
-.btn-card:disabled { opacity: 0.25; cursor: not-allowed; }
+.btn-card:disabled { opacity: 0.15; cursor: not-allowed; }
 
-.card.empty { border-style: dashed; opacity: 0.2; justify-content: center; align-items: center; font-size: 0.75rem; color: var(--text-muted); }
+.card.empty { border-style: dashed; opacity: 0.2; justify-content: center; align-items: center; font-size: 0.65rem; }
 
-/* ── Reserved Hand & Owned Inventory ────────────────────────── */
-.reserved-section { margin-top: 20px; background: rgba(255,179,71,0.03); border: 1px solid rgba(255,179,71,0.1); padding: 12px; border-radius: var(--radius); }
+/* ── Reserved Hand ────────────────────────────────────────── */
+.reserved-section { margin-top: 8px; background: rgba(255,179,71,0.03); border: 1px solid rgba(255,179,71,0.1); padding: 6px; border-radius: var(--radius); }
+
+/* ── 📱 PHONE RESPONSIVE OVERRIDES (小螢幕極致同屏化) ── */
+@media (max-width: 768px) {
+  .top-meta-wrap { flex-direction: row; justify-content: space-between; align-items: center; }
+  .header { border-bottom: none; text-align: left; }
+  .status-bar { margin-top: 0; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); } /* 手機改 2x2 排列，每層只佔兩列高度 */
+  
+  /* 縮小卡牌動作按鈕，避免擠壓 */
+  .btn-card { padding: 5px 0; font-size: 0.7rem; }
+  .card { min-height: 105px; }
+}
 
 /* ── Modal ── */
 .modal-overlay {
@@ -222,46 +234,44 @@ html, body {
 <body>
 
 <div class="shell">
-  <!-- HEADER -->
-  <header class="header">
-    <h1 class="game-title">SPLENDOR</h1>
-    <p style="font-size:0.75rem; color:var(--text-muted); letter-spacing:0.2em; margin-top:2px;">精 英 爭 奪 戰</p>
+  <!-- TOP WRAPPER -->
+  <div class="top-meta-wrap">
+    <header class="header">
+      <h1 class="game-title">SPLENDOR</h1>
+    </header>
     <div class="status-bar">
       <div class="status-pill">回合 <strong id="turn-txt">0</strong></div>
-      <div class="status-pill">當前威望積分 <strong id="score-txt" style="color:var(--c-emerald)">0</strong> / 15 分</div>
+      <div class="status-pill">威望 <strong id="score-txt" style="color:var(--c-emerald)">0</strong> / 15</div>
     </div>
-  </header>
+  </div>
 
   <!-- NOBLES -->
   <section class="nobles-section">
-    <p class="section-title">👑 貴族拜訪條件</p>
     <div class="nobles-grid" id="nobles-layer"></div>
   </section>
 
   <!-- PLAYER DASHBOARD -->
   <section class="dashboard">
-    <p class="section-title" style="margin-bottom:6px;">🎒 我的資產面板 (手牌上限 10 個 Token)</p>
     <div class="res-grid" id="res-layer"></div>
-    <div class="cap-bar" id="cap-txt">Token 總數: 0 / 10</div>
+    <div class="cap-bar" id="cap-txt">0 / 10</div>
   </section>
 
   <!-- ACTION PANEL -->
   <section class="action-panel">
-    <p class="section-title" style="color:var(--c-gold)">⚡ 執行回合行動 (三選一)</p>
     <div class="action-row">
       <!-- Act 1 -->
       <div class="act-group">
-        <p class="action-title">🟢 行動一：拿取 3 個不同顏色的寶石</p>
-        <p class="act-desc">點選下方 3 個不同的基礎顏色 Token 後點擊確認。</p>
+        <p class="action-title">🟢 拿 3 個不同色</p>
+        <div class="act-desc">點選 3 個不同基礎顏色。</div>
         <div class="token-selectors" id="diff-selectors"></div>
-        <button class="btn-primary" id="btn-do-diff" disabled>確認拿取 3 色</button>
+        <button class="btn-primary" id="btn-do-diff" disabled>確認 (3色)</button>
       </div>
       <!-- Act 2 -->
       <div class="act-group">
-        <p class="action-title">🟡 行動二：拿取 2 個相同顏色的寶石</p>
-        <p class="act-desc">點選下方 1 個顏色。依據原版規則，該色剩餘庫存須大於等於 4 顆才可拿取。</p>
+        <p class="action-title">🟡 拿 2 個同色</p>
+        <div class="act-desc">點選 1 個顏色 (庫存須 ≥ 4)。</div>
         <div class="token-selectors" id="same-selectors"></div>
-        <button class="btn-primary" id="btn-do-same" disabled>確認拿取 2 色</button>
+        <button class="btn-primary" id="btn-do-same" disabled>確認 (2色)</button>
       </div>
     </div>
     <div class="msg-box" id="error-msg"></div>
@@ -272,8 +282,8 @@ html, body {
     <!-- Level 3 -->
     <div class="board-row">
       <div class="row-header lv3">
-        <span class="section-title" style="color:var(--c-ruby); font-weight:700;">★★★ 第三級卡牌 (高分高代價)</span>
-        <span class="deck-count" id="deck-lv3-txt">牌堆剩餘: 0</span>
+        <span class="section-title" style="color:var(--c-ruby); font-weight:700;">Lv3 卡牌</span>
+        <span class="deck-count" id="deck-lv3-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv3"></div>
     </div>
@@ -281,8 +291,8 @@ html, body {
     <!-- Level 2 -->
     <div class="board-row">
       <div class="row-header lv2">
-        <span class="section-title" style="color:var(--c-gold); font-weight:700;">★★ 第二級卡牌 (中堅主力)</span>
-        <span class="deck-count" id="deck-lv2-txt">牌堆剩餘: 0</span>
+        <span class="section-title" style="color:var(--c-gold); font-weight:700;">Lv2 卡牌</span>
+        <span class="deck-count" id="deck-lv2-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv2"></div>
     </div>
@@ -290,8 +300,8 @@ html, body {
     <!-- Level 1 -->
     <div class="board-row">
       <div class="row-header lv1">
-        <span class="section-title" style="color:var(--c-emerald); font-weight:700;">★ 第一級卡牌 (基礎引擎)</span>
-        <span class="deck-count" id="deck-lv1-txt">牌堆剩餘: 0</span>
+        <span class="section-title" style="color:var(--c-emerald); font-weight:700;">Lv1 卡牌</span>
+        <span class="deck-count" id="deck-lv1-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv1"></div>
     </div>
@@ -299,8 +309,8 @@ html, body {
 
   <!-- RESERVED HAND -->
   <section class="reserved-section">
-    <p class="section-title" style="color:var(--c-gold)">🔒 已保留的手牌 (上限 3 張，保留時自動獲得 1 萬用黃金)</p>
-    <div class="grid-4" id="reserved-layer" style="margin-top:8px;"></div>
+    <p class="section-title" style="color:var(--c-gold)">🔒 已保留手牌</p>
+    <div class="grid-4" id="reserved-layer" style="margin-top:4px;"></div>
   </section>
 </div>
 
@@ -319,7 +329,7 @@ html, body {
    CORE CONSTANTS & DICTIONARIES
    ===================================================== */
 const GEM_TYPES = ['w', 'u', 'g', 'r', 'k']; 
-const GEM_NAMES = { w: '白鑽', u: '藍寶', g: '綠翠', r: '紅寶', k: '黑曜', o: '黃金' };
+const GEM_NAMES = { w: '白', u: '藍', g: '綠', r: '紅', k: '黑', o: '金' };
 const GEM_CLASSES = { w: 'bg-w', u: 'bg-u', g: 'bg-g', r: 'bg-r', k: 'bg-k', o: 'bg-o' };
 
 const RAW_CARDS = {
@@ -418,9 +428,6 @@ function initGame() {
   updateUI();
 }
 
-/* =====================================================
-   🎯 CRITICAL CORRECTION: PERFECT COST CALCULATION
-   ===================================================== */
 function calculateAffordability(card) {
   const p = state.player;
   let totalGoldNeeded = 0;
@@ -428,10 +435,8 @@ function calculateAffordability(card) {
 
   for (let gem of GEM_TYPES) {
     const rawCost = card.cost[gem] || 0;
-    // 1. 先扣除永久寶石加成 (Bonus)
     const afterBonusCost = Math.max(0, rawCost - p.bonus[gem]);
     
-    // 2. 計算實體 Token 還缺多少
     let tokenDeducted = 0;
     let goldSubstituted = 0;
 
@@ -446,26 +451,18 @@ function calculateAffordability(card) {
 
     breakdown[gem] = {
       rawCost,
-      afterBonusCost,    // 經過永久寶石折扣後，玩家總共需要支付的數量
-      tokenDeducted,     // 將由玩家普通 Token 支付的數量
-      goldSubstituted,   // 玩家普通 Token 不夠，需要用黃金頂替的數量
+      afterBonusCost,
+      tokenDeducted,
+      goldSubstituted,
       isFreeByBonus: afterBonusCost === 0 && rawCost > 0
     };
   }
 
-  // 3. 檢查玩家擁有的黃金萬用 Token 是否足以應付所有缺口
   const canAfford = p.tokens.o >= totalGoldNeeded;
 
-  return {
-    canAfford,
-    totalGoldNeeded,
-    breakdown
-  };
+  return { canAfford, totalGoldNeeded, breakdown };
 }
 
-/* =====================================================
-   LOGIC HELPERS
-   ===================================================== */
 function getPlayerTotalTokens() {
   let total = 0;
   for(let k in state.player.tokens) total += state.player.tokens[k];
@@ -487,12 +484,6 @@ function checkNoblesTrigger() {
     if (match) {
       n.completed = true;
       p.score += n.points;
-      
-      const toast = document.createElement('div');
-      toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:var(--c-gold); color:#000; padding:10px 20px; font-weight:bold; border-radius:8px; z-index:1000;";
-      toast.textContent = `👑 貴族特使前來拜訪！賦予你 +3 威望積分！`;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 4000);
     }
   });
 }
@@ -505,19 +496,16 @@ function nextTurn() {
   
   if (state.player.score >= 15) {
     state.isOver = true;
-    document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，成功組建了完美的寶石帝國鏈，突破 15 分標準大關！`;
+    document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，突破 15 分標準大關！`;
     document.getElementById('win-modal').classList.add('show');
   }
   
   updateUI();
 }
 
-/* =====================================================
-   ACTIONS
-   ===================================================== */
 function takeThreeDiff() {
   if (getPlayerTotalTokens() + 3 > 10) {
-    showError("持有 Token 將超過 10 個上限，請先購買卡牌消耗資源！");
+    showError("超過 10 個上限！");
     return;
   }
   selectedDiff.forEach(gem => {
@@ -529,11 +517,11 @@ function takeThreeDiff() {
 
 function takeTwoSame() {
   if (getPlayerTotalTokens() + 2 > 10) {
-    showError("持有 Token 將超過 10 個上限！");
+    showError("超過 10 個上限！");
     return;
   }
   if (state.bank[selectedSame] < 4) {
-    showError("原版規則：該色銀行庫存需 ≥ 4 顆才可一口氣拿走 2 顆！");
+    showError("庫存需 ≥ 4 顆才可拿 2 顆！");
     return;
   }
   state.bank[selectedSame] -= 2;
@@ -546,32 +534,23 @@ window.buyCard = function(level, index, isReserved = false) {
   if (!card) return;
 
   const { canAfford, totalGoldNeeded, breakdown } = calculateAffordability(card);
-  if (!canAfford) {
-    showError("資產不足，無法購買此卡牌！");
-    return;
-  }
+  if (!canAfford) return;
 
   const p = state.player;
-
-  // 精確扣除與回歸銀行邏輯
   for (let gem of GEM_TYPES) {
     const b = breakdown[gem];
-    // 扣除普通代幣
     p.tokens[gem] -= b.tokenDeducted;
     state.bank[gem] += b.tokenDeducted;
   }
 
-  // 扣除黃金代幣
   if (totalGoldNeeded > 0) {
     p.tokens.o -= totalGoldNeeded;
     state.bank.o += totalGoldNeeded;
   }
 
-  // 獲得卡牌獎勵
   p.score += card.points;
   p.bonus[card.provides]++;
   
-  // 移除並補發新卡
   if (isReserved) {
     state.player.reserved.splice(index, 1);
   } else {
@@ -582,10 +561,7 @@ window.buyCard = function(level, index, isReserved = false) {
 };
 
 window.reserveCard = function(level, index) {
-  if (state.player.reserved.length >= 3) {
-    showError("最多隻能保留 3 張手牌！");
-    return;
-  }
+  if (state.player.reserved.length >= 3) return;
   const card = state.matrix[level][index];
   if (!card) return;
 
@@ -596,16 +572,11 @@ window.reserveCard = function(level, index) {
     if (getPlayerTotalTokens() < 10) {
       state.bank.o--;
       state.player.tokens.o++;
-    } else {
-      showError("保留成功！但背包已滿，無法拿取黃金萬用 Token。");
     }
   }
   nextTurn();
 };
 
-/* =====================================================
-   UI RENDERING MATRIX
-   ===================================================== */
 function renderActionSelectors() {
   const diffBox = document.getElementById('diff-selectors');
   const sameBox = document.getElementById('same-selectors');
@@ -613,13 +584,13 @@ function renderActionSelectors() {
   diffBox.innerHTML = GEM_TYPES.map(gem => {
     const sel = selectedDiff.includes(gem) ? 'selected' : '';
     const dis = state.bank[gem] <= 0 ? 'disabled' : '';
-    return `<button class="token-btn ${sel}" ${dis} onclick="toggleSelectDiff('${gem}')">${GEM_NAMES[gem]} (${state.bank[gem]})</button>`;
+    return `<button class="token-btn ${sel}" ${dis} onclick="toggleSelectDiff('${gem}')">${GEM_NAMES[gem]}<br/>${state.bank[gem]}</button>`;
   }).join('');
 
   sameBox.innerHTML = GEM_TYPES.map(gem => {
     const sel = selectedSame === gem ? 'selected' : '';
     const dis = state.bank[gem] < 4 ? 'disabled' : '';
-    return `<button class="token-btn ${sel}" ${dis} onclick="selectSameGem('${gem}')">${GEM_NAMES[gem]} (${state.bank[gem]})</button>`;
+    return `<button class="token-btn ${sel}" ${dis} onclick="selectSameGem('${gem}')">${GEM_NAMES[gem]}<br/>${state.bank[gem]}</button>`;
   }).join('');
 
   document.getElementById('btn-do-diff').disabled = selectedDiff.length !== 3;
@@ -649,19 +620,15 @@ window.selectSameGem = function(gem) {
 
 function renderCard(card, level, index, isReserved = false) {
   if (!card) return `<div class="card empty">已抽光</div>`;
-  
   const { canAfford, breakdown } = calculateAffordability(card);
   
   let costHtml = '';
   for (let gem in card.cost) {
     const b = breakdown[gem];
-    const displayCost = b.afterBonusCost; // 顯示經過「永久寶石」扣除後，實質還需要支付的總量
-    
     costHtml += `
       <span class="cost-dot ${b.isFreeByBonus ? 'free' : ''}">
-        <span style="display:inline-block; width:8px; height:8px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span>
-        ${displayCost} 
-        ${b.rawCost !== displayCost ? `<small style="font-size:0.6rem; opacity:0.5; margin-left:2px;">(-${b.rawCost - displayCost})</small>` : ''}
+        <span style="display:inline-block; width:6px; height:6px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span>
+        ${b.afterBonusCost}
       </span>
     `;
   }
@@ -669,13 +636,13 @@ function renderCard(card, level, index, isReserved = false) {
   return `
     <div class="card">
       <div class="card-top">
-        <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
+        <span class="card-pts">${card.points > 0 ? card.points : '0'}</span>
         <div class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</div>
       </div>
       <div class="card-costs">${costHtml}</div>
       <div class="card-actions">
         <button class="btn-card" onclick="buyCard('${level}', ${index}, ${isReserved})" ${!canAfford ? 'disabled' : ''}>購買</button>
-        ${!isReserved ? `<button class="btn-card" style="border-color:rgba(255,179,71,0.3)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
+        ${!isReserved ? `<button class="btn-card" style="border-color:rgba(255,179,71,0.2)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
       </div>
     </div>
   `;
@@ -685,9 +652,9 @@ function updateUI() {
   document.getElementById('turn-txt').textContent = state.turn;
   document.getElementById('score-txt').textContent = state.player.score;
 
-  document.getElementById('deck-lv1-txt').textContent = `牌堆剩餘: ${state.decks.lv1.length}`;
-  document.getElementById('deck-lv2-txt').textContent = `牌堆剩餘: ${state.decks.lv2.length}`;
-  document.getElementById('deck-lv3-txt').textContent = `牌堆剩餘: ${state.decks.lv3.length}`;
+  document.getElementById('deck-lv1-txt').textContent = `剩: ${state.decks.lv1.length}`;
+  document.getElementById('deck-lv2-txt').textContent = `剩: ${state.decks.lv2.length}`;
+  document.getElementById('deck-lv3-txt').textContent = `剩: ${state.decks.lv3.length}`;
 
   const p = state.player;
   const allGemsExtended = [...GEM_TYPES, 'o'];
@@ -697,39 +664,34 @@ function updateUI() {
       <div class="res-block">
         <div class="res-circle ${GEM_CLASSES[k]}">${k.toUpperCase()}</div>
         <span class="res-count">${p.tokens[k]}</span>
-        <div class="res-bonus">${isBase ? `加成: +${p.bonus[k]}` : '萬用替代'}</div>
+        <div class="res-bonus">${isBase ? `+${p.bonus[k]}` : '黃金'}</div>
       </div>
     `;
   }).join('');
 
   const tot = getPlayerTotalTokens();
-  document.getElementById('cap-txt').textContent = `Token 總數: ${tot} / 10`;
+  document.getElementById('cap-txt').textContent = `背包: ${tot} / 10`;
   document.getElementById('cap-txt').style.color = tot >= 10 ? 'var(--c-ruby)' : 'var(--text-muted)';
 
   document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
     let reqsHtml = Object.keys(n.req).map(gem => `
-      <span style="color:var(--text)">
-        <span style="display:inline-block; width:6px; height:6px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span> 
-        ${n.req[gem]}
-      </span>
+      <span><span style="display:inline-block; width:5px; height:5px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span>${n.req[gem]}</span>
     `).join(' ');
     return `
       <div class="noble-card ${n.completed ? 'completed' : ''}">
-        <span class="noble-pts">3分</span>
-        <p class="noble-name">貴族勳爵</p>
+        <span class="noble-pts">3p</span>
+        <p class="noble-name">👑貴族</p>
         <div class="noble-reqs">${reqsHtml}</div>
       </div>
     `;
   }).join('');
 
-  // 刷新 3x4 矩陣
   document.getElementById('row-lv3').innerHTML = state.matrix.lv3.map((c, i) => renderCard(c, 'lv3', i)).join('');
   document.getElementById('row-lv2').innerHTML = state.matrix.lv2.map((c, i) => renderCard(c, 'lv2', i)).join('');
   document.getElementById('row-lv1').innerHTML = state.matrix.lv1.map((c, i) => renderCard(c, 'lv1', i)).join('');
 
-  // 刷新手牌區
   if (p.reserved.length === 0) {
-    document.getElementById('reserved-layer').innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted); grid-column:1/-1; text-align:center; padding:10px 0;">目前手牌空空如也</p>`;
+    document.getElementById('reserved-layer').innerHTML = `<p style="font-size:0.65rem; color:var(--text-muted); grid-column:1/-1; text-align:center;">無保留手牌</p>`;
   } else {
     document.getElementById('reserved-layer').innerHTML = p.reserved.map((c, i) => renderCard(c, null, i, true)).join('');
   }
@@ -737,9 +699,6 @@ function updateUI() {
   renderActionSelectors();
 }
 
-/* =====================================================
-   LISTENERS
-   ===================================================== */
 document.getElementById('btn-do-diff').addEventListener('click', takeThreeDiff);
 document.getElementById('btn-do-same').addEventListener('click', takeTwoSame);
 document.getElementById('btn-restart').addEventListener('click', () => {
@@ -747,7 +706,6 @@ document.getElementById('btn-restart').addEventListener('click', () => {
   initGame();
 });
 
-// START
 initGame();
 </script>
 </body>
