@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (手機終極避讓引導版)</title>
+<title>璀璨寶石 — 皇家大會堂 (深度教學層級同步版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <style>
 /* ── Reset & Base ──────────────────────────────────────────── */
@@ -114,7 +114,7 @@ html, body {
 }
 
 /* ── Nobles ────────────────────────────────────────────────── */
-.nobles-section { margin-bottom: 8px; transition: all 0.3s ease; }
+.nobles-section { margin-bottom: 8px; transition: all 0.3s ease; border: 2px solid transparent; border-radius: var(--radius); padding: 2px; }
 .section-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
 .nobles-grid { display: flex; gap: 8px; overflow-x: auto; }
 
@@ -223,7 +223,7 @@ html, body {
 .msg-box { font-size: 0.65rem; color: #c94c4c; text-align: center; margin-top: 2px; min-height: 10px; font-weight: 600; }
 
 /* ── Matrix Board ──────────────────────────────────────────── */
-.board-matrix { transition: all 0.3s ease; }
+.board-matrix { transition: all 0.3s ease; border: 2px solid transparent; border-radius: var(--radius); padding: 2px; }
 .board-row { margin-bottom: 10px; }
 .row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; border-left: 3px solid #b89742; padding-left: 6px; }
 .row-header.lv3 { border-color: #d4af37; }
@@ -260,7 +260,7 @@ html, body {
 
 @keyframes cardBuyFly {
   0% { transform: scale(1) translateY(0); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-  30 { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); }
+  30% { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); }
   100% { transform: scale(0.8) translateY(-40px); opacity: 0; filter: brightness(0.6); }
 }
 .animate-buy { animation: cardBuyFly 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; pointer-events: none; z-index: 99; }
@@ -314,67 +314,70 @@ html, body {
 .modal-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: #d4af37; margin-bottom: 10px; text-shadow: var(--glow-warm); }
 .btn-replay { width: 100%; padding: 10px; background: linear-gradient(180deg, #d4af37, #8a6418); color: #FFF; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: transform 0.1s; }
 
-/* ── 🎬 頂層聚光燈教學導覽系統樣式 ────────────────────────────── */
-.tutorial-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 10000;
-  opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-}
-.tutorial-overlay.show { opacity: 1; pointer-events: all; }
 
-/* 凸顯欄位的高亮特效動畫 */
+/* ── 🎬 結構内嵌式引導系統樣式 ───────────────────────────────── */
+/* 核心改動：移除了固定的 fixed 黑色全螢幕遮罩，改由目標區塊「原地渲染」說明面板 */
+
+/* 🎨 與被說明區塊高度整合的「共生高亮框」：亮度、層級與區塊完全一致 */
 .tutorial-highlight {
-  position: relative; z-index: 10001 !important;
-  box-shadow: 0 0 30px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75) !important;
-  outline: 3px solid #ffe099 !important;
-  transform: scale(1.01);
-  animation: pulseHighlight 1.5s infinite ease-in-out;
-}
-@keyframes pulseHighlight {
-  0% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
-  50% { outline-color: #ffe099; box-shadow: 0 0 40px #ffe099, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
-  100% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
+  border: 3px solid #ffcc00 !important;
+  box-shadow: 0 0 30px rgba(255, 204, 0, 0.6) !important;
+  transform: scale(1.005);
+  transition: all 0.3s ease;
 }
 
-/* 🚀 終極優化：加入動態過渡，用於吸附 Top 或 Bottom 避讓 */
-.tutorial-card {
-  background: rgba(22, 16, 12, 0.95);
-  backdrop-filter: blur(8px);
-  border: 2px solid #ffe099; border-radius: var(--radius);
-  padding: 16px; width: 92%; max-width: 380px; text-align: center;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.95);
-  position: fixed; left: 50%;
-  transform: translateX(-50%);
-  z-index: 10005;
-  transition: top 0.4s cubic-bezier(0.25, 1, 0.5, 1), bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+/* 🚀 精緻內嵌導覽卡：直接作為區塊下方子元素或兄弟元素渲染，繼承相同的 z-index 與亮度層級 */
+.tutorial-embedded-card {
+  background: rgba(22, 16, 12, 0.98); /* 極深黑底，確保文字在各區塊背景下都清晰可見 */
+  border-left: 4px solid #ffcc00; /* 與高亮同飽和度的金黃左側條 */
+  border-top: 1px solid rgba(255, 204, 0, 0.2);
+  border-right: 1px solid rgba(255, 204, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  display: none; /* 預設隱藏，由 JS 控制顯示 */
+  animation: embedFadeIn 0.4s ease forwards;
 }
 
-/* 避讓用狀態樣式 */
-.tutorial-card.pos-top { top: 20px; bottom: auto; }
-.tutorial-card.pos-bottom { bottom: 20px; top: auto; }
+@keyframes embedFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
+/* 🌟 說明標題：極致高亮金 */
 .tutorial-header { 
-  font-family: 'Cinzel', serif; font-size: 1.15rem; 
-  color: #ffe099; margin-bottom: 8px; font-weight: 900; 
-  letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+  font-family: 'Cinzel', serif; font-size: 1.1rem; 
+  color: #ffcc00 !important; 
+  margin-bottom: 6px; font-weight: 900; 
+  letter-spacing: 0.06em; 
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.4), 0 1px 2px #000000;
 }
 
-/* 修正：調到最亮、加粗、增加深色陰影防雜底 */
+/* 🌟 說明文字：純白高粗體，具備與遊戲同等的分量感，不壓縮視野 */
 .tutorial-text { 
   font-size: 0.88rem; 
-  color: #ffffff !important; /* 純白高對比 */
-  line-height: 1.5; margin-bottom: 14px; text-align: left; 
-  font-weight: 600; /* 加粗 */
-  text-shadow: 0 2px 4px #000000, 0 1px 1px #000000; /* 強力陰影 */
+  color: #ffffff !important; 
+  line-height: 1.6; margin-bottom: 12px; text-align: left; 
+  font-weight: 700; 
+  text-shadow: 0 1px 3px #000000;
 }
+
 .tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
+
+/* 進度點點發光 */
 .tutorial-dots { display: flex; gap: 6px; }
-.t-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(212,175,55,0.25); }
-.t-dot.active { background: #ffe099; box-shadow: 0 0 8px #ffe099; }
+.t-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 204, 0, 0.2); }
+.t-dot.active { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
+
 .btn-tutorial-next {
-  padding: 8px 18px; background: linear-gradient(180deg, #ffe099, #d4af37, #8a6418);
-  color: #110e0c; border: none; border-radius: 3px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
+  padding: 6px 16px; background: linear-gradient(180deg, #ffe680, #ffcc00, #b38600);
+  color: #110e0c; border: none; border-radius: 4px; font-size: 0.78rem; font-weight: 800; cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  transition: filter 0.15s;
 }
+.btn-tutorial-next:hover { filter: brightness(1.1); }
 
 /* ── 📱 手機版 RWD 防爆、全面微調縮小版面 ────────────────────── */
 @media (max-width: 768px) {
@@ -403,7 +406,7 @@ html, body {
   .token-btn { width: 20px; height: 20px; background-size: 18px 18px; }
   .btn-primary { padding: 4px; font-size: 0.65rem; }
 
-  /* 縮小卡牌矩陣，避免超出單頁顯示高度 */
+  /* 縮小卡牌矩陣 */
   .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .card { min-height: 92px; }
   .card-content-wrapper { padding: 4px; }
@@ -413,9 +416,9 @@ html, body {
   .cost-dot-circle { width: 6px; height: 6px; }
   .btn-card { font-size: 0.5rem; padding: 1px 0; }
   
-  /* 教學卡片微調 */
-  .tutorial-card { width: 92%; padding: 14px; }
-  .tutorial-text { font-size: 0.82rem; }
+  /* 手機版內嵌導覽字體微調 */
+  .tutorial-embedded-card { padding: 10px 12px; }
+  .tutorial-text { font-size: 0.8rem; }
 }
 </style>
 </head>
@@ -424,17 +427,6 @@ html, body {
 <audio id="bg-music" src="https://assets.mixkit.co/music/785/785.mp3" loop></audio>
 <audio id="sfx-gem" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
 <audio id="sfx-buy" src="https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3"></audio>
-
-<div class="tutorial-overlay" id="tutorial-mask">
-  <div class="tutorial-card pos-bottom" id="tutorial-pop">
-    <div class="tutorial-header" id="t-title">皇家覲見</div>
-    <div class="tutorial-text" id="t-body">歡迎來到璀璨大會堂。</div>
-    <div class="tutorial-footer">
-      <div class="tutorial-dots" id="t-dots"></div>
-      <button class="btn-tutorial-next" id="btn-t-next" onclick="nextTutorialStep()">下一步</button>
-    </div>
-  </div>
-</div>
 
 <div class="shell">
   <div class="top-meta-wrap">
@@ -451,11 +443,27 @@ html, body {
 
   <section class="nobles-section" id="guide-nobles">
     <div class="nobles-grid" id="nobles-layer"></div>
+    <div class="tutorial-embedded-card" id="embed-card-0">
+      <div class="tutorial-header">⚜️ 貴族覲見區</div>
+      <div class="tutorial-text">這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！</div>
+      <div class="tutorial-footer">
+        <div class="tutorial-dots" id="dots-0"></div>
+        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+      </div>
+    </div>
   </section>
 
   <section class="dashboard" id="guide-dashboard">
     <div class="res-grid" id="res-layer"></div>
     <div class="cap-bar" id="cap-txt">背包: 0 / 10</div>
+    <div class="tutorial-embedded-card" id="embed-card-1">
+      <div class="tutorial-header">🪙 皇家金庫 (資產欄)</div>
+      <div class="tutorial-text">顯示您當前擁有的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！</div>
+      <div class="tutorial-footer">
+        <div class="tutorial-dots" id="dots-1"></div>
+        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+      </div>
+    </div>
   </section>
 
   <section class="action-panel" id="guide-actions">
@@ -472,6 +480,14 @@ html, body {
       </div>
     </div>
     <div class="msg-box" id="error-msg"></div>
+    <div class="tutorial-embedded-card" id="embed-card-2">
+      <div class="tutorial-header">🟢 行動挑選面板</div>
+      <div class="tutorial-text">輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。</div>
+      <div class="tutorial-footer">
+        <div class="tutorial-dots" id="dots-2"></div>
+        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+      </div>
+    </div>
   </section>
 
   <section class="board-matrix" id="guide-matrix">
@@ -498,11 +514,28 @@ html, body {
       </div>
       <div class="grid-4" id="row-lv1"></div>
     </div>
+
+    <div class="tutorial-embedded-card" id="embed-card-3">
+      <div class="tutorial-header">💎 工業與發展卡矩陣</div>
+      <div class="tutorial-text">核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。</div>
+      <div class="tutorial-footer">
+        <div class="tutorial-dots" id="dots-3"></div>
+        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+      </div>
+    </div>
   </section>
 
   <section class="reserved-section" id="guide-reserved">
     <p class="section-title" style="color:#d4af37">🔒 保密保留區</p>
     <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
+    <div class="tutorial-embedded-card" id="embed-card-4">
+      <div class="tutorial-header">🔒 機密保留契約</div>
+      <div class="tutorial-text">如果某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。</div>
+      <div class="tutorial-footer">
+        <div class="tutorial-dots" id="dots-4"></div>
+        <button class="btn-tutorial-next" id="btn-final-t-next">進入大會堂</button>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -590,16 +623,14 @@ const sfxGemEl = document.getElementById('sfx-gem');
 const sfxBuyEl = document.getElementById('sfx-buy');
 const musicBtn = document.getElementById('toggle-music-btn');
 
-/* ── 🎬 智能避讓教學導覽配置 ────────────────────────────────── */
+/* ── 🎬 結構内嵌式教學導覽邏輯 ────────────────────────── */
 let currentTutorialStep = 0;
 const TUTORIAL_STEPS = [
-  // 介紹上半部元件時，說明卡片放在底部 (pos-bottom)
-  { elementId: 'guide-nobles', position: 'pos-bottom', title: '⚜️ 貴族覲見區', text: '這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！' },
-  { elementId: 'guide-dashboard', position: 'pos-bottom', title: '🪙 皇家金庫 (資產欄)', text: '顯示您當前擁有的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！' },
-  { elementId: 'guide-actions', position: 'pos-bottom', title: '🟢 行動挑選面板', text: '輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。' },
-  // 🚀 當要介紹龐大的卡牌矩陣與保留區時，自動將說明卡片推到螢幕最頂端 (pos-top)，完美避開阻擋
-  { elementId: 'guide-matrix', position: 'pos-top', title: '💎 工業與發展卡矩陣', text: '核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。' },
-  { elementId: 'guide-reserved', position: 'pos-top', title: '🔒 機密保留契約', text: '如果某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。' }
+  { elementId: 'guide-nobles' },
+  { elementId: 'guide-dashboard' },
+  { elementId: 'guide-actions' },
+  { elementId: 'guide-matrix' },
+  { elementId: 'guide-reserved' }
 ];
 
 function checkAndStartTutorial() {
@@ -617,50 +648,40 @@ function forceStartTutorial() {
 
 function startTutorial() {
   currentTutorialStep = 0;
-  document.getElementById('tutorial-mask').classList.add('show');
   
-  const dotsBox = document.getElementById('t-dots');
-  dotsBox.innerHTML = TUTORIAL_STEPS.map((_, i) => `<div class="t-dot ${i===0?'active':''}" id="tdot-${i}"></div>`).join('');
-  
+  // 初始化所有引導步驟內建的進度小圓點
+  TUTORIAL_STEPS.forEach((_, stepIdx) => {
+    const dotsLayer = document.getElementById(`dots-${stepIdx}`);
+    if (dotsLayer) {
+      dotsLayer.innerHTML = TUTORIAL_STEPS.map((_, i) => 
+        `<div class="t-dot ${i === stepIdx ? 'active' : ''}"></div>`
+      ).join('');
+    }
+  });
+
   showTutorialStep();
 }
 
 function showTutorialStep() {
-  TUTORIAL_STEPS.forEach(s => {
+  // 先把所有區塊的高亮樣式和內置引導面板隱藏
+  TUTORIAL_STEPS.forEach((s, idx) => {
     const el = document.getElementById(s.elementId);
-    if(el) el.classList.remove('tutorial-highlight');
+    const card = document.getElementById(`embed-card-${idx}`);
+    if (el) el.classList.remove('tutorial-highlight');
+    if (card) card.style.display = 'none';
   });
 
+  // 渲染當前步驟
   const step = TUTORIAL_STEPS[currentTutorialStep];
   const targetEl = document.getElementById(step.elementId);
-  const popCard = document.getElementById('tutorial-pop');
+  const targetCard = document.getElementById(`embed-card-${currentTutorialStep}`);
   
-  // ⚡ 實施智慧位置切換：Top 還是 Bottom 避讓
-  popCard.classList.remove('pos-top', 'pos-bottom');
-  popCard.classList.add(step.position);
-
-  if (targetEl) {
+  if (targetEl && targetCard) {
     targetEl.classList.add('tutorial-highlight');
-    // 如果是矩陣，滾動到中心，如果是其他，滾到對應位置
-    targetEl.scrollIntoView({ behavior: 'smooth', block: step.position === 'pos-top' ? 'end' : 'center' });
-  }
-
-  TUTORIAL_STEPS.forEach((_, i) => {
-    const dot = document.getElementById(`tdot-${i}`);
-    if(dot) {
-      if(i === currentTutorialStep) dot.classList.add('active');
-      else dot.classList.remove('active');
-    }
-  });
-
-  document.getElementById('t-title').textContent = step.title;
-  document.getElementById('t-body').textContent = step.text;
-
-  const nextBtn = document.getElementById('btn-t-next');
-  if (currentTutorialStep === TUTORIAL_STEPS.length - 1) {
-    nextBtn.textContent = "進入大會堂 (開啟音樂)";
-  } else {
-    nextBtn.textContent = "下一步";
+    targetCard.style.display = 'block';
+    
+    // 平滑滑動至目標區塊，使該區域及其說明的亮度層級完美呈現在視野中央
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
 
@@ -668,18 +689,23 @@ window.nextTutorialStep = function() {
   if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
     currentTutorialStep++;
     showTutorialStep();
-  } else {
-    TUTORIAL_STEPS.forEach(s => {
-      const el = document.getElementById(s.elementId);
-      if(el) el.classList.remove('tutorial-highlight');
-    });
-    document.getElementById('tutorial-mask').classList.remove('show');
-    localStorage.setItem('splendor_tutorial_seen', 'true');
-    if (!isMusicMuted) {
-      audioEl.play().catch(err => console.log("音樂播放受阻:", err));
-    }
   }
 };
+
+// 最後一步完成按鈕綁定事件
+document.getElementById('btn-final-t-next').addEventListener('click', () => {
+  TUTORIAL_STEPS.forEach((s, idx) => {
+    const el = document.getElementById(s.elementId);
+    const card = document.getElementById(`embed-card-${idx}`);
+    if (el) el.classList.remove('tutorial-highlight');
+    if (card) card.style.display = 'none';
+  });
+  localStorage.setItem('splendor_tutorial_seen', 'true');
+  if (!isMusicMuted) {
+    audioEl.play().catch(err => console.log("音樂播放受阻:", err));
+  }
+});
+
 
 /* ── 寶石主程式邏輯 ────────────────────────────────────────── */
 function shuffle(arr) {
