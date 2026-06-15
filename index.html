@@ -3,103 +3,110 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 精英爭奪戰 (手機優化版)</title>
+<title>璀璨寶石 — 精英爭奪戰 (自訂美術測試版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
 /* ── Reset & Base ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:          #0A0A10;
-  --surface:     #121222;
-  --card-bg:     #1A1A30;
-  --card-border: #2A2A48;
+  --bg:          #07070c;
+  --surface:     #0f0f1e;
+  --card-bg:     rgba(30, 30, 52, 0.6); 
+  --card-border: rgba(255, 255, 255, 0.08);
   --text:        #F0F0F5;
-  --text-muted:  #8A8AAB;
-  --radius:      10px;
-  --radius-sm:   5px;
+  --text-muted:  #7a7a9e;
+  --radius:      12px;
+  --radius-sm:   6px;
   
-  /* Gem Colors */
-  --c-diamond:   #E4F0FF;
-  --c-sapphire:  #3A86FF;
-  --c-emerald:   #06D6A0;
-  --c-ruby:      #EF476F;
-  --c-onyx:      #A5A5A5;
-  --c-gold:      #FFD166;
+  /* ── 資源資產定義區 ── */
+  --c-diamond:   linear-gradient(135deg, #E4F0FF, #A5C9FF);
+  /* 🌟 抽換成你提供的藍寶石圖片網址 */
+  --c-sapphire:  url('https://i.ibb.co/4nGkn3HP/sapphire.png');
+  --c-emerald:   linear-gradient(135deg, #06D6A0, #007A58);
+  --c-ruby:      linear-gradient(135deg, #EF476F, #A30026);
+  --c-onyx:      linear-gradient(135deg, #606066, #1A1A1C);
+  --c-gold:      linear-gradient(135deg, #FFD166, #B38600);
+  
+  --glow-gold: 0 0 8px rgba(255, 209, 102, 0.4);
 }
 
 html, body {
   min-height: 100vh;
-  background: var(--bg);
+  background: radial-gradient(circle at top, #14142b 0%, var(--bg) 80%);
   color: var(--text);
   font-family: 'Inter', sans-serif;
-  padding: 8px;
+  padding: 6px;
+  overflow-x: hidden;
 }
 
 .shell {
-  max-width: 1100px;
+  max-width: 950px;
   margin: 0 auto;
 }
 
-/* ── Top Info Wrapper (手機端並排減少空間) ─────────────────── */
+/* ── Top Info Wrapper ──────────────────────────────────────── */
 .top-meta-wrap {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
-.header {
-  padding: 4px 0;
-  text-align: center;
-  border-bottom: 1px solid var(--card-border);
-}
+.header { text-align: left; }
 .game-title {
   font-family: 'Cinzel', serif;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 900;
-  letter-spacing: .06em;
-  background: linear-gradient(120deg, var(--c-gold), #FFF, var(--c-sapphire));
+  letter-spacing: .1em;
+  background: linear-gradient(120deg, #FFD166, #FFF, #3A86FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: var(--glow-gold);
 }
-.status-bar { display: flex; gap: 10px; justify-content: center; margin-top: 4px; }
+.status-bar { display: flex; gap: 8px; }
 .status-pill {
-  background: var(--surface);
-  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 999px;
-  padding: 2px 12px;
-  font-size: 0.8rem;
+  padding: 2px 10px;
+  font-size: 0.75rem;
 }
-.status-pill strong { font-family: 'Cinzel', serif; color: var(--c-gold); }
+.status-pill strong { font-family: 'Orbitron', sans-serif; color: #FFD166; text-shadow: var(--glow-gold); }
 
-/* ── Nobles (手機改為極小並排) ────────────────────────────────── */
-.nobles-section { margin-bottom: 8px; }
-.section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
-.nobles-grid { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+/* ── Nobles ────────────────────────────────────────────────── */
+.nobles-section { margin-bottom: 6px; }
+.section-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 3px; }
+.nobles-grid { display: flex; gap: 6px; overflow-x: auto; }
 .noble-card {
-  background: var(--surface);
-  border: 1px solid #5C4010;
+  background: linear-gradient(145deg, #16162a, #0d0d1a);
+  border: 1px solid #7c5a1a;
   border-radius: var(--radius-sm);
-  padding: 4px 8px;
-  min-width: 95px;
+  padding: 4px 6px;
+  min-width: 85px;
   flex: 1;
+  transition: all 0.3s ease;
 }
-.noble-card.completed { opacity: 0.2; border-color: var(--text-muted); }
-.noble-name { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: var(--c-gold); font-weight: 600; }
-.noble-pts { font-family: 'Cinzel', serif; font-size: 0.9rem; color: #FFF; float: right; }
-.noble-reqs { margin-top: 2px; display: flex; gap: 4px; font-size: 0.65rem; font-weight: bold; }
+.noble-card.completed { opacity: 0.15; transform: scale(0.95); border-color: var(--text-muted); }
+.noble-name { font-size: 0.6rem; color: #FFD166; font-weight: 600; }
+.noble-pts { font-family: 'Cinzel', serif; font-size: 0.8rem; color: #FFF; float: right; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+.noble-reqs { margin-top: 2px; display: flex; gap: 3px; font-size: 0.6rem; font-weight: bold; }
 
-/* ── Player Dashboard (極致壓縮) ──────────────────────────── */
+/* ── Player Dashboard ──────────────────────────────────────── */
 .dashboard {
   background: var(--surface);
-  border: 1px solid var(--card-border);
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
   border-radius: var(--radius);
-  padding: 8px;
-  margin-bottom: 8px;
+  padding: 6px;
+  margin-bottom: 6px;
 }
 .res-grid {
   display: grid;
@@ -107,116 +114,155 @@ html, body {
   gap: 4px;
 }
 .res-block {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--card-border);
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.04);
   border-radius: var(--radius-sm);
-  padding: 4px 2px;
+  padding: 3px 2px;
   text-align: center;
+  transition: transform 0.2s;
 }
 .res-circle {
-  width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 2px;
-  display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #000;
+  width: 18px; height: 18px; border-radius: 50%; margin: 0 auto 1px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; color: #000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  background-size: cover;
+  background-position: center;
 }
-.res-count { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; display: block; line-height: 1.1; }
-.res-bonus { font-size: 0.6rem; color: var(--text-muted); scale: 0.9; }
+.res-count { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; display: block; line-height: 1; color: #FFF; }
+.res-bonus { font-size: 0.55rem; color: var(--text-muted); transform: scale(0.85); }
 
-/* Token Colors mapping */
-.bg-w { background: var(--c-diamond); color: #111; }
-.bg-u { background: var(--c-sapphire); color: #FFF; }
-.bg-g { background: var(--c-emerald); color: #111; }
+/* ── 寶石樣式抽換 ── */
+.bg-w { background: var(--c-diamond); color: #030307; }
+/* 藍寶石全面改用背景圖，文字隱藏改為透明 */
+.bg-u { background-image: var(--c-sapphire); color: transparent !important; }
+.bg-g { background: var(--c-emerald); color: #030307; }
 .bg-r { background: var(--c-ruby); color: #FFF; }
 .bg-k { background: var(--c-onyx); color: #FFF; }
-.bg-o { background: var(--c-gold); color: #111; }
+.bg-o { background: var(--c-gold); color: #030307; }
 
-.cap-bar { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; text-align: right; }
+.cap-bar { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; text-align: right; font-family: 'Orbitron', sans-serif; }
 
-/* ── Action Panel (手機端並排，高度大縮減) ──────────────────── */
+/* ── Action Panel ──────────────────────────────────────────── */
 .action-panel {
   background: rgba(255,255,255,0.01);
-  border: 1px dashed var(--card-border);
+  border: 1px dashed rgba(255,255,255,0.1);
   border-radius: var(--radius);
-  padding: 8px;
-  margin-bottom: 12px;
+  padding: 6px;
+  margin-bottom: 8px;
 }
-.action-title { font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--c-gold); }
-.action-row { display: flex; gap: 6px; }
-.act-group { flex: 1; background: var(--surface); padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); }
-.act-desc { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; display: none; } /* 手機端隱藏說明省空間 */
-.token-selectors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 6px; }
+.action-title { font-size: 0.7rem; font-weight: 700; margin-bottom: 4px; color: #FFD166; }
+.action-row { display: flex; gap: 4px; }
+.act-group { flex: 1; background: rgba(0,0,0,0.2); padding: 4px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05); }
+.token-selectors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 4px; }
+
 .token-btn {
-  padding: 4px 0; border: 1px solid var(--card-border); background: var(--card-bg);
-  border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: var(--text-muted);
-  text-align: center;
+  padding: 3px 0; border: 1px solid rgba(255,255,255,0.08); background: #151525;
+  border-radius: 4px; cursor: pointer; font-size: 0.6rem; font-weight: 600; color: var(--text-muted);
+  text-align: center; transition: all 0.15s ease;
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: center 3px;
 }
-.token-btn.selected { border-color: #FFF; color: #FFF; box-shadow: 0 0 6px rgba(255,255,255,0.3); }
+.token-btn:not(:disabled):hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.2); color: #FFF; }
+.token-btn:active { transform: scale(0.92); }
+.token-btn.selected { border-color: #FFF; color: #FFF; background-color: #222240; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+
+/* 當選取按鈕是藍寶石時的特製樣式（隱藏按鈕上原本的「藍」字，保留底下數字） */
+.token-btn-u { background-image: var(--c-sapphire); font-size: 0; }
+.token-btn-u span { font-size: 0.6rem; display: block; margin-top: 14px; color: var(--text-muted); }
+.token-btn-u.selected span { color: #FFF; }
 
 .btn-primary {
-  width: 100%; padding: 6px; border: none; border-radius: 4px; background: var(--c-sapphire); color: white;
-  font-weight: 700; font-size: 0.75rem; cursor: pointer;
+  width: 100%; padding: 5px; border: none; border-radius: 4px; background: linear-gradient(180deg, #3a86ff, #0055d4); color: white;
+  font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;
 }
-.btn-primary:disabled { opacity: 0.2; cursor: not-allowed; }
+.btn-primary:not(:disabled):hover { filter: brightness(1.1); box-shadow: 0 0 8px rgba(58,134,255,0.4); }
+.btn-primary:active { transform: scale(0.96); }
+.btn-primary:disabled { opacity: 0.15; cursor: not-allowed; }
 
-.msg-box { font-size: 0.7rem; color: var(--c-ruby); text-align: center; margin-top: 2px; min-height: 12px; }
+.msg-box { font-size: 0.65rem; color: #EF476F; text-align: center; margin-top: 1px; min-height: 10px; }
 
-/* ── Matrix 3x4 Board ──────────────────────────────────────── */
-.board-row { margin-bottom: 10px; }
-.row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; border-left: 3px solid var(--c-sapphire); padding-left: 6px; }
-.row-header.lv3 { border-color: var(--c-ruby); }
-.row-header.lv2 { border-color: var(--c-gold); }
-.row-header.lv1 { border-color: var(--c-emerald); }
-.deck-count { font-size: 0.65rem; color: var(--text-muted); }
+/* ── Matrix Board ──────────────────────────────────────────── */
+.board-row { margin-bottom: 6px; }
+.row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; border-left: 3px solid #3A86FF; padding-left: 4px; }
+.row-header.lv3 { border-color: #EF476F; }
+.row-header.lv2 { border-color: #FFD166; }
+.row-header.lv1 { border-color: #06D6A0; }
+.deck-count { font-size: 0.6rem; color: var(--text-muted); font-family: 'Orbitron', sans-serif; }
 
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
 
-/* ── Splendor Card UI (針對手機高度再優化) ─────────────────── */
+/* ── Splendor Card UI ──────────────────────────────────────── */
 .card {
   background: var(--card-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
-  padding: 6px;
+  padding: 4px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 95px;
+  min-height: 86px;
   position: relative;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s, box-shadow 0.2s;
+  animation: cardFadeIn 0.35s ease-out;
 }
+.card:not(.empty):hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 .card-top { display: flex; justify-content: space-between; align-items: center; }
-.card-pts { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 800; color: #FFF; line-height: 1; }
-.card-gem-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: bold; }
+.card-pts { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 900; color: #FFF; line-height: 1; text-shadow: 0 0 4px rgba(255,255,255,0.3); }
+.card-gem-icon {
+  width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 900; box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background-size: cover; background-position: center;
+}
 
-.card-costs { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 4px; }
+.card-costs { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 2px; }
 .cost-dot {
-  display: flex; align-items: center; gap: 1px; font-size: 0.65rem; font-weight: 700;
-  padding: 1px 3px; border-radius: 3px; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; gap: 1px; font-size: 0.6rem; font-weight: 700;
+  padding: 1px 2px; border-radius: 3px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05);
 }
-.cost-dot.free { opacity: 0.2; }
+.cost-dot.free { opacity: 0.15; }
+.cost-dot-circle {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background-size: cover; background-position: center;
+}
 
-.card-actions { display: flex; gap: 2px; margin-top: 4px; }
+.card-actions { display: flex; gap: 2px; margin-top: 3px; }
+
 .btn-card {
-  flex: 1; padding: 3px 0; border: 1px solid var(--card-border); background: var(--surface);
-  color: var(--text); border-radius: 3px; font-size: 0.65rem; font-weight: 600; cursor: pointer;
+  flex: 1; padding: 2px 0; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3);
+  color: var(--text); border-radius: 3px; font-size: 0.55rem; font-weight: 600; cursor: pointer; transition: all 0.1s;
 }
-.btn-card:disabled { opacity: 0.15; cursor: not-allowed; }
+.btn-card:not(:disabled):hover { background: var(--text); color: #000; font-weight: 700; }
+.btn-card:active { transform: scale(0.9); }
+.btn-card:disabled { opacity: 0.1; cursor: not-allowed; }
 
-.card.empty { border-style: dashed; opacity: 0.2; justify-content: center; align-items: center; font-size: 0.65rem; }
+.card.empty { border-style: dashed; opacity: 0.15; justify-content: center; align-items: center; font-size: 0.6rem; min-height: 86px; animation: none; }
 
 /* ── Reserved Hand ────────────────────────────────────────── */
-.reserved-section { margin-top: 8px; background: rgba(255,179,71,0.03); border: 1px solid rgba(255,179,71,0.1); padding: 6px; border-radius: var(--radius); }
+.reserved-section { margin-top: 4px; background: rgba(255,179,71,0.02); border: 1px solid rgba(255,179,71,0.08); padding: 4px; border-radius: var(--radius); }
 
-/* ── 📱 PHONE RESPONSIVE OVERRIDES (小螢幕極致同屏化) ── */
+/* ── Responsive Overrides ──────────────────────────────────── */
 @media (max-width: 768px) {
-  .top-meta-wrap { flex-direction: row; justify-content: space-between; align-items: center; }
-  .header { border-bottom: none; text-align: left; }
-  .status-bar { margin-top: 0; }
-  .grid-4 { grid-template-columns: repeat(2, 1fr); } /* 手機改 2x2 排列，每層只佔兩列高度 */
-  
-  /* 縮小卡牌動作按鈕，避免擠壓 */
-  .btn-card { padding: 5px 0; font-size: 0.7rem; }
-  .card { min-height: 105px; }
+  html, body { padding: 4px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 3px; }
+  .card { min-height: 82px; padding: 3px; }
+  .card-pts { font-size: 0.85rem; }
+  .btn-card { font-size: 0.5rem; }
+  .res-circle { width: 16px; height: 16px; font-size: 0.6rem; }
+  .res-count { font-size: 0.85rem; }
 }
 
 /* ── Modal ── */
@@ -226,9 +272,10 @@ html, body {
   opacity:0; pointer-events:none; transition:opacity 0.3s;
 }
 .modal-overlay.show { opacity:1; pointer-events:all; }
-.modal { background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:30px; max-width:440px; width:100%; text-align:center; }
-.modal-title { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--c-gold); margin-bottom: 12px; }
-.btn-replay { width: 100%; padding: 12px; background: var(--c-gold); color: #000; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+.modal { background:#16162a; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; max-width:360px; width:100%; text-align:center; box-shadow: 0 0 20px rgba(0,0,0,0.6); }
+.modal-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: #FFD166; margin-bottom: 10px; text-shadow: var(--glow-gold); }
+.btn-replay { width: 100%; padding: 10px; background: linear-gradient(180deg, #FFD166, #B38600); color: #000; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: transform 0.1s; }
+.btn-replay:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -241,7 +288,7 @@ html, body {
     </header>
     <div class="status-bar">
       <div class="status-pill">回合 <strong id="turn-txt">0</strong></div>
-      <div class="status-pill">威望 <strong id="score-txt" style="color:var(--c-emerald)">0</strong> / 15</div>
+      <div class="status-pill">威望 <strong id="score-txt" style="color:#06D6A0; text-shadow: 0 0 6px rgba(6,214,160,0.4);">0</strong> / 15</div>
     </div>
   </div>
 
@@ -253,7 +300,7 @@ html, body {
   <!-- PLAYER DASHBOARD -->
   <section class="dashboard">
     <div class="res-grid" id="res-layer"></div>
-    <div class="cap-bar" id="cap-txt">0 / 10</div>
+    <div class="cap-bar" id="cap-txt">背包: 0 / 10</div>
   </section>
 
   <!-- ACTION PANEL -->
@@ -262,14 +309,12 @@ html, body {
       <!-- Act 1 -->
       <div class="act-group">
         <p class="action-title">🟢 拿 3 個不同色</p>
-        <div class="act-desc">點選 3 個不同基礎顏色。</div>
         <div class="token-selectors" id="diff-selectors"></div>
         <button class="btn-primary" id="btn-do-diff" disabled>確認 (3色)</button>
       </div>
       <!-- Act 2 -->
       <div class="act-group">
         <p class="action-title">🟡 拿 2 個同色</p>
-        <div class="act-desc">點選 1 個顏色 (庫存須 ≥ 4)。</div>
         <div class="token-selectors" id="same-selectors"></div>
         <button class="btn-primary" id="btn-do-same" disabled>確認 (2色)</button>
       </div>
@@ -282,7 +327,7 @@ html, body {
     <!-- Level 3 -->
     <div class="board-row">
       <div class="row-header lv3">
-        <span class="section-title" style="color:var(--c-ruby); font-weight:700;">Lv3 卡牌</span>
+        <span class="section-title" style="color:#EF476F; font-weight:700;">Lv3 卡牌</span>
         <span class="deck-count" id="deck-lv3-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv3"></div>
@@ -291,7 +336,7 @@ html, body {
     <!-- Level 2 -->
     <div class="board-row">
       <div class="row-header lv2">
-        <span class="section-title" style="color:var(--c-gold); font-weight:700;">Lv2 卡牌</span>
+        <span class="section-title" style="color:#FFD166; font-weight:700;">Lv2 卡牌</span>
         <span class="deck-count" id="deck-lv2-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv2"></div>
@@ -300,7 +345,7 @@ html, body {
     <!-- Level 1 -->
     <div class="board-row">
       <div class="row-header lv1">
-        <span class="section-title" style="color:var(--c-emerald); font-weight:700;">Lv1 卡牌</span>
+        <span class="section-title" style="color:#06D6A0; font-weight:700;">Lv1 卡牌</span>
         <span class="deck-count" id="deck-lv1-txt">剩餘: 0</span>
       </div>
       <div class="grid-4" id="row-lv1"></div>
@@ -309,25 +354,22 @@ html, body {
 
   <!-- RESERVED HAND -->
   <section class="reserved-section">
-    <p class="section-title" style="color:var(--c-gold)">🔒 已保留手牌</p>
-    <div class="grid-4" id="reserved-layer" style="margin-top:4px;"></div>
+    <p class="section-title" style="color:#FFD166">🔒 已保留手牌</p>
+    <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
   </section>
 </div>
 
 <!-- WIN MODAL -->
 <div class="modal-overlay" id="win-modal">
   <div class="modal">
-    <span style="font-size:3rem;">🏆</span>
+    <span style="font-size:2.5rem;">🏆</span>
     <h2 class="modal-title">璀璨大師，實至名歸！</h2>
-    <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;" id="modal-body-txt"></p>
+    <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;" id="modal-body-txt"></p>
     <button class="btn-replay" id="btn-restart">重開新局</button>
   </div>
 </div>
 
 <script>
-/* =====================================================
-   CORE CONSTANTS & DICTIONARIES
-   ===================================================== */
 const GEM_TYPES = ['w', 'u', 'g', 'r', 'k']; 
 const GEM_NAMES = { w: '白', u: '藍', g: '綠', r: '紅', k: '黑', o: '金' };
 const GEM_CLASSES = { w: 'bg-w', u: 'bg-u', g: 'bg-g', r: 'bg-r', k: 'bg-k', o: 'bg-o' };
@@ -382,9 +424,6 @@ const RAW_NOBLES = [
   {id:"n5", points:3, req:{u:4, r:4}}
 ];
 
-/* =====================================================
-   GAME STATE
-   ===================================================== */
 let state = {};
 let selectedDiff = [];
 let selectedSame = null;
@@ -459,7 +498,6 @@ function calculateAffordability(card) {
   }
 
   const canAfford = p.tokens.o >= totalGoldNeeded;
-
   return { canAfford, totalGoldNeeded, breakdown };
 }
 
@@ -499,7 +537,6 @@ function nextTurn() {
     document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，突破 15 分標準大關！`;
     document.getElementById('win-modal').classList.add('show');
   }
-  
   updateUI();
 }
 
@@ -520,8 +557,8 @@ function takeTwoSame() {
     showError("超過 10 個上限！");
     return;
   }
-  if (state.bank[selectedSame] < 4) {
-    showError("庫存需 ≥ 4 顆才可拿 2 顆！");
+  if (state.bank[selectedSame] < 2) {
+    showError("庫存剩餘數量小於 2 顆，無法拿取！");
     return;
   }
   state.bank[selectedSame] -= 2;
@@ -556,7 +593,6 @@ window.buyCard = function(level, index, isReserved = false) {
   } else {
     state.matrix[level][index] = state.decks[level].pop() || null;
   }
-
   nextTurn();
 };
 
@@ -584,13 +620,15 @@ function renderActionSelectors() {
   diffBox.innerHTML = GEM_TYPES.map(gem => {
     const sel = selectedDiff.includes(gem) ? 'selected' : '';
     const dis = state.bank[gem] <= 0 ? 'disabled' : '';
-    return `<button class="token-btn ${sel}" ${dis} onclick="toggleSelectDiff('${gem}')">${GEM_NAMES[gem]}<br/>${state.bank[gem]}</button>`;
+    const specialClass = gem === 'u' ? 'token-btn-u' : '';
+    return `<button class="token-btn ${sel} ${specialClass}" ${dis} onclick="toggleSelectDiff('${gem}')">${GEM_NAMES[gem]}<span>${state.bank[gem]}</span></button>`;
   }).join('');
 
   sameBox.innerHTML = GEM_TYPES.map(gem => {
     const sel = selectedSame === gem ? 'selected' : '';
-    const dis = state.bank[gem] < 4 ? 'disabled' : '';
-    return `<button class="token-btn ${sel}" ${dis} onclick="selectSameGem('${gem}')">${GEM_NAMES[gem]}<br/>${state.bank[gem]}</button>`;
+    const dis = state.bank[gem] < 2 ? 'disabled' : '';
+    const specialClass = gem === 'u' ? 'token-btn-u' : '';
+    return `<button class="token-btn ${sel} ${specialClass}" ${dis} onclick="selectSameGem('${gem}')">${GEM_NAMES[gem]}<span>${state.bank[gem]}</span></button>`;
   }).join('');
 
   document.getElementById('btn-do-diff').disabled = selectedDiff.length !== 3;
@@ -627,14 +665,14 @@ function renderCard(card, level, index, isReserved = false) {
     const b = breakdown[gem];
     costHtml += `
       <span class="cost-dot ${b.isFreeByBonus ? 'free' : ''}">
-        <span style="display:inline-block; width:6px; height:6px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span>
+        <span class="cost-dot-circle ${GEM_CLASSES[gem]}"></span>
         ${b.afterBonusCost}
       </span>
     `;
   }
 
   return `
-    <div class="card">
+    <div class="card" data-id="${card.id}">
       <div class="card-top">
         <span class="card-pts">${card.points > 0 ? card.points : '0'}</span>
         <div class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</div>
@@ -642,7 +680,7 @@ function renderCard(card, level, index, isReserved = false) {
       <div class="card-costs">${costHtml}</div>
       <div class="card-actions">
         <button class="btn-card" onclick="buyCard('${level}', ${index}, ${isReserved})" ${!canAfford ? 'disabled' : ''}>購買</button>
-        ${!isReserved ? `<button class="btn-card" style="border-color:rgba(255,179,71,0.2)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
+        ${!isReserved ? `<button class="btn-card" style="border-color:rgba(255,179,71,0.15)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
       </div>
     </div>
   `;
@@ -671,11 +709,11 @@ function updateUI() {
 
   const tot = getPlayerTotalTokens();
   document.getElementById('cap-txt').textContent = `背包: ${tot} / 10`;
-  document.getElementById('cap-txt').style.color = tot >= 10 ? 'var(--c-ruby)' : 'var(--text-muted)';
+  document.getElementById('cap-txt').style.color = tot >= 10 ? '#EF476F' : 'var(--text-muted)';
 
   document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
     let reqsHtml = Object.keys(n.req).map(gem => `
-      <span><span style="display:inline-block; width:5px; height:5px; border-radius:50%;" class="${GEM_CLASSES[gem]}"></span>${n.req[gem]}</span>
+      <span><span class="cost-dot-circle ${GEM_CLASSES[gem]}"></span>${n.req[gem]}</span>
     `).join(' ');
     return `
       <div class="noble-card ${n.completed ? 'completed' : ''}">
@@ -691,7 +729,7 @@ function updateUI() {
   document.getElementById('row-lv1').innerHTML = state.matrix.lv1.map((c, i) => renderCard(c, 'lv1', i)).join('');
 
   if (p.reserved.length === 0) {
-    document.getElementById('reserved-layer').innerHTML = `<p style="font-size:0.65rem; color:var(--text-muted); grid-column:1/-1; text-align:center;">無保留手牌</p>`;
+    document.getElementById('reserved-layer').innerHTML = `<p style="font-size:0.6rem; color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 4px 0;">無保留手牌</p>`;
   } else {
     document.getElementById('reserved-layer').innerHTML = p.reserved.map((c, i) => renderCard(c, null, i, true)).join('');
   }
