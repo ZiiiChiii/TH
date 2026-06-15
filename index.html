@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (客製化貴族版)</title>
+<title>璀璨寶石 — 皇家大會堂 (固定卡牌圖片版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -80,7 +80,7 @@ html, body {
   -webkit-text-fill-color: transparent;
   text-shadow: var(--glow-warm);
 }
-.status-bar { display: flex; gap: 8px; }
+.status-bar { display: flex; gap: 8px; align-items: center; }
 .status-pill {
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(212, 175, 55, 0.25);
@@ -90,7 +90,37 @@ html, body {
 }
 .status-pill strong { font-family: 'Orbitron', sans-serif; color: #d4af37; text-shadow: var(--glow-warm); }
 
-/* ── Nobles (全新優化版) ─────────────────────────────────────── */
+/* 🎵 皇家金絲音樂開關按鈕樣式 */
+.music-btn {
+  background: linear-gradient(180deg, #3a2e22, #1c150e);
+  border: 1px solid #d4af37;
+  color: #ffe099;
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.music-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+.music-btn:active {
+  transform: scale(0.95);
+}
+.music-btn.muted {
+  border-color: #554a3a;
+  color: var(--text-muted);
+  background: #120e0a;
+  box-shadow: none;
+}
+
+/* ── Nobles ────────────────────────────────────────────────── */
 .nobles-section { margin-bottom: 8px; }
 .section-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
 .nobles-grid { display: flex; gap: 8px; overflow-x: auto; }
@@ -101,13 +131,12 @@ html, body {
   border: 1px solid #9c7a3c;
   border-radius: var(--radius-sm);
   min-width: 90px;
-  height: 90px; /* 固定正方形或微長方形比例 */
+  height: 90px;
   flex: 1;
   box-shadow: 0 4px 8px rgba(0,0,0,0.6);
   transition: all 0.3s ease;
   overflow: hidden;
 }
-/* 貴族卡背景原圖 */
 .noble-img {
   width: 100%;
   height: 100%;
@@ -118,7 +147,6 @@ html, body {
   z-index: 1;
   opacity: 0.9;
 }
-/* 貴族卡上方的半透明黑色底盤，用來凸顯文字與寶石需求，不遮擋主圖 */
 .noble-overlay {
   position: absolute;
   inset: 0;
@@ -244,20 +272,36 @@ html, body {
 
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
-/* ── Splendor Card UI ─────────────────────────────────────────── */
+/* ── Splendor Card UI ──────────────────────────────────────── */
 .card {
   background: var(--card-bg);
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
-  padding: 5px;
+  padding: 0; 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 90px;
+  min-height: 105px;
   position: relative;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
   transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
 }
+
+/* 用半透明黑色漸層覆蓋卡牌背景圖，確保前景文字/按鈕清晰可讀 */
+.card-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: 5px;
+  background: linear-gradient(180deg, rgba(16, 12, 10, 0.75) 0%, rgba(16, 12, 10, 0.2) 50%, rgba(16, 12, 10, 0.85) 100%);
+}
+
 .card:not(.empty):hover {
   transform: translateY(-3px);
   border-color: #d4af37;
@@ -286,9 +330,9 @@ html, body {
 .animate-reserve { animation: cardReserveSink 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; pointer-events: none; z-index: 99; }
 
 .card-top { display: flex; justify-content: space-between; align-items: center; }
-.card-pts { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 900; color: #f4f0ea; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+.card-pts { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(255,255,255,0.4); }
 .card-gem-icon {
-  width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 0; color: transparent !important; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
   background-size: cover; background-position: center;
 }
@@ -296,7 +340,8 @@ html, body {
 .card-costs { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 4px; }
 .cost-dot {
   display: flex; align-items: center; gap: 2px; font-size: 0.6rem; font-weight: 700;
-  padding: 1px 3px; border-radius: 2px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.02);
+  padding: 1px 3px; border-radius: 2px; background: rgba(0,0,0,0.75); border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .cost-dot.free { opacity: 0.1; }
 .cost-dot-circle { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background-size: cover; background-position: center; }
@@ -304,14 +349,15 @@ html, body {
 .card-actions { display: flex; gap: 3px; margin-top: 4px; }
 
 .btn-card {
-  flex: 1; padding: 2px 0; border: 1px solid #4a3e35; background: #1c1714;
-  color: var(--text-muted); border-radius: 2px; font-size: 0.55rem; font-weight: 600; cursor: pointer; transition: all 0.1s;
+  flex: 1; padding: 2px 0; border: 1px solid #4a3e35; background: rgba(28, 23, 20, 0.9);
+  color: var(--text); border-radius: 2px; font-size: 0.55rem; font-weight: 600; cursor: pointer; transition: all 0.1s;
+  text-shadow: 0 1px 2px #000;
 }
-.btn-card:not(:disabled):hover { background: #d4af37; color: #110e0c; border-color: #d4af37; font-weight: 700; }
+.btn-card:not(:disabled):hover { background: #d4af37; color: #110e0c; border-color: #d4af37; font-weight: 700; text-shadow: none; }
 .btn-card:active { transform: scale(0.95); }
-.btn-card:disabled { opacity: 0.1; cursor: not-allowed; }
+.btn-card:disabled { opacity: 0.15; cursor: not-allowed; }
 
-.card.empty { border-style: dashed; border-color: #4a3e35; background: rgba(0,0,0,0.2); opacity: 0.3; justify-content: center; align-items: center; font-size: 0.6rem; min-height: 90px; animation: none; box-shadow: none; }
+.card.empty { border-style: dashed; border-color: #4a3e35; background: rgba(0,0,0,0.2); opacity: 0.3; justify-content: center; align-items: center; font-size: 0.6rem; min-height: 105px; animation: none; box-shadow: none; }
 
 /* ── Reserved Hand ────────────────────────────────────────── */
 .reserved-section { margin-top: 6px; background: rgba(0, 0, 0, 0.35); border: 1px dashed #9c7a3c; padding: 6px; border-radius: var(--radius); }
@@ -320,8 +366,8 @@ html, body {
 @media (max-width: 768px) {
   html, body { padding: 4px; }
   .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 4px; }
-  .card { min-height: 84px; padding: 4px; }
-  .card-pts { font-size: 0.9rem; }
+  .card { min-height: 100px; }
+  .card-pts { font-size: 1rem; }
   .btn-card { font-size: 0.5rem; }
   .res-circle { width: 18px; height: 18px; }
   .res-count { font-size: 0.9rem; }
@@ -342,12 +388,17 @@ html, body {
 </head>
 <body>
 
+<audio id="bg-music" src="https://assets.mixkit.co/music/785/785.mp3" loop></audio>
+<audio id="sfx-gem" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+<audio id="sfx-buy" src="https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3"></audio>
+
 <div class="shell">
   <div class="top-meta-wrap">
     <header class="header">
       <h1 class="game-title">SPLENDOR</h1>
     </header>
     <div class="status-bar">
+      <button id="toggle-music-btn" class="music-btn">🎵 音樂：開啟</button>
       <div class="status-pill">回合 <strong id="turn-txt">0</strong></div>
       <div class="status-pill">威望 <strong id="score-txt" style="color:#e6b464; text-shadow: var(--glow-warm);">0</strong> / 15</div>
     </div>
@@ -425,6 +476,45 @@ const GEM_NAMES = { w: '白', u: '藍', g: '綠', r: '紅', k: '黑', o: '金' }
 const GEM_CLASSES = { w: 'bg-w', u: 'bg-u', g: 'bg-g', r: 'bg-r', k: 'bg-k', o: 'bg-o' };
 const GEM_BTN_CLASSES = { w: 'token-btn-w', u: 'token-btn-u', g: 'token-btn-g', r: 'token-btn-r', k: 'token-btn-k' };
 
+// 🎨 25張卡牌固定的圖片資料庫
+const CUSTOM_CARD_IMAGES = {
+  g: [
+    "https://i.ibb.co/KxX2gxBP/1.jpg", // 綠寶石 1
+    "https://i.ibb.co/35Wz9SGp/2.jpg", // 綠寶石 2
+    "https://i.ibb.co/4nRZhdV9/3.jpg", // 綠寶石 3
+    "https://i.ibb.co/VW851t3Q/4.jpg", // 綠寶石 4
+    "https://i.ibb.co/zh2mXJDS/5.jpg"  // 綠寶石 5
+  ],
+  u: [
+    "https://i.ibb.co/cc5LQG4Z/1.jpg", // 藍寶石 1
+    "https://i.ibb.co/JjQb4p1F/2.jpg", // 藍寶石 2
+    "https://i.ibb.co/spKMvZfr/3.jpg", // 藍寶石 3
+    "https://i.ibb.co/R4QS49Zj/4.jpg", // 藍寶石 4
+    "https://i.ibb.co/HLFX94d2/5.jpg"  // 藍寶石 5
+  ],
+  r: [
+    "https://i.ibb.co/rf43Prw8/1.jpg", // 紅寶石 1
+    "https://i.ibb.co/gFPGMGK7/2.jpg", // 紅寶石 2
+    "https://i.ibb.co/bjgntGqQ/3.jpg", // 紅寶石 3
+    "https://i.ibb.co/NghmMzHM/4.jpg", // 紅寶石 4
+    "https://i.ibb.co/VWhLdVjL/5.jpg"  // 紅寶石 5
+  ],
+  w: [
+    "https://i.ibb.co/DDkcxCww/1.jpg", // 白寶石 1
+    "https://i.ibb.co/Z6wkT9sw/2.jpg", // 白寶石 2
+    "https://i.ibb.co/dstw94C5/3.jpg", // 白寶石 3
+    "https://i.ibb.co/HLcpg8kB/4.jpg", // 白寶石 4
+    "https://i.ibb.co/p6Y1Tt5M/5.jpg"  // 白寶石 5
+  ],
+  k: [
+    "https://i.ibb.co/6cKPW5Ff/1.jpg", // 黑寶石 1
+    "https://i.ibb.co/7tRFCqBb/2.jpg", // 黑寶石 2
+    "https://i.ibb.co/gbGqKfnv/3.jpg", // 黑寶石 3
+    "https://i.ibb.co/zHS6cht3/4.jpg", // 黑寶石 4
+    "https://i.ibb.co/SwrD6WdV/5.jpg"  // 黑寶石 5
+  ]
+};
+
 let lastRenderedCardIds = new Set();
 
 const RAW_CARDS = {
@@ -469,7 +559,6 @@ const RAW_CARDS = {
   ]
 };
 
-/* 👑 【重大更新】整合你上傳的 9 張精美貴族原圖路徑，並配置對應的標準遊戲成本需求 */
 const ALL_NOBLES_POOL = [
   {id:"n1", points:3, img:"https://i.ibb.co/9k5FLXbz/noble1.png", req:{w:3, u:3, g:3}},
   {id:"n2", points:3, img:"https://i.ibb.co/hF1krHB4/noble2.png", req:{u:3, g:3, r:3}},
@@ -486,6 +575,12 @@ let state = {};
 let selectedDiff = [];
 let selectedSame = null;
 
+let isMusicMuted = false;
+const audioEl = document.getElementById('bg-music');
+const sfxGemEl = document.getElementById('sfx-gem');
+const sfxBuyEl = document.getElementById('sfx-buy');
+const musicBtn = document.getElementById('toggle-music-btn');
+
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -494,12 +589,33 @@ function shuffle(arr) {
   return arr;
 }
 
+// 🎯 核心改動：根據卡牌的威望點數 (points) 固定對應相應的圖片
+function assignFixedImage(card) {
+  if (!card) return;
+  const pool = CUSTOM_CARD_IMAGES[card.provides];
+  if (!pool) return;
+
+  // 對應邏輯：0分->圖1(索引0), 1分->圖2(索引1), 2分->圖3(索引2), 3分->圖4(索引3), 4/5分->圖5(索引4)
+  let imgIndex = 0;
+  if (card.points === 0) imgIndex = 0;
+  else if (card.points === 1) imgIndex = 1;
+  else if (card.points === 2) imgIndex = 2;
+  else if (card.points === 3) imgIndex = 3;
+  else if (card.points >= 4)  imgIndex = 4;
+
+  card.bgImage = pool[imgIndex];
+}
+
 function initGame() {
   const deck1 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv1)));
   const deck2 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv2)));
   const deck3 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv3)));
   
-  // 🎰 從 9 張特製貴族卡中隨機打亂並抽取 3 張投入本局
+  // 為所有牌庫的牌套用「固定威望對應」的卡面底圖
+  deck1.forEach(assignFixedImage);
+  deck2.forEach(assignFixedImage);
+  deck3.forEach(assignFixedImage);
+  
   const shuffledNobles = shuffle(JSON.parse(JSON.stringify(ALL_NOBLES_POOL)));
 
   lastRenderedCardIds.clear();
@@ -528,6 +644,34 @@ function initGame() {
   showError("");
   updateUI();
 }
+
+document.body.addEventListener('click', () => {
+  if (!isMusicMuted && audioEl.paused) {
+    audioEl.play().catch(err => {});
+  }
+}, { once: false });
+
+function playSFX(audioComponent) {
+  if (!isMusicMuted && audioComponent) {
+    audioComponent.currentTime = 0;
+    audioComponent.play().catch(err => {});
+  }
+}
+
+musicBtn.addEventListener('click', (e) => {
+  e.stopPropagation(); 
+  if (isMusicMuted) {
+    isMusicMuted = false;
+    musicBtn.textContent = "🎵 音樂：開啟";
+    musicBtn.classList.remove('muted');
+    audioEl.play().catch(err => {});
+  } else {
+    isMusicMuted = true;
+    musicBtn.textContent = "🔇 音樂：靜音";
+    musicBtn.classList.add('muted');
+    audioEl.pause();
+  }
+});
 
 function calculateAffordability(card) {
   const p = state.player;
@@ -607,6 +751,7 @@ function takeThreeDiff() {
     showError("超過 10 個上限！");
     return;
   }
+  playSFX(sfxGemEl);
   selectedDiff.forEach(gem => {
     state.bank[gem]--;
     state.player.tokens[gem]++;
@@ -623,9 +768,18 @@ function takeTwoSame() {
     showError("庫存剩餘數量小於 2 顆，無法拿取！");
     return;
   }
+  playSFX(sfxGemEl);
   state.bank[selectedSame] -= 2;
   state.player.tokens[selectedSame] += 2;
   nextTurn();
+}
+
+function drawNextCard(level) {
+  const nextCard = state.decks[level].pop() || null;
+  if (nextCard) {
+    assignFixedImage(nextCard); // 確保牌組補牌時，新拿出來的牌也能套用固定的卡面
+  }
+  return nextCard;
 }
 
 function applyBuyCard(level, index, isReserved, card, totalGoldNeeded, breakdown) {
@@ -647,13 +801,13 @@ function applyBuyCard(level, index, isReserved, card, totalGoldNeeded, breakdown
   if (isReserved) {
     state.player.reserved.splice(index, 1);
   } else {
-    state.matrix[level][index] = state.decks[level].pop() || null;
+    state.matrix[level][index] = drawNextCard(level);
   }
 }
 
 function applyReserveCard(level, index, card) {
   state.player.reserved.push(card);
-  state.matrix[level][index] = state.decks[level].pop() || null;
+  state.matrix[level][index] = drawNextCard(level);
 
   if (state.bank.o > 0) {
     if (getPlayerTotalTokens() < 10) {
@@ -669,6 +823,8 @@ window.buyCard = function(level, index, isReserved = false) {
 
   const { canAfford, totalGoldNeeded, breakdown } = calculateAffordability(card);
   if (!canAfford) return;
+
+  playSFX(sfxBuyEl);
 
   const cardEl = document.getElementById(`card-${card.id}`);
   if (cardEl) {
@@ -776,16 +932,20 @@ function renderCard(card, level, index, isReserved = false) {
     animationClass = 'animate-deal';
   }
 
+  const styleBg = card.bgImage ? `style="background-image: url('${card.bgImage}');"` : '';
+
   return `
-    <div class="card ${animationClass}" id="card-${card.id}" data-id="${card.id}">
-      <div class="card-top">
-        <span class="card-pts">${card.points > 0 ? card.points : '0'}</span>
-        <div class="card-gem-icon ${GEM_CLASSES[card.provides]}"></div>
-      </div>
-      <div class="card-costs">${costHtml}</div>
-      <div class="card-actions">
-        <button class="btn-card" onclick="buyCard('${level}', ${index}, ${isReserved})" ${!canAfford ? 'disabled' : ''}>購買</button>
-        ${!isReserved ? `<button class="btn-card" style="border-color:rgba(212,175,55,0.15)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
+    <div class="card ${animationClass}" id="card-${card.id}" data-id="${card.id}" ${styleBg}>
+      <div class="card-content-wrapper">
+        <div class="card-top">
+          <span class="card-pts">${card.points > 0 ? card.points : '0'}</span>
+          <div class="card-gem-icon ${GEM_CLASSES[card.provides]}"></div>
+        </div>
+        <div class="card-costs">${costHtml}</div>
+        <div class="card-actions">
+          <button class="btn-card" onclick="buyCard('${level}', ${index}, ${isReserved})" ${!canAfford ? 'disabled' : ''}>購買</button>
+          ${!isReserved ? `<button class="btn-card" style="border-color:rgba(212,175,55,0.15)" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
+        </div>
       </div>
     </div>
   `;
@@ -816,7 +976,6 @@ function updateUI() {
   document.getElementById('cap-txt').textContent = `袋中存貨: ${tot} / 10`;
   document.getElementById('cap-txt').style.color = tot >= 10 ? '#c94c4c' : '#738a7c';
 
-  /* 👑 【貴族渲染更新】透過 <img> 標籤穩固載入，外加精美半透明遮罩維持文字清晰度 */
   document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
     let reqsHtml = Object.keys(n.req).map(gem => `
       <div class="noble-req-item">
