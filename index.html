@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (手機優化引導版)</title>
+<title>璀璨寶石 — 皇家大會堂 (手機終極避讓引導版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -260,7 +260,7 @@ html, body {
 
 @keyframes cardBuyFly {
   0% { transform: scale(1) translateY(0); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-  30% { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); }
+  30 { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); }
   100% { transform: scale(0.8) translateY(-40px); opacity: 0; filter: brightness(0.6); }
 }
 .animate-buy { animation: cardBuyFly 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; pointer-events: none; z-index: 99; }
@@ -316,49 +316,55 @@ html, body {
 
 /* ── 🎬 頂層聚光燈教學導覽系統樣式 ────────────────────────────── */
 .tutorial-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.82); z-index: 10000; /* 最高階層 */
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 10000;
   opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 .tutorial-overlay.show { opacity: 1; pointer-events: all; }
 
 /* 凸顯欄位的高亮特效動畫 */
 .tutorial-highlight {
-  position: relative; z-index: 10001 !important; /* 高於暗底、低於對話框 */
-  box-shadow: 0 0 30px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82) !important;
+  position: relative; z-index: 10001 !important;
+  box-shadow: 0 0 30px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75) !important;
   outline: 3px solid #ffe099 !important;
-  transform: scale(1.02);
+  transform: scale(1.01);
   animation: pulseHighlight 1.5s infinite ease-in-out;
 }
 @keyframes pulseHighlight {
-  0% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
-  50% { outline-color: #ffe099; box-shadow: 0 0 40px #ffe099, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
-  100% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
+  0% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
+  50% { outline-color: #ffe099; box-shadow: 0 0 40px #ffe099, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
+  100% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
 }
 
-/* 修正手機重疊核心：改用 Fixed 固定置中，不再使用動態絕對坐標推擠 */
+/* 🚀 終極優化：加入動態過渡，用於吸附 Top 或 Bottom 避讓 */
 .tutorial-card {
-  background: linear-gradient(135deg, #2a2018, #130f0c);
-  border: 2px solid #d4af37; border-radius: var(--radius);
-  padding: 18px; width: 90%; max-width: 380px; text-align: center;
-  box-shadow: 0 12px 45px rgba(0,0,0,0.95);
-  position: fixed; left: 50%; top: 50%;
-  transform: translate(-50%, -50%); /* 永遠保持在視窗最中心 */
-  z-index: 10005; /* 絕對最高層 */
-}
-.tutorial-header { 
-  font-family: 'Cinzel', serif; font-size: 1.2rem; 
-  color: #ffe099; margin-bottom: 10px; font-weight: 900; 
-  letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  background: rgba(22, 16, 12, 0.95);
+  backdrop-filter: blur(8px);
+  border: 2px solid #ffe099; border-radius: var(--radius);
+  padding: 16px; width: 92%; max-width: 380px; text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.95);
+  position: fixed; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10005;
+  transition: top 0.4s cubic-bezier(0.25, 1, 0.5, 1), bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* 修正：調亮說明文字顏色，採用純白與亮色，極高對比 */
+/* 避讓用狀態樣式 */
+.tutorial-card.pos-top { top: 20px; bottom: auto; }
+.tutorial-card.pos-bottom { bottom: 20px; top: auto; }
+
+.tutorial-header { 
+  font-family: 'Cinzel', serif; font-size: 1.15rem; 
+  color: #ffe099; margin-bottom: 8px; font-weight: 900; 
+  letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+/* 修正：調到最亮、加粗、增加深色陰影防雜底 */
 .tutorial-text { 
   font-size: 0.88rem; 
-  color: #ffffff; /* 純白高明度文字 */
-  line-height: 1.6; margin-bottom: 16px; text-align: left; 
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); /* 加深底層陰影防雜色 */
+  color: #ffffff !important; /* 純白高對比 */
+  line-height: 1.5; margin-bottom: 14px; text-align: left; 
+  font-weight: 600; /* 加粗 */
+  text-shadow: 0 2px 4px #000000, 0 1px 1px #000000; /* 強力陰影 */
 }
 .tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
 .tutorial-dots { display: flex; gap: 6px; }
@@ -408,7 +414,7 @@ html, body {
   .btn-card { font-size: 0.5rem; padding: 1px 0; }
   
   /* 教學卡片微調 */
-  .tutorial-card { width: 85%; padding: 14px; }
+  .tutorial-card { width: 92%; padding: 14px; }
   .tutorial-text { font-size: 0.82rem; }
 }
 </style>
@@ -420,7 +426,7 @@ html, body {
 <audio id="sfx-buy" src="https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3"></audio>
 
 <div class="tutorial-overlay" id="tutorial-mask">
-  <div class="tutorial-card" id="tutorial-pop">
+  <div class="tutorial-card pos-bottom" id="tutorial-pop">
     <div class="tutorial-header" id="t-title">皇家覲見</div>
     <div class="tutorial-text" id="t-body">歡迎來到璀璨大會堂。</div>
     <div class="tutorial-footer">
@@ -584,14 +590,16 @@ const sfxGemEl = document.getElementById('sfx-gem');
 const sfxBuyEl = document.getElementById('sfx-buy');
 const musicBtn = document.getElementById('toggle-music-btn');
 
-/* ── 🎬 遊戲教學配置與邏輯 ────────────────────────────────── */
+/* ── 🎬 智能避讓教學導覽配置 ────────────────────────────────── */
 let currentTutorialStep = 0;
 const TUTORIAL_STEPS = [
-  { elementId: 'guide-nobles', title: '⚜️ 貴族覲見區', text: '這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量（加號數）」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！' },
-  { elementId: 'guide-dashboard', title: '🪙 皇家金庫 (資產欄)', text: '顯示您當前擁有的「寶石籌碼袋（數字）」與「發展卡帶來的永久產量（小加號）」。注意：身上籌碼總上限為 10 顆！' },
-  { elementId: 'guide-actions', title: '🟢 行動挑選面板', text: '輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。若身上籌碼總數將會超過 10 個，系統會發出警示。' },
-  { elementId: 'guide-matrix', title: '💎 工業與發展卡矩陣', text: '核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。' },
-  { elementId: 'guide-reserved', title: '🔒 機密保留契約', text: '如果某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。' }
+  // 介紹上半部元件時，說明卡片放在底部 (pos-bottom)
+  { elementId: 'guide-nobles', position: 'pos-bottom', title: '⚜️ 貴族覲見區', text: '這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！' },
+  { elementId: 'guide-dashboard', position: 'pos-bottom', title: '🪙 皇家金庫 (資產欄)', text: '顯示您當前擁有的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！' },
+  { elementId: 'guide-actions', position: 'pos-bottom', title: '🟢 行動挑選面板', text: '輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。' },
+  // 🚀 當要介紹龐大的卡牌矩陣與保留區時，自動將說明卡片推到螢幕最頂端 (pos-top)，完美避開阻擋
+  { elementId: 'guide-matrix', position: 'pos-top', title: '💎 工業與發展卡矩陣', text: '核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。' },
+  { elementId: 'guide-reserved', position: 'pos-top', title: '🔒 機密保留契約', text: '如果某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。' }
 ];
 
 function checkAndStartTutorial() {
@@ -618,7 +626,6 @@ function startTutorial() {
 }
 
 function showTutorialStep() {
-  // 清除前一次的高亮
   TUTORIAL_STEPS.forEach(s => {
     const el = document.getElementById(s.elementId);
     if(el) el.classList.remove('tutorial-highlight');
@@ -626,14 +633,18 @@ function showTutorialStep() {
 
   const step = TUTORIAL_STEPS[currentTutorialStep];
   const targetEl = document.getElementById(step.elementId);
+  const popCard = document.getElementById('tutorial-pop');
   
+  // ⚡ 實施智慧位置切換：Top 還是 Bottom 避讓
+  popCard.classList.remove('pos-top', 'pos-bottom');
+  popCard.classList.add(step.position);
+
   if (targetEl) {
     targetEl.classList.add('tutorial-highlight');
-    // 自動將該元件平滑滾動到畫面中心，防止在小螢幕被切掉
-    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // 如果是矩陣，滾動到中心，如果是其他，滾到對應位置
+    targetEl.scrollIntoView({ behavior: 'smooth', block: step.position === 'pos-top' ? 'end' : 'center' });
   }
 
-  // 更新小圓點
   TUTORIAL_STEPS.forEach((_, i) => {
     const dot = document.getElementById(`tdot-${i}`);
     if(dot) {
@@ -642,11 +653,9 @@ function showTutorialStep() {
     }
   });
 
-  // 更新內容
   document.getElementById('t-title').textContent = step.title;
   document.getElementById('t-body').textContent = step.text;
 
-  // 更改最後一步按鈕文字
   const nextBtn = document.getElementById('btn-t-next');
   if (currentTutorialStep === TUTORIAL_STEPS.length - 1) {
     nextBtn.textContent = "進入大會堂 (開啟音樂)";
@@ -660,14 +669,12 @@ window.nextTutorialStep = function() {
     currentTutorialStep++;
     showTutorialStep();
   } else {
-    // 教學結束
     TUTORIAL_STEPS.forEach(s => {
       const el = document.getElementById(s.elementId);
       if(el) el.classList.remove('tutorial-highlight');
     });
     document.getElementById('tutorial-mask').classList.remove('show');
     localStorage.setItem('splendor_tutorial_seen', 'true');
-    
     if (!isMusicMuted) {
       audioEl.play().catch(err => console.log("音樂播放受阻:", err));
     }
