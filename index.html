@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (新手引導版)</title>
+<title>璀璨寶石 — 皇家大會堂 (手機優化引導版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -316,7 +316,7 @@ html, body {
 
 /* ── 🎬 頂層聚光燈教學導覽系統樣式 ────────────────────────────── */
 .tutorial-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 1000;
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.82); z-index: 10000; /* 最高階層 */
   opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
@@ -324,42 +324,92 @@ html, body {
 
 /* 凸顯欄位的高亮特效動畫 */
 .tutorial-highlight {
-  position: relative; z-index: 1001 !important;
-  box-shadow: 0 0 25px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75) !important;
+  position: relative; z-index: 10001 !important; /* 高於暗底、低於對話框 */
+  box-shadow: 0 0 30px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82) !important;
   outline: 3px solid #ffe099 !important;
-  transform: scale(1.01);
+  transform: scale(1.02);
   animation: pulseHighlight 1.5s infinite ease-in-out;
 }
 @keyframes pulseHighlight {
-  0% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
-  50% { outline-color: #ffe099; box-shadow: 0 0 35px #ffe099, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
-  100% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.75); }
+  0% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
+  50% { outline-color: #ffe099; box-shadow: 0 0 40px #ffe099, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
+  100% { outline-color: #d4af37; box-shadow: 0 0 20px #d4af37, 0 0 0 9999px rgba(0, 0, 0, 0.82); }
 }
 
+/* 修正手機重疊核心：改用 Fixed 固定置中，不再使用動態絕對坐標推擠 */
 .tutorial-card {
-  background: linear-gradient(135deg, #261f1a, #16120f);
+  background: linear-gradient(135deg, #2a2018, #130f0c);
   border: 2px solid #d4af37; border-radius: var(--radius);
-  padding: 16px; width: 90%; max-width: 400px; text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-  position: absolute; z-index: 1002; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  padding: 18px; width: 90%; max-width: 380px; text-align: center;
+  box-shadow: 0 12px 45px rgba(0,0,0,0.95);
+  position: fixed; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); /* 永遠保持在視窗最中心 */
+  z-index: 10005; /* 絕對最高層 */
 }
-.tutorial-header { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #ffe099; margin-bottom: 8px; font-weight: 900; letter-spacing: 0.05em; }
-.tutorial-text { font-size: 0.8rem; color: #e6dfd5; line-height: 1.6; margin-bottom: 14px; text-align: left; }
+.tutorial-header { 
+  font-family: 'Cinzel', serif; font-size: 1.2rem; 
+  color: #ffe099; margin-bottom: 10px; font-weight: 900; 
+  letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* 修正：調亮說明文字顏色，採用純白與亮色，極高對比 */
+.tutorial-text { 
+  font-size: 0.88rem; 
+  color: #ffffff; /* 純白高明度文字 */
+  line-height: 1.6; margin-bottom: 16px; text-align: left; 
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); /* 加深底層陰影防雜色 */
+}
 .tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
 .tutorial-dots { display: flex; gap: 6px; }
-.t-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(212,175,55,0.2); }
-.t-dot.active { background: #ffe099; box-shadow: 0 0 6px #ffe099; }
+.t-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(212,175,55,0.25); }
+.t-dot.active { background: #ffe099; box-shadow: 0 0 8px #ffe099; }
 .btn-tutorial-next {
-  padding: 6px 16px; background: linear-gradient(180deg, #d4af37, #8a6418);
-  color: #FFF; border: none; border-radius: 3px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+  padding: 8px 18px; background: linear-gradient(180deg, #ffe099, #d4af37, #8a6418);
+  color: #110e0c; border: none; border-radius: 3px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
+/* ── 📱 手機版 RWD 防爆、全面微調縮小版面 ────────────────────── */
 @media (max-width: 768px) {
   html, body { padding: 4px; }
+  .shell { max-width: 100%; }
+  
+  .game-title { font-size: 1.05rem; letter-spacing: 0.1em; }
+  .status-bar { gap: 4px; }
+  .music-btn { padding: 3px 6px; font-size: 0.68rem; }
+  .status-pill { padding: 2px 6px; font-size: 0.68rem; }
+
+  /* 縮小貴族 */
+  .noble-card { min-width: 72px; height: 72px; }
+  .noble-name { font-size: 0.5rem; }
+  .noble-pts { font-size: 0.75rem; }
+  .noble-reqs { gap: 1px; padding: 2px; }
+
+  /* 縮小玩家金庫 */
+  .res-circle { width: 17px; height: 17px; margin-bottom: 2px; }
+  .res-count { font-size: 0.9rem; }
+  .res-bonus { font-size: 0.5rem; }
+  
+  /* 縮小行動面板 */
+  .action-title { font-size: 0.65rem; margin-bottom: 4px; }
+  .act-group { padding: 4px; }
+  .token-btn { width: 20px; height: 20px; background-size: 18px 18px; }
+  .btn-primary { padding: 4px; font-size: 0.65rem; }
+
+  /* 縮小卡牌矩陣，避免超出單頁顯示高度 */
   .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 4px; }
-  .card { min-height: 100px; }
-  .card-pts { font-size: 1rem; }
-  .res-circle { width: 18px; height: 18px; }
+  .card { min-height: 92px; }
+  .card-content-wrapper { padding: 4px; }
+  .card-pts { font-size: 0.9rem; }
+  .card-gem-icon { width: 13px; height: 13px; }
+  .cost-dot { font-size: 0.55rem; padding: 0px 2px; }
+  .cost-dot-circle { width: 6px; height: 6px; }
+  .btn-card { font-size: 0.5rem; padding: 1px 0; }
+  
+  /* 教學卡片微調 */
+  .tutorial-card { width: 85%; padding: 14px; }
+  .tutorial-text { font-size: 0.82rem; }
 }
 </style>
 </head>
@@ -549,7 +599,6 @@ function checkAndStartTutorial() {
   if (!hasSeen) {
     startTutorial();
   } else {
-    // 不是第一次進來，非靜音狀態下可直接播放
     if (!isMusicMuted) audioEl.play().catch(e => {});
   }
 }
@@ -562,7 +611,6 @@ function startTutorial() {
   currentTutorialStep = 0;
   document.getElementById('tutorial-mask').classList.add('show');
   
-  // 生成進度小圓點
   const dotsBox = document.getElementById('t-dots');
   dotsBox.innerHTML = TUTORIAL_STEPS.map((_, i) => `<div class="t-dot ${i===0?'active':''}" id="tdot-${i}"></div>`).join('');
   
@@ -581,7 +629,7 @@ function showTutorialStep() {
   
   if (targetEl) {
     targetEl.classList.add('tutorial-highlight');
-    // 捲動畫面確保教學目標進入視野
+    // 自動將該元件平滑滾動到畫面中心，防止在小螢幕被切掉
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
@@ -594,20 +642,9 @@ function showTutorialStep() {
     }
   });
 
-  // 更新卡片內容與動態定位
+  // 更新內容
   document.getElementById('t-title').textContent = step.title;
   document.getElementById('t-body').textContent = step.text;
-
-  const pop = document.getElementById('tutorial-pop');
-  if (targetEl) {
-    const rect = targetEl.getBoundingClientRect();
-    // 智慧定位：若目標太靠近上方，導覽對話框就放下方，反之放上方
-    if (rect.top < window.innerHeight / 2) {
-      pop.style.top = `${window.scrollY + rect.bottom + 15}px`;
-    } else {
-      pop.style.top = `${window.scrollY + rect.top - pop.offsetHeight - 180}px`;
-    }
-  }
 
   // 更改最後一步按鈕文字
   const nextBtn = document.getElementById('btn-t-next');
@@ -631,7 +668,6 @@ window.nextTutorialStep = function() {
     document.getElementById('tutorial-mask').classList.remove('show');
     localStorage.setItem('splendor_tutorial_seen', 'true');
     
-    // 🎵 重點：教學結束，藉由點擊互動，順利解鎖播放遊戲音樂！
     if (!isMusicMuted) {
       audioEl.play().catch(err => console.log("音樂播放受阻:", err));
     }
@@ -696,7 +732,6 @@ function initGame() {
   showError("");
   updateUI();
   
-  // 初始化完畢後檢查是否觸發教學
   setTimeout(checkAndStartTutorial, 600);
 }
 
