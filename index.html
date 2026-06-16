@@ -661,6 +661,164 @@ html, body {
   .achievement-banner { padding: 6px 8px; }
   .ach-latest-display { font-size: 0.75rem; }
 }
+
+/* ── 手機版全螢幕無捲動佈局 (360 / 390 / 414px) ───────────── */
+@media (max-width: 430px) {
+  /* 整體容器：固定視窗高度，禁止捲動 */
+  html, body {
+    padding: 2px;
+    overflow: hidden;
+    height: 100dvh;
+    height: 100vh;
+  }
+
+  .shell {
+    max-width: 100%;
+    height: calc(100dvh - 4px);
+    height: calc(100vh - 4px);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  /* ── 頂部資訊列：緊湊化 */
+  .top-meta-wrap {
+    padding: 3px 6px;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+  }
+  .game-title { font-size: 0.85rem; letter-spacing: 0.06em; }
+  .status-bar { gap: 3px; }
+  .music-btn { padding: 2px 5px; font-size: 0.6rem; gap: 2px; }
+  .status-pill { padding: 2px 5px; font-size: 0.6rem; }
+  .status-pill strong { font-size: 0.6rem; }
+
+  /* ── 成就欄：最小化 */
+  .achievement-banner {
+    padding: 3px 8px;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+  }
+  .ach-badge-title { font-size: 0.55rem; padding: 1px 4px; }
+  .ach-latest-display { font-size: 0.62rem; }
+  .ach-stats-summary { font-size: 0.6rem; padding: 2px 5px; }
+
+  /* ── 貴族欄：扁平橫排 */
+  .nobles-section {
+    margin-bottom: 2px;
+    padding: 1px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 0.55rem; margin-bottom: 2px; }
+  .nobles-grid { gap: 4px; overflow-x: auto; }
+  .noble-card { min-width: 56px; height: 56px; flex-shrink: 0; }
+  .noble-name { font-size: 0.42rem; }
+  .noble-pts { font-size: 0.65rem; }
+  .noble-reqs { gap: 1px; padding: 1px 2px; font-size: 0.5rem; }
+  .noble-req-item { gap: 2px; }
+  .noble-overlay { padding: 3px; }
+  .cost-dot-circle { width: 5px; height: 5px; }
+
+  /* ── 玩家資產欄：橫排壓縮 */
+  .dashboard-container {
+    flex-direction: row;
+    gap: 4px;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+  }
+  .dashboard {
+    flex: 3;
+    padding: 4px 6px;
+  }
+  .res-grid { gap: 2px; }
+  .res-block { gap: 3px; }
+  .res-circle { width: 14px; height: 14px; }
+  .res-count { font-size: 0.72rem; }
+  .res-bonus { font-size: 0.42rem; margin-top: 1px; }
+  .cap-bar { font-size: 0.5rem; margin-top: 2px; }
+
+  .earned-nobles-panel {
+    min-width: 0;
+    flex: 1;
+    padding: 4px;
+  }
+  .earned-nobles-title { font-size: 0.5rem; margin-bottom: 2px; }
+  .earned-nobles-list { max-height: 36px; gap: 3px; }
+  .earned-noble-mini img { width: 12px; height: 12px; }
+  .earned-noble-mini span { font-size: 0.42rem; }
+
+  /* ── 行動面板：橫排極致壓縮 */
+  .action-panel {
+    padding: 4px 6px;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+  }
+  .action-row { gap: 4px; }
+  .act-group { padding: 3px; }
+  .action-title { font-size: 0.55rem; margin-bottom: 3px; }
+  .token-selectors { gap: 2px; margin-bottom: 4px; }
+  .token-btn { width: 18px; height: 18px; background-size: 16px 16px; }
+  .btn-primary { padding: 3px; font-size: 0.58rem; }
+  .msg-box { font-size: 0.55rem; min-height: 8px; margin-top: 1px; }
+
+  /* ── 卡牌矩陣：填滿剩餘空間 */
+  .board-matrix {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 1px;
+    margin-bottom: 2px;
+  }
+  .board-row {
+    flex: 1;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .row-header { margin-bottom: 2px; padding-left: 4px; }
+  .row-header .section-title { font-size: 0.52rem; }
+  .deck-count { font-size: 0.48rem; }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    flex: 1;
+  }
+
+  /* 卡牌本身：動態填滿 */
+  .card {
+    min-height: 0;
+    height: 100%;
+  }
+  .card-content-wrapper { padding: 3px; }
+  .card-pts { font-size: 0.72rem; }
+  .card-gem-icon { width: 10px; height: 10px; }
+  .card-costs { gap: 1px; padding-top: 2px; }
+  .cost-dot { font-size: 0.48rem; padding: 0px 1px; gap: 1px; }
+  .card-actions { gap: 2px; margin-top: 2px; }
+  .btn-card { font-size: 0.44rem; padding: 1px 0; }
+  .card.empty { min-height: 0; font-size: 0.48rem; }
+
+  /* ── 保留區：緊湊 */
+  .reserved-section {
+    flex-shrink: 0;
+    margin-top: 0;
+    padding: 3px 5px;
+  }
+  .reserved-section .section-title { font-size: 0.52rem; }
+  .reserved-section .grid-4 { gap: 3px; }
+  .reserved-section .card { min-height: 60px; }
+
+  /* ── 隱藏教學卡片避免佔空間（教學模式下由 JS 控制顯示） */
+  .tutorial-embedded-card { padding: 6px 8px; margin-top: 4px; }
+  .tutorial-header { font-size: 0.82rem; }
+  .tutorial-text { font-size: 0.72rem; line-height: 1.4; margin-bottom: 8px; }
+  .btn-tutorial-next { padding: 4px 10px; font-size: 0.68rem; }
+  .t-dot { width: 6px; height: 6px; }
+}
 </style>
 </head>
 <body>
