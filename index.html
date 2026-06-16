@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (單人成就大師版)</title>
+<title>寶石交易所 — 皇家大會堂 (單人成就大師版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -34,10 +34,10 @@
 
   /* 難易度色彩系統 */
   --diff-easy:    #2ecc71; /* 🟢 簡單 */
-  --diff-normal:  #f1c40f; /* 🟡 中階 */
-  --diff-hard:    #e67e22; /* 🟠 進階 */
-  --diff-expert:  #e74c3c; /* 🔴 困難 */
-  --diff-master:  #9b59b6; /* 🟣 終極 */
+  --diff-normal:  #f1c40f; /* 🟡 普通 */
+  --diff-hard:    #e67e22; /* 🟠 困難 */
+  --diff-expert:  #e74c3c; /* 🔴 極限 */
+  --diff-master:  #9b59b6; /* 🟣 神人 */
 }
 
 html, body {
@@ -120,7 +120,7 @@ html, body {
   box-shadow: none;
 }
 
-/* ── 🏆 全新：成就顯示欄 UI ────────────────────────────────── */
+/* ── 🏆 成就顯示欄 UI ────────────────────────────────── */
 .achievement-banner {
   background: linear-gradient(90deg, rgba(20, 15, 12, 0.95), rgba(35, 28, 22, 0.95));
   border: 1px dashed rgba(212, 175, 55, 0.4);
@@ -167,11 +167,11 @@ html, body {
   gap: 6px;
 }
 .ach-latest-display.has-ach {
-  animation: achPopGlow 0.5s ease-out forwards;
+  animation: achPopGlow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 @keyframes achPopGlow {
-  0% { transform: scale(0.95); filter: brightness(1.8); }
-  50% { transform: scale(1.03); filter: brightness(2); }
+  0% { transform: scale(0.95); filter: brightness(1.8); background: rgba(212, 175, 55, 0); }
+  30% { transform: scale(1.05); filter: brightness(2.2); background: rgba(212, 175, 55, 0.2); }
   100% { transform: scale(1); filter: brightness(1); }
 }
 .ach-stats-summary {
@@ -184,10 +184,102 @@ html, body {
   border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* 成就歷史清單彈窗 */
-.ach-history-modal {
-  max-width: 500px !important;
+/* 🏛️ 人才庫與難易度選擇彈窗專用 UI ────────────────────────────── */
+.talent-pool-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 8px 4px;
 }
+.talent-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.4);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.talent-mini-card:hover {
+  border-color: #ffe099;
+  background: rgba(212, 175, 55, 0.15);
+}
+.talent-mini-card.selected {
+  border-color: #ffe099;
+  background: rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+.talent-mini-card img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.talent-mini-card span {
+  font-size: 0.75rem;
+  color: #ffe099;
+  font-weight: 600;
+}
+
+/* 難易度調整整合組件 */
+.diff-setting-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin: 10px 0;
+}
+.diff-opt-btn {
+  padding: 8px 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #1a1410;
+  border: 1px solid #4a3a30;
+  color: var(--text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.diff-opt-btn.active[data-diff="easy"] { background: var(--diff-easy); color: #000; border-color: #fff; }
+.diff-opt-btn.active[data-diff="normal"] { background: var(--diff-normal); color: #000; border-color: #fff; }
+.diff-opt-btn.active[data-diff="hard"] { background: var(--diff-hard); color: #000; border-color: #fff; }
+.diff-opt-btn.active[data-diff="expert"] { background: var(--diff-expert); color: #fff; border-color: #fff; }
+.diff-opt-btn.active[data-diff="master"] { background: var(--diff-master); color: #fff; border-color: #fff; }
+
+/* 整合主選單彈窗排版 */
+.menu-grid-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+}
+.menu-row-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffe099;
+  background: linear-gradient(180deg, #2a2018, #150f0b);
+  border: 1px solid #d4af37;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.menu-row-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+/* 成就歷史清單彈窗 */
+.ach-history-modal { max-width: 500px !important; }
 .ach-matrix-grid {
   display: flex;
   flex-direction: column;
@@ -216,28 +308,10 @@ html, body {
   background: rgba(25, 20, 16, 0.8);
   border-left-width: 4px;
 }
-.ach-row-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.ach-row-name {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #fff;
-}
-.ach-row-desc {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-.ach-row-tag {
-  font-size: 0.6rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 2px;
-  color: #110e0c;
-  text-transform: uppercase;
-}
+.ach-row-meta { display: flex; flex-direction: column; gap: 2px; }
+.ach-row-name { font-size: 0.82rem; font-weight: 700; color: #fff; }
+.ach-row-desc { font-size: 0.7rem; color: var(--text-muted); }
+.ach-row-tag { font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 2px; color: #110e0c; text-transform: uppercase; }
 
 /* ── Nobles ────────────────────────────────────────────────── */
 .nobles-section { margin-bottom: 8px; transition: all 0.3s ease; border: 2px solid transparent; border-radius: var(--radius); padding: 2px; }
@@ -274,13 +348,8 @@ html, body {
 .noble-reqs { display: flex; flex-direction: column; gap: 2px; font-size: 0.6rem; font-weight: bold; background: rgba(0,0,0,0.6); padding: 3px; border-radius: 3px; max-width: fit-content; }
 .noble-req-item { display: flex; align-items: center; gap: 3px; color: #fff; text-shadow: 0 1px 2px #000; }
 
-/* ── Player Dashboard (更動版面) ───────────────────────────── */
-.dashboard-container {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
+/* ── Player Dashboard ───────────────────────────── */
+.dashboard-container { display: flex; gap: 8px; margin-bottom: 8px; }
 .dashboard {
   flex: 3;
   background: rgba(10, 24, 18, 0.85);
@@ -294,18 +363,7 @@ html, body {
   justify-content: center;
 }
 .res-grid { display: flex; justify-content: space-around; align-items: center; gap: 4px; }
-
-.res-block { 
-  background: none; 
-  border: none; 
-  padding: 0; 
-  text-align: center;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
+.res-block { background: none; border: none; padding: 0; text-align: center; position: relative; display: flex; align-items: center; gap: 4px; }
 .res-circle {
   width: 22px; height: 22px; border-radius: 50%;
   display: inline-block;
@@ -313,63 +371,29 @@ html, body {
   background-size: cover; background-position: center; color: transparent !important;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+.res-text-group { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; position: relative; }
 
-.res-text-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  position: relative;
-}
-
-@keyframes gemPulseGlow {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.2); filter: brightness(1.5); }
-  100% { transform: scale(1); filter: brightness(1); }
-}
-
-@keyframes textPopValue {
-  0% { transform: scale(1); color: #fff; }
-  30% { transform: scale(1.3); color: #ffd700; text-shadow: 0 0 8px #ffd700; }
-  100% { transform: scale(1); color: #FFF; }
-}
-
-/* 🎬 背包數字加減與漸漸消失特效 */
-@keyframes floatFadeUp {
-  0% { transform: translateY(0) scale(0.7); opacity: 0; }
-  20% { transform: translateY(-12px) scale(1.1); opacity: 1; }
-  80% { transform: translateY(-16px) scale(1); opacity: 1; }
-  100% { transform: translateY(-24px) scale(0.8); opacity: 0; }
-}
+@keyframes gemPulseGlow { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.2); filter: brightness(1.5); } 100% { transform: scale(1); filter: brightness(1); } }
+@keyframes textPopValue { 0% { transform: scale(1); color: #fff; } 30% { transform: scale(1.3); color: #ffd700; text-shadow: 0 0 8px #ffd700; } 100% { transform: scale(1); color: #FFF; } }
+@keyframes floatFadeUp { 0% { transform: translateY(0) scale(0.7); opacity: 0; } 20% { transform: translateY(-12px) scale(1.1); opacity: 1; } 80% { transform: translateY(-16px) scale(1); opacity: 1; } 100% { transform: translateY(-24px) scale(0.8); opacity: 0; } }
+@keyframes permanentFloatUp { 0% { transform: translateY(5px); opacity: 0; } 15% { transform: translateY(-5px); opacity: 1; } 85% { transform: translateY(-8px); opacity: 1; } 100% { transform: translateY(-15px); opacity: 0; } }
 
 .floating-diff {
-  position: absolute;
-  left: 0;
-  top: -10px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 900;
-  pointer-events: none;
-  z-index: 10;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-  animation: floatFadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  position: absolute; left: 0; top: -10px; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 900; pointer-events: none; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.9); animation: floatFadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.floating-diff.plus { color: #2ecc71; }
+.floating-diff.minus { color: #e74c3c; }
+
+.floating-permanent-anim {
+  position: absolute; right: -30px; top: -8px; font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 800; color: #2ecc71; pointer-events: none; z-index: 15; text-shadow: 0 1px 2px rgba(0,0,0,0.9); animation: permanentFloatUp 1.5s ease-out forwards;
 }
 
-.floating-diff.plus { color: #2ecc71; }  /* 綠色字體 */
-.floating-diff.minus { color: #e74c3c; } /* 紅色字體 */
-
-.res-block.animate-pulse-glow .res-circle {
-  animation: gemPulseGlow 0.6s ease-in-out;
-}
-.res-block.animate-pulse-glow .res-count {
-  animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-.res-block.animate-pulse-glow .res-bonus {
-  animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
+.res-block.animate-pulse-glow .res-circle { animation: gemPulseGlow 0.6s ease-in-out; }
+.res-block.animate-pulse-glow .res-count { animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+.res-block.animate-pulse-glow .res-bonus { animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
 .res-count { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; line-height: 1; color: #FFF; text-shadow: 0 2px 2px rgba(0,0,0,0.5); transition: color 0.3s; }
-.res-bonus { font-size: 0.55rem; color: #738a7c; font-weight: 600; transition: color 0.3s; line-height: 1; margin-top: 2px; }
+.res-bonus { font-size: 0.65rem; color: #ffe099; font-weight: 700; font-family: 'Orbitron', sans-serif; transition: color 0.3s; line-height: 1; margin-top: 2px; }
 
 .bg-w { background-image: var(--c-diamond); }
 .bg-u { background-image: var(--c-sapphire); }
@@ -380,77 +404,57 @@ html, body {
 
 .cap-bar { font-size: 0.6rem; color: #738a7c; margin-top: 4px; text-align: left; font-family: 'Orbitron', sans-serif; font-weight: 600; padding-left: 4px; }
 
-/* ── Earned Nobles ────────────────────────────────────────── */
+/* ── Earned Nobles & Assistant ────────────────────────────── */
 .earned-nobles-panel {
-  flex: 1;
-  background: rgba(30, 24, 20, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: var(--radius);
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-width: 140px;
+  flex: 1.5; background: rgba(30, 24, 20, 0.6); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius); padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 160px;
 }
-.earned-nobles-title {
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-  padding-bottom: 2px;
-}
-.earned-nobles-list {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  max-height: 48px;
-}
-.earned-noble-mini {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(0,0,0,0.4);
-  padding: 2px 4px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-}
-.earned-noble-mini img {
-  width: 16px; height: 16px; object-fit: cover; border-radius: 2px;
-}
-.earned-noble-mini span {
-  font-size: 0.55rem; color: #ffe099; white-space: nowrap;
-}
+.earned-nobles-title { font-size: 0.6rem; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 2px; }
+.assistant-subpanel { background: rgba(212, 175, 55, 0.06); border: 1px dashed rgba(212, 175, 55, 0.3); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 2px; }
+.earned-nobles-list { display: flex; gap: 4px; flex-wrap: wrap; overflow-y: auto; max-height: 36px; }
+.earned-noble-mini { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 2px 4px; border-radius: var(--radius-sm); border: 1px solid rgba(212, 175, 55, 0.3); }
+.earned-noble-mini img { width: 16px; height: 16px; object-fit: cover; border-radius: 2px; }
+.earned-noble-mini span { font-size: 0.55rem; color: #ffe099; white-space: nowrap; }
 
 /* ── Action Panel ──────────────────────────────────────────── */
-.action-panel {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: var(--radius);
-  padding: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
-}
+.action-panel { background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius); padding: 8px; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
 .action-title { font-size: 0.7rem; font-weight: 700; margin-bottom: 6px; color: #d4af37; letter-spacing: 0.05em; }
 .action-row { display: flex; gap: 6px; }
 .act-group { flex: 1; background: #1a1512; padding: 6px; border-radius: var(--radius-sm); border: 1px solid #2d241f; }
 .token-selectors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 6px; }
 
+.token-container-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
 .token-btn {
-  padding: 4px 0; border: 1px solid #3a3028; background: #120e0c;
-  border-radius: 50%; width: 24px; height: 24px; margin: 0 auto;
-  cursor: pointer; font-size: 0; color: transparent;
-  transition: all 0.15s ease;
-  background-size: 22px 22px; background-repeat: no-repeat; background-position: center center;
+  padding: 0; 
+  border: 1px solid #3a3028; 
+  background: #120e0c; 
+  border-radius: 50%; 
+  width: 28px; 
+  height: 28px; 
+  margin: 0 auto; 
+  cursor: pointer; 
+  transition: all 0.15s ease; 
+  background-size: 24px 24px; 
+  background-repeat: no-repeat; 
+  background-position: center center; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  position: relative;
 }
 .token-btn:not(:disabled):hover { transform: translateY(-2px); border-color: #d4af37; box-shadow: 0 4px 8px rgba(0,0,0,0.6); }
 .token-btn.selected { border-color: #ffe099; box-shadow: 0 0 10px #ffe099, 0 2px 4px rgba(0,0,0,0.8); }
-.token-btn span { font-size: 0.55rem; display: block; margin-top: 24px; color: var(--text-muted); text-align: center; font-family: 'Orbitron', sans-serif; }
+
+.token-count-label {
+  font-size: 0.65rem; 
+  color: var(--text-muted); 
+  text-align: center; 
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  line-height: 1;
+}
 
 .token-btn-w { background-image: var(--c-diamond); }
 .token-btn-u { background-image: var(--c-sapphire); }
@@ -459,10 +463,7 @@ html, body {
 .token-btn-k { background-image: var(--c-onyx); }
 
 .btn-primary {
-  width: 100%; padding: 6px; border: 1px solid #8a6418; border-radius: 3px; 
-  background: linear-gradient(180deg, #a67c2e, #6e4e13); color: #f4f0ea;
-  font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  width: 100%; padding: 6px; border: 1px solid #8a6418; border-radius: 3px; background: linear-gradient(180deg, #a67c2e, #6e4e13); color: #f4f0ea; font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 .btn-primary:not(:disabled):hover { filter: brightness(1.15); box-shadow: 0 2px 6px rgba(166,124,46,0.4); }
 .btn-primary:disabled { opacity: 0.15; cursor: not-allowed; }
@@ -477,91 +478,43 @@ html, body {
 .row-header.lv2 { border-color: #b0b5b8; }
 .row-header.lv1 { border-color: #a1704a; }
 .deck-count { font-size: 0.6rem; color: var(--text-muted); font-family: 'Orbitron', sans-serif; }
-
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
 /* ── Splendor Card UI ──────────────────────────────────────── */
 .card {
-  background: var(--card-bg); background-size: cover; background-position: center;
-  border: 1px solid var(--card-border); border-radius: var(--radius-sm);
-  display: flex; flex-direction: column; justify-content: space-between;
-  min-height: 105px; position: relative;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-  transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
-  overflow: hidden;
+  background: var(--card-bg); background-size: cover; background-position: center; border: 1px solid var(--card-border); border-radius: var(--radius-sm); display: flex; flex-direction: column; justify-content: space-between; min-height: 105px; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s; overflow: hidden;
 }
-
-.card-content-wrapper {
-  display: flex; flex-direction: column; justify-content: space-between;
-  width: 100%; height: 100%; flex: 1; padding: 5px;
-  background: linear-gradient(180deg, rgba(16, 12, 10, 0.75) 0%, rgba(16, 12, 10, 0.2) 50%, rgba(16, 12, 10, 0.85) 100%);
-}
-
+.card-content-wrapper { display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; flex: 1; padding: 5px; background: linear-gradient(180deg, rgba(16, 12, 10, 0.75) 0%, rgba(16, 12, 10, 0.2) 50%, rgba(16, 12, 10, 0.85) 100%); }
 .card:not(.empty):hover { transform: translateY(-3px); border-color: #d4af37; box-shadow: 0 8px 20px rgba(0,0,0,0.7); z-index: 2; }
 
-@keyframes cardDealIn {
-  from { opacity: 0; transform: translateY(-20px) scale(0.9); filter: brightness(1.4); }
-  to { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
-}
+@keyframes cardDealIn { from { opacity: 0; transform: translateY(-20px) scale(0.9); filter: brightness(1.4); } to { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); } }
 .animate-deal { animation: cardDealIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards !important; }
-
-@keyframes cardBuyFly {
-  0% { transform: scale(1) translateY(0); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-  30% { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); }
-  100% { transform: scale(0.8) translateY(-40px); opacity: 0; filter: brightness(0.6); }
-}
+@keyframes cardBuyFly { 0% { transform: scale(1) translateY(0); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.5); } 30% { transform: scale(1.05) translateY(-5px); opacity: 1; border-color: #ffe099; box-shadow: 0 12px 24px rgba(212,175,55,0.4); } 100% { transform: scale(0.8) translateY(-40px); opacity: 0; filter: brightness(0.6); } }
 .animate-buy { animation: cardBuyFly 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; pointer-events: none; z-index: 99; }
-
-@keyframes cardReserveSink {
-  0% { transform: scale(1) translateY(0); opacity: 1; }
-  100% { transform: scale(0.7) translateY(40px); opacity: 0; }
-}
+@keyframes cardReserveSink { 0% { transform: scale(1) translateY(0); opacity: 1; } 100% { transform: scale(0.7) translateY(40px); opacity: 0; } }
 .animate-reserve { animation: cardReserveSink 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; pointer-events: none; z-index: 99; }
 
 .card-top { display: flex; justify-content: space-between; align-items: center; }
 .card-pts { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(255,255,255,0.4); }
-.card-gem-icon {
-  width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 0; color: transparent !important; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  background-size: cover; background-position: center;
-}
-
+.card-gem-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0; color: transparent !important; box-shadow: 0 2px 4px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
 .card-costs { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 4px; }
-.cost-dot {
-  display: flex; align-items: center; gap: 2px; font-size: 0.6rem; font-weight: 700;
-  padding: 1px 3px; border-radius: 2px; background: rgba(0,0,0,0.75); border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-}
+.cost-dot { display: flex; align-items: center; gap: 2px; font-size: 0.6rem; font-weight: 700; padding: 1px 3px; border-radius: 2px; background: rgba(0,0,0,0.75); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .cost-dot.free { opacity: 0.1; }
 .cost-dot-circle { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background-size: cover; background-position: center; }
-
 .card-actions { display: flex; gap: 3px; margin-top: 4px; }
 
-.btn-card {
-  flex: 1; padding: 2px 0; border: 1px solid #4a3e35; background: rgba(28, 23, 20, 0.9);
-  color: var(--text); border-radius: 2px; font-size: 0.55rem; font-weight: 600; cursor: pointer; transition: all 0.1s;
-  text-shadow: 0 1px 2px #000;
-}
+.btn-card { flex: 1; padding: 2px 0; border: 1px solid #4a3e35; background: rgba(28, 23, 20, 0.9); color: var(--text); border-radius: 2px; font-size: 0.55rem; font-weight: 600; cursor: pointer; transition: all 0.1s; text-shadow: 0 1px 2px #000; }
 .btn-card:not(:disabled):hover { background: #d4af37; color: #110e0c; border-color: #d4af37; font-weight: 700; text-shadow: none; }
 .btn-card:disabled { opacity: 0.15; cursor: not-allowed; }
-
 .card.empty { border-style: dashed; border-color: #4a3e35; background: rgba(0,0,0,0.2); opacity: 0.3; justify-content: center; align-items: center; font-size: 0.6rem; min-height: 105px; animation: none; box-shadow: none; }
 
 /* ── Reserved Hand ────────────────────────────────────────── */
 .reserved-section { margin-top: 6px; background: rgba(0, 0, 0, 0.35); border: 1px dashed #9c7a3c; padding: 6px; border-radius: var(--radius); transition: all 0.3s ease; }
 
 /* ── Modal Popups ─────────────────────────────────────────── */
-.modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(5px);
-  display:flex; align-items:center; justify-content:center; padding:20px; z-index:200;
-  opacity:0; pointer-events:none; transition:opacity 0.3s ease;
-}
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:20px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
 .modal-overlay.show { opacity:1; pointer-events:all; }
-.modal { 
-  background:#1e1814; border:2px solid #d4af37; border-radius:8px; padding:24px; 
-  max-width:420px; width:100%; text-align:center; box-shadow: 0 10px 35px rgba(0,0,0,0.9); 
-  position: relative;
-}
+.modal { background:#1e1814; border:2px solid #d4af37; border-radius:8px; padding:24px; max-width:420px; width:100%; text-align:center; box-shadow: 0 10px 35px rgba(0,0,0,0.9); position: relative; }
 .modal-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: #d4af37; margin-bottom: 12px; text-shadow: var(--glow-warm); font-weight:900; }
 
 .rule-box { text-align: left; background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.15); padding: 12px; border-radius: 6px; margin: 12px 0; font-size: 0.85rem; line-height: 1.6; }
@@ -572,59 +525,18 @@ html, body {
 .btn-replay:hover { filter: brightness(1.15); }
 
 /* ── Tutorial ─────────────────────────────────────────── */
-.tutorial-highlight {
-  border: 3px solid #ffcc00 !important;
-  box-shadow: 0 0 30px rgba(255, 204, 0, 0.6) !important;
-  transform: scale(1.005);
-  transition: all 0.3s ease;
-}
+.tutorial-highlight { border: 3px solid #ffcc00 !important; box-shadow: 0 0 30px rgba(255, 204, 0, 0.6) !important; transform: scale(1.005); transition: all 0.3s ease; }
+.tutorial-embedded-card { background: rgba(22, 16, 12, 0.98); border-left: 4px solid #ffcc00; border-top: 1px solid rgba(255, 204, 0, 0.2); border-right: 1px solid rgba(255, 204, 0, 0.1); border-bottom: 1px solid rgba(255, 204, 0, 0.1); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 8px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7); display: none; animation: embedFadeIn 0.4s ease forwards; }
 
-.tutorial-embedded-card {
-  background: rgba(22, 16, 12, 0.98);
-  border-left: 4px solid #ffcc00;
-  border-top: 1px solid rgba(255, 204, 0, 0.2);
-  border-right: 1px solid rgba(255, 204, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 204, 0, 0.1);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  margin-top: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-  display: none;
-  animation: embedFadeIn 0.4s ease forwards;
-}
-
-@keyframes embedFadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.tutorial-header { 
-  font-family: 'Cinzel', serif; font-size: 1.1rem; 
-  color: #ffcc00 !important; 
-  margin-bottom: 6px; font-weight: 900; 
-  letter-spacing: 0.06em; 
-  text-shadow: 0 0 8px rgba(255, 204, 0, 0.4), 0 1px 2px #000000;
-}
-
-.tutorial-text { 
-  font-size: 0.88rem; 
-  color: #ffffff !important; 
-  line-height: 1.6; margin-bottom: 12px; text-align: left; 
-  font-weight: 700; 
-  text-shadow: 0 1px 3px #000000;
-}
-
+@keyframes embedFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.tutorial-header { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #ffcc00 !important; margin-bottom: 6px; font-weight: 900; letter-spacing: 0.06em; text-shadow: 0 0 8px rgba(255, 204, 0, 0.4), 0 1px 2px #000000; }
+.tutorial-text { font-size: 0.88rem; color: #ffffff !important; line-height: 1.6; margin-bottom: 12px; text-align: left; font-weight: 700; text-shadow: 0 1px 3px #000000; }
 .tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
 .tutorial-dots { display: flex; gap: 6px; }
 .t-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 204, 0, 0.2); }
 .t-dot.active { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
 
-.btn-tutorial-next {
-  padding: 6px 16px; background: linear-gradient(180deg, #ffe680, #ffcc00, #b38600);
-  color: #110e0c; border: none; border-radius: 4px; font-size: 0.78rem; font-weight: 800; cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  transition: filter 0.15s;
-}
+.btn-tutorial-next { padding: 6px 16px; background: linear-gradient(180deg, #ffe680, #ffcc00, #b38600); color: #110e0c; border: none; border-radius: 4px; font-size: 0.78rem; font-weight: 800; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.5); transition: filter 0.15s; }
 .btn-tutorial-next:hover { filter: brightness(1.1); }
 
 /* ── RWD ────────────────────────────────────────── */
@@ -646,7 +558,8 @@ html, body {
   .earned-nobles-panel { min-width: 100%; }
   .action-title { font-size: 0.65rem; margin-bottom: 4px; }
   .act-group { padding: 4px; }
-  .token-btn { width: 20px; height: 20px; background-size: 18px 18px; }
+  .token-btn { width: 22px; height: 22px; background-size: 18px 18px; }
+  .token-count-label { font-size: 0.6rem; }
   .btn-primary { padding: 4px; font-size: 0.65rem; }
   .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .card { min-height: 92px; }
@@ -662,54 +575,20 @@ html, body {
   .ach-latest-display { font-size: 0.75rem; }
 }
 
-/* ── 手機版全螢幕無捲動佈局 (360 / 390 / 414px) ───────────── */
 @media (max-width: 430px) {
-  /* 整體容器：固定視窗高度，禁止捲動 */
-  html, body {
-    padding: 2px;
-    overflow: hidden;
-    height: 100dvh;
-    height: 100vh;
-  }
-
-  .shell {
-    max-width: 100%;
-    height: calc(100dvh - 4px);
-    height: calc(100vh - 4px);
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow: visible;
-  }
-
-  /* ── 頂部資訊列：緊湊化 */
-  .top-meta-wrap {
-    padding: 3px 6px;
-    margin-bottom: 2px;
-    flex-shrink: 0;
-  }
+  html, body { padding: 2px; overflow: hidden; height: 100dvh; height: 100vh; }
+  .shell { max-width: 100%; height: calc(100dvh - 4px); height: calc(100vh - 4px); display: flex; flex-direction: column; gap: 0; overflow: visible; }
+  .top-meta-wrap { padding: 3px 6px; margin-bottom: 2px; flex-shrink: 0; }
   .game-title { font-size: 0.85rem; letter-spacing: 0.06em; }
   .status-bar { gap: 3px; }
   .music-btn { padding: 2px 5px; font-size: 0.6rem; gap: 2px; }
   .status-pill { padding: 2px 5px; font-size: 0.6rem; }
   .status-pill strong { font-size: 0.6rem; }
-
-  /* ── 成就欄：最小化 */
-  .achievement-banner {
-    padding: 3px 8px;
-    margin-bottom: 2px;
-    flex-shrink: 0;
-  }
+  .achievement-banner { padding: 3px 8px; margin-bottom: 2px; flex-shrink: 0; }
   .ach-badge-title { font-size: 0.55rem; padding: 1px 4px; }
   .ach-latest-display { font-size: 0.62rem; }
   .ach-stats-summary { font-size: 0.6rem; padding: 2px 5px; }
-
-  /* ── 貴族欄：扁平橫排 */
-  .nobles-section {
-    margin-bottom: 2px;
-    padding: 1px;
-    flex-shrink: 0;
-  }
+  .nobles-section { margin-bottom: 2px; padding: 1px; flex-shrink: 0; }
   .section-title { font-size: 0.55rem; margin-bottom: 2px; }
   .nobles-grid { gap: 4px; overflow-x: auto; }
   .noble-card { min-width: 56px; height: 56px; flex-shrink: 0; }
@@ -719,69 +598,34 @@ html, body {
   .noble-req-item { gap: 2px; }
   .noble-overlay { padding: 3px; }
   .cost-dot-circle { width: 5px; height: 5px; }
-
-  /* ── 玩家資產欄：橫排壓縮 */
-  .dashboard-container {
-    flex-direction: row;
-    gap: 4px;
-    margin-bottom: 2px;
-    flex-shrink: 0;
-  }
-  .dashboard {
-    flex: 3;
-    padding: 4px 6px;
-  }
+  .dashboard-container { flex-direction: row; gap: 4px; margin-bottom: 2px; flex-shrink: 0; }
+  .dashboard { flex: 3; padding: 4px 6px; }
   .res-grid { gap: 2px; }
   .res-block { gap: 3px; }
   .res-circle { width: 14px; height: 14px; }
   .res-count { font-size: 0.72rem; }
   .res-bonus { font-size: 0.42rem; margin-top: 1px; }
   .cap-bar { font-size: 0.5rem; margin-top: 2px; }
-
-  .earned-nobles-panel {
-    min-width: 0;
-    flex: 1;
-    padding: 4px;
-  }
+  .earned-nobles-panel { min-width: 0; flex: 1.5; padding: 4px; }
   .earned-nobles-title { font-size: 0.5rem; margin-bottom: 2px; }
-  .earned-nobles-list { max-height: 36px; gap: 3px; }
+  .earned-nobles-list { max-height: 24px; gap: 3px; }
   .earned-noble-mini img { width: 12px; height: 12px; }
   .earned-noble-mini span { font-size: 0.42rem; }
-
-  /* ── 行動面板：橫排極致壓縮 */
-  .action-panel {
-    padding: 4px 6px;
-    margin-bottom: 2px;
-    flex-shrink: 0;
-  }
+  .action-panel { padding: 4px 6px; margin-bottom: 2px; flex-shrink: 0; }
   .action-row { gap: 4px; }
   .act-group { padding: 3px; }
   .action-title { font-size: 0.55rem; margin-bottom: 3px; }
   .token-selectors { gap: 2px; margin-bottom: 4px; }
-  .token-btn { width: 18px; height: 18px; background-size: 16px 16px; }
+  .token-btn { width: 18px; height: 18px; background-size: 14px 14px; }
+  .token-count-label { font-size: 0.5rem; }
   .btn-primary { padding: 3px; font-size: 0.58rem; }
   .msg-box { font-size: 0.55rem; min-height: 8px; margin-top: 1px; }
-
-  /* ── 卡牌矩陣：固定高度確保顯示 */
-  .board-matrix {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 1px;
-    margin-bottom: 2px;
-  }
+  .board-matrix { flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; padding: 1px; margin-bottom: 2px; }
   .board-row { margin-bottom: 0; }
   .row-header { margin-bottom: 2px; padding-left: 4px; }
   .row-header .section-title { font-size: 0.52rem; }
   .deck-count { font-size: 0.48rem; }
-  .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 3px;
-  }
-
-  /* 卡牌本身：固定高度 */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
   .card { min-height: 72px; height: 72px; }
   .card-content-wrapper { padding: 3px; }
   .card-pts { font-size: 0.72rem; }
@@ -791,23 +635,16 @@ html, body {
   .card-actions { gap: 2px; margin-top: 2px; }
   .btn-card { font-size: 0.44rem; padding: 1px 0; }
   .card.empty { min-height: 72px; height: 72px; font-size: 0.48rem; }
-
-  /* ── 保留區：緊湊 */
-  .reserved-section {
-    flex-shrink: 0;
-    margin-top: 0;
-    padding: 3px 5px;
-  }
+  .reserved-section { flex-shrink: 0; margin-top: 0; padding: 3px 5px; }
   .reserved-section .section-title { font-size: 0.52rem; }
   .reserved-section .grid-4 { gap: 3px; }
   .reserved-section .card { min-height: 60px; height: 60px; }
-
-  /* ── 隱藏教學卡片避免佔空間（教學模式下由 JS 控制顯示） */
   .tutorial-embedded-card { padding: 6px 8px; margin-top: 4px; }
   .tutorial-header { font-size: 0.82rem; }
   .tutorial-text { font-size: 0.72rem; line-height: 1.4; margin-bottom: 8px; }
   .btn-tutorial-next { padding: 4px 10px; font-size: 0.68rem; }
   .t-dot { width: 6px; height: 6px; }
+  .talent-pool-modal-grid { grid-template-columns: 1fr; max-height: 180px; }
 }
 </style>
 </head>
@@ -819,13 +656,14 @@ html, body {
 <audio id="sfx-reserve" src="https://assets.mixkit.co/active_storage/sfx/3175/3175-preview.mp3"></audio>
 <audio id="sfx-select" src="https://assets.mixkit.co/active_storage/sfx/2073/2073-preview.mp3"></audio>
 <audio id="sfx-unselect" src="https://assets.mixkit.co/active_storage/sfx/2585/2585-preview.mp3"></audio>
-
-<!-- 👑 貴族拜訪音效更新 ──-->
 <audio id="sfx-noble-male" src="https://files.catbox.moe/q5v1cb.mp3"></audio>
 <audio id="sfx-noble-female" src="https://files.catbox.moe/fjlwtl.mp3"></audio>
 
-<!-- 🎬 新增音效：成就解鎖提示 -->
-<audio id="sfx-achievement" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+<audio id="sfx-ach-easy" src="https://assets.mixkit.co/active_storage/sfx/253/253-preview.mp3"></audio>
+<audio id="sfx-ach-normal" src="https://assets.mixkit.co/active_storage/sfx/2058/2058-preview.mp3"></audio>
+<audio id="sfx-ach-hard" src="https://assets.mixkit.co/active_storage/sfx/2067/2067-preview.mp3"></audio>
+<audio id="sfx-ach-expert" src="https://assets.mixkit.co/active_storage/sfx/2063/2063-preview.mp3"></audio>
+<audio id="sfx-ach-master" src="https://assets.mixkit.co/active_storage/sfx/2059/2059-preview.mp3"></audio>
 
 <div class="shell">
   <div class="top-meta-wrap">
@@ -833,15 +671,14 @@ html, body {
       <h1 class="game-title">SPLENDOR</h1>
     </header>
     <div class="status-bar">
-      <button id="toggle-music-btn" class="music-btn">🎵 音樂：開啟</button>
-      <button class="music-btn" style="border-color:#8a6418" onclick="forceStartOverviewTutorial()">📖 完整教學</button>
+      <button class="music-btn" style="border-color:#2ecc71; color:#2ecc71;" onclick="playUniformSfx(); saveCurrentProgress()">💾 保存進度</button>
+      <button class="music-btn" style="border-color:#d4af37" onclick="playUniformSfx(); openGameOptionsModal()">⚙️ 遊戲選項</button>
       <div class="status-pill">回合 <strong id="turn-txt">0</strong></div>
       <div class="status-pill">威望 <strong id="score-txt" style="color:#e6b464; text-shadow: var(--glow-warm);">0</strong> / 15</div>
     </div>
   </div>
 
-  <!-- 🏆 全新：最新成就公告欄 (點擊可查看累積歷史紀錄) -->
-  <div class="achievement-banner" id="ach-banner-btn" onclick="openAchievementHistory()">
+  <div class="achievement-banner" id="ach-banner-btn" onclick="playUniformSfx(); openAchievementHistory()">
     <div class="ach-latest-container">
       <span class="ach-badge-title">Latest Achievement</span>
       <div class="ach-latest-display" id="ach-latest-field">🏆 暫無新成就，繼續努力收購！</div>
@@ -856,7 +693,7 @@ html, body {
       <div class="tutorial-text">這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-0"></div>
-        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
       </div>
     </div>
   </section>
@@ -868,6 +705,13 @@ html, body {
     </section>
     
     <section class="earned-nobles-panel">
+      <div class="assistant-subpanel">
+        <div class="earned-nobles-title" style="color: #ffe099;">🤝 首席輔助官</div>
+        <div id="assistant-display-layer" style="display: flex; align-items: center; gap: 6px; padding-top: 4px;">
+          <p style="font-size:0.55rem; color:var(--text-muted);">孤軍奮戰中</p>
+        </div>
+      </div>
+      
       <div class="earned-nobles-title">👑 已拜訪的貴族</div>
       <div class="earned-nobles-list" id="earned-nobles-layer">
         <p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>
@@ -877,10 +721,10 @@ html, body {
   
   <div class="tutorial-embedded-card" id="embed-card-1" style="margin-top: -4px; margin-bottom: 8px;">
     <div class="tutorial-header">🪙 皇家金庫 (資產欄) & 貴族隨行</div>
-    <div class="tutorial-text">左側顯示您當前「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。右側新空間則會即時顯示「已獲得的貴族」！注意：身上籌碼總上限為 10 顆！</div>
+    <div class="tutorial-text">左側顯示您當前「寶石籌碼袋（數字）」與「發展卡永久產量（數字）」。右側新空間則會即時顯示「已獲得的貴族」！注意：身上籌碼總上限為 10 顆！</div>
     <div class="tutorial-footer">
       <div class="tutorial-dots" id="dots-1"></div>
-      <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+      <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
     </div>
   </div>
 
@@ -889,12 +733,12 @@ html, body {
       <div class="act-group">
         <p class="action-title">🟢 拿 3 個不同色籌碼</p>
         <div class="token-selectors" id="diff-selectors"></div>
-        <button class="btn-primary" id="btn-do-diff" disabled>確認收下 (3色)</button>
+        <button class="btn-primary" id="btn-do-diff" disabled onclick="handleDoDiffClick()">確認收下 (3色)</button>
       </div>
       <div class="act-group">
         <p class="action-title">🟡 拿 2 個同色籌碼</p>
         <div class="token-selectors" id="same-selectors"></div>
-        <button class="btn-primary" id="btn-do-same" disabled>確認收下 (2色)</button>
+        <button class="btn-primary" id="btn-do-same" disabled onclick="handleDoSameClick()">確認收下 (2色)</button>
       </div>
     </div>
     <div class="msg-box" id="error-msg"></div>
@@ -903,7 +747,7 @@ html, body {
       <div class="tutorial-text">輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-2"></div>
-        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
       </div>
     </div>
   </section>
@@ -938,7 +782,7 @@ html, body {
       <div class="tutorial-text">核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-3"></div>
-        <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
+        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
       </div>
     </div>
   </section>
@@ -957,29 +801,75 @@ html, body {
   </section>
 </div>
 
+<!-- ⚙️ 遊戲選項總統合彈窗面 -->
+<div class="modal-overlay" id="game-options-modal">
+  <div class="modal" style="max-width:460px;">
+    <h2 class="modal-title">⚙️ 皇家貿易商會選項</h2>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">調配您的經商偏好與難易度策略</p>
+    
+    <p style="font-size:0.75rem; color:#ffe099; text-align:left; font-weight:700; margin-top:8px;">⚖️ 難易度設定 (中途變更會清空人才庫)：</p>
+    <div class="diff-setting-box">
+      <button class="diff-opt-btn" data-diff="easy" onclick="playUniformSfx(); changeGameDifficultyWithWarning('easy')">簡單 (30回/5貴族)</button>
+      <button class="diff-opt-btn" data-diff="normal" onclick="playUniformSfx(); changeGameDifficultyWithWarning('normal')">普通 (28回/3貴族)</button>
+      <button class="diff-opt-btn" data-diff="hard" onclick="playUniformSfx(); changeGameDifficultyWithWarning('hard')">困難 (25回/3貴族)</button>
+      <button class="diff-opt-btn" data-diff="expert" onclick="playUniformSfx(); changeGameDifficultyWithWarning('expert')">極限 (22回/5貴族)</button>
+      <button class="diff-opt-btn" data-diff="master" onclick="playUniformSfx(); changeGameDifficultyWithWarning('master')">神人 (20回/5貴族)</button>
+    </div>
+
+    <div class="menu-grid-layout" style="margin-top: 12px;">
+      <button id="menu-toggle-music" class="menu-row-btn" onclick="playUniformSfx(); handleMusicToggle()">🎵 背景音樂：開啟</button>
+      <button id="menu-toggle-sfx" class="menu-row-btn" onclick="playUniformSfx(); handleSfxToggle()">🔊 遊戲音效：開啟</button>
+      <button class="menu-row-btn" style="border-color:#ffe099;" onclick="playUniformSfx(); openTalentPoolModal()">🏛️ 挑選首席輔助官 (人才庫)</button>
+      <button class="menu-row-btn" style="background:rgba(212,175,55,0.15);" onclick="playUniformSfx(); triggerMenuTutorial()">📖 重新啟動完整欄位教學</button>
+    </div>
+    
+    <button class="btn-replay" style="background:#3a2e22; border:1px solid #d4af37;" onclick="playUniformSfx(); closeGameOptionsModal()">返回大會堂</button>
+  </div>
+</div>
+
+<!-- 🏛️ 獨立人才庫人才挑選彈窗面 -->
+<div class="modal-overlay" id="talent-pool-modal">
+  <div class="modal" style="max-width:460px;">
+    <h2 class="modal-title">🏛️ 皇家貴族人才庫</h2>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">點擊選定一位作為下一局的「首席輔助官」</p>
+    
+    <div class="talent-pool-modal-grid" id="talent-pool-modal-layer"></div>
+    <p style="font-size:0.65rem; color:#e67e22; margin-top:6px;">* 提示：新設定的首席輔助官將在重開新局時正式隨行效忠！</p>
+    
+    <button class="btn-replay" onclick="playUniformSfx(); closeTalentPoolModal()">儲存並關閉</button>
+  </div>
+</div>
+
+<!-- 📜 遊戲說明調整 -->
 <div class="modal-overlay" id="tutorial-start-modal">
-  <div class="modal" style="max-width: 460px;">
+  <div class="modal" style="max-width: 480px; max-height: 90vh; overflow-y: auto;">
     <span style="font-size:2.2rem;">📜</span>
     <h2 class="modal-title">皇家大會堂：貿易法則</h2>
     
     <div class="rule-box">
-      <div class="rule-title">👑 遊戲目標</div>
-      <p style="margin-bottom: 10px; color:#c7bfb5;">精明地調配資源，透過募集籌碼與收購產業卡，**最先累積達到 15 分威望值** 的工藝大師將獲得最終勝利！</p>
+      <div class="rule-title">👑 1. 遊戲目標</div>
+      <p style="margin-bottom: 12px; color:#c7bfb5;">精明地調配資源，透過募集籌碼與收購產業卡，**最先累積達到 15 分威望值** 的工藝大師將獲得最終勝利！</p>
       
-      <div class="rule-title">🔄 核心遊戲流程 (每回合步驟)</div>
-      <div class="rule-step"><strong>1. 執行動作 (三選一)：</strong></div>
-      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 3 顆不同顏色的寶石籌碼</p>
-      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 2 顆相同顏色的寶石籌碼 (庫存需為 2 顆以上)</p>
-      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">• 支付相應代價 <strong>購買</strong> 或 <strong>保留</strong> 一張發展卡</p>
+      <div class="rule-title">🔄 2. 核心遊戲流程 (每回合步驟)</div>
+      <div class="rule-step"><strong>執行動作 (三選一)：</strong></div>
+      <p style="margin-left: 14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 3 顆不同顏色的寶石籌碼</p>
+      <p style="margin-left: 14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 2 顆相同顏色的寶石籌碼 (庫存需為 2 顆以上)</p>
+      <p style="margin-left: 14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">• 支付相應代價 <strong>購買</strong> 或 <strong>保留</strong> 一張發展卡</p>
       
-      <div class="rule-step"><strong>2. 貴族檢定：</strong></div>
-      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">• 動作用完後，系統將自動檢查您的發展卡產量是否滿足貴族需求。若符合，貴族將自動來訪並賦予分數。</p>
+      <div class="rule-title">🔄 3. 貴族檢定與回合結束</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; line-height:1.5;">每個行動結束後，系統將自動檢查名下卡片減免產量。若滿足任何貴族板塊需求，該貴族將永久進駐提供額外威望。隨後本回合正式結束，移交經商主控權。</p>
       
-      <div class="rule-step"><strong>3. 回合結束：</strong></div>
-      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted);">• 移交主控權給下一位，開啟新的回合。</p>
+      <div class="rule-title">⚖️ 4. 經商難易度與人才庫規則</div>
+      <p style="font-size:0.8rem; color:#ffe099; margin-bottom:4px;">預設為「簡單」模式。您可以在「遊戲選項 ⚙️」中點選進行更動調整：</p>
+      <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>簡單</strong>：限制 30 回合內通關，起始貴族板塊 5 塊</p>
+      <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>普通</strong>：限制 28 回合內通關，起始貴族板塊 3 塊</p>
+      <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>困難</strong>：限制 25 回合內通關，起始貴族板塊 3 塊</p>
+      <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>極限</strong>：限制 22 回合內通關，起始貴族板塊 5 塊</p>
+      <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:4px;">• <strong>神人</strong>：限制 20 回合內通關，起始貴族板塊 5 塊</p>
+      <p style="font-size:0.78rem; color:#e67e22; line-height:1.4;">⚠️ 提示：新對局將自動繼承。若在中途變更難易度設定，為求公平，人才庫將被全部重置清空，無名貴族也會全面同步重置。</p>
     </div>
 
-    <button class="btn-replay" id="btn-start-field-tutorial">開始分解欄位教學</button>
+    <button class="btn-replay" id="btn-start-field-tutorial" onclick="playUniformSfx();">開始分解欄位教學</button>
   </div>
 </div>
 
@@ -989,26 +879,27 @@ html, body {
     <h2 class="modal-title" style="letter-spacing: 0.05em;">璀璨寶石交易殿堂</h2>
     <p style="font-size:0.95rem; color:#ffe099; line-height:1.6; font-weight:600; margin: 15px 0;">歡迎進入璀璨寶石交易殿堂！</p>
     <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">皇家金庫已備妥，祝您在今日的貿易戰局中日進斗金、奪得最高榮譽。</p>
-    <button class="btn-replay" id="btn-welcome-confirm">開啟音樂並進入遊戲</button>
+    <button class="btn-replay" id="btn-welcome-confirm" onclick="playUniformSfx();">開啟音樂並進入遊戲</button>
   </div>
 </div>
 
-<!-- 🏆 全新：成就歷史履歷累積彈窗 (點擊欄位時觸開) -->
-<div class="modal-overlay" id="ach-history-modal">
+<div class="modal-overlay" id="ach-history-modal-container">
   <div class="modal ach-history-modal">
     <h2 class="modal-title">🏆 皇家榮譽堂</h2>
     <p style="font-size:0.8rem; color:var(--text-muted);">在此查閱您在本局中所達成的貿易壯舉軌跡</p>
     <div class="ach-matrix-grid" id="ach-matrix-injector"></div>
-    <button class="btn-replay" style="background: #3a2e22; border: 1px solid #d4af37;" onclick="closeAchievementHistory()">返回大會堂</button>
+    <button class="btn-replay" style="background: #3a2e22; border: 1px solid #d4af37;" onclick="playUniformSfx(); closeAchievementHistory()">返回大會堂</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="win-modal">
   <div class="modal">
     <span style="font-size:2.5rem;">🏆</span>
-    <h2 class="modal-title">璀璨大師，實至名規！</h2>
-    <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;" id="modal-body-txt"></p>
-    <button class="btn-replay" id="btn-restart">重開新局</button>
+    <h2 class="modal-title">璀璨大師，實至名歸！</h2>
+    <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6; margin-bottom:8px;" id="modal-body-txt"></p>
+    <p style="font-size:0.8rem; color:#ffe099; line-height:1.4;" id="modal-diff-result-txt"></p>
+    
+    <button class="btn-replay" id="btn-restart" onclick="playUniformSfx();">重開新局</button>
   </div>
 </div>
 
@@ -1024,6 +915,18 @@ const CUSTOM_CARD_IMAGES = {
   w: ["https://i.ibb.co/DDkcxCww/1.jpg", "https://i.ibb.co/Z6wkT9sw/2.jpg", "https://i.ibb.co/dstw94C5/3.jpg", "https://i.ibb.co/HLcpg8kB/4.jpg", "https://i.ibb.co/p6Y1Tt5M/5.jpg"],
   k: ["https://i.ibb.co/6cKPW5Ff/1.jpg", "https://i.ibb.co/7tRFCqBb/2.jpg", "https://i.ibb.co/gbGqKfnv/3.jpg", "https://i.ibb.co/zHS6cht3/4.jpg", "https://i.ibb.co/SwrD6WdV/5.jpg"]
 };
+
+const NOON_NOBLE_IMAGES = [
+  "https://i.ibb.co/zHGC8vsm/image.png", "https://i.ibb.co/QvHvZZWc/image.png", "https://i.ibb.co/hzw3Vfm/image.png",
+  "https://i.ibb.co/nNSjxvvd/image.png", "https://i.ibb.co/67w5Lbjg/image.png", "https://i.ibb.co/8gJK15HN/image.png",
+  "https://i.ibb.co/DDCcYWwX/image.png", "https://i.ibb.co/twnJGmm0/image.png", "https://i.ibb.co/rGGhc41x/image.png",
+  "https://i.ibb.co/JjvCKgMm/image.png", "https://i.ibb.co/xSv0th2K/image.png", "https://i.ibb.co/dwsGHwHv/image.png",
+  "https://i.ibb.co/GQ2Yh0yH/image.png", "https://i.ibb.co/C3J5y1YY/image.png", "https://i.ibb.co/zTgwrwjz/image.png",
+  "https://i.ibb.co/Q7zdjpKt/image.png", "https://i.ibb.co/7tghmFD6/image.png", "https://i.ibb.co/1tvK72P3/image.png",
+  "https://i.ibb.co/0pZCRHx7/image.png", "https://i.ibb.co/PsNV1NKC/image.png", "https://i.ibb.co/N2g1rhFp/image.png",
+  "https://i.ibb.co/KcbQYgmQ/image.png", "https://i.ibb.co/PzjqmHYQ/image.png", "https://i.ibb.co/xSJsNHRv/image.png",
+  "https://i.ibb.co/N28cjs5Z/image.png"
+];
 
 let lastRenderedCardIds = new Set();
 let lastPlayerState = null; 
@@ -1098,7 +1001,72 @@ const ALL_NOBLES_POOL = [
   {id:"n25", name:"13 伊莎貝拉", gender:"female", points:3, img:"https://i.ibb.co/N28cjs5Z/image.png", req:{w:3, g:3, k:3}}
 ];
 
-// 🏆 30 項單人模式成就元數據庫
+let globalTalentPoolIds = [];   
+let selectedAssistantId = null; 
+let currentDifficulty = 'easy'; 
+let isMusicMuted = false;
+let isSfxMuted = false; 
+
+// 統一按鈕與選單點擊基本音效 (不影響核心動作確認音效)
+function playUniformSfx() {
+  const uniformSfx = document.getElementById('sfx-select');
+  if (uniformSfx && !isSfxMuted) {
+    uniformSfx.currentTime = 0;
+    uniformSfx.play().catch(e => console.log(e));
+  }
+}
+
+// 專門播放按下確認拿取籌碼時的音效
+function playActionGemSfx() {
+  const gemSfx = document.getElementById('sfx-gem');
+  if (gemSfx && !isSfxMuted) {
+    gemSfx.currentTime = 0;
+    gemSfx.play().catch(e => console.log(e));
+  }
+}
+
+function loadTalentPool() {
+  const savedProgress = localStorage.getItem('splendor_saved_progress_2026');
+  if (savedProgress) {
+    try {
+      const data = JSON.parse(savedProgress);
+      currentDifficulty = data.difficulty || 'easy';
+      globalTalentPoolIds = data.talentPool || [];
+      selectedAssistantId = data.selectedAssistant || null;
+      if (globalTalentPoolIds.length === 0) {
+        selectedAssistantId = null;
+      }
+    } catch(e) {
+      fallbackToLegacyStorage();
+    }
+  } else {
+    fallbackToLegacyStorage();
+  }
+}
+
+function fallbackToLegacyStorage() {
+  const saved = localStorage.getItem('splendor_noble_talent_pool_2026');
+  if (saved) {
+    try { globalTalentPoolIds = JSON.parse(saved); } catch(e) { globalTalentPoolIds = []; }
+  }
+  const savedDiff = localStorage.getItem('splendor_difficulty_2026');
+  if (savedDiff) currentDifficulty = savedDiff;
+}
+
+function saveCurrentProgress() {
+  const progressData = {
+    difficulty: currentDifficulty,
+    talentPool: globalTalentPoolIds,
+    selectedAssistant: selectedAssistantId
+  };
+  localStorage.setItem('splendor_saved_progress_2026', JSON.stringify(progressData));
+  alert('💾 皇家進度已成功保存！(已記錄當前難易度及人才庫狀態)');
+}
+
+function saveTalentPool() {
+  localStorage.setItem('splendor_noble_talent_pool_2026', JSON.stringify(globalTalentPoolIds));
+}
+
 const ACHIEVEMENT_DEFINITIONS = [
   { id: 1, symbol: "💰", name: "第一桶金", desc: "在單一回合中，一口氣拿取 3 枚不同顏色的普通寶石。", tier: "easy", color: "var(--diff-easy)" },
   { id: 2, symbol: "💎", name: "專一的收藏家", desc: "在單一回合中，拿取 2 枚相同顏色的普通寶石。", tier: "easy", color: "var(--diff-easy)" },
@@ -1108,13 +1076,13 @@ const ACHIEVEMENT_DEFINITIONS = [
   { id: 6, symbol: "🪙", name: "不需找零", desc: "購買一張發展卡時，完全由手牌普通寶石支付，沒用到黃金。", tier: "easy", color: "var(--diff-easy)" },
   
   { id: 7, symbol: "🌈", name: "七彩的寶石尋寶家", desc: "玩家背包同時存在 5 種不同顏色的普通寶石各至少 1 枚。", tier: "normal", color: "var(--diff-normal)" },
-  { id: 8, symbol: "🔄", name: "永續發展", desc: "完全不消耗任何實體寶石（僅靠已購卡片的減免功能）購買卡片。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 8, symbol: "🔄", name: "永續發展", desc: "完全不消耗 any 實體寶石（僅靠已購卡片的減免功能）購買卡片。", tier: "normal", color: "var(--diff-normal)" },
   { id: 9, symbol: "⚡", name: "先搶先贏", desc: "執行「保留一張卡片並獲得 1 黃金」的行動。", tier: "normal", color: "var(--diff-normal)" },
   { id: 10, symbol: "🎯", name: "高瞻遠矚", desc: "成功將保留區的 3 張手牌全部補滿。", tier: "normal", color: "var(--diff-normal)" },
   { id: 11, symbol: "🏗️", name: "基礎紮實", desc: "成功在遊戲前 10 回合內，購買 5 張等級 1 的發展卡。", tier: "normal", color: "var(--diff-normal)" },
   { id: 12, symbol: "🧱", name: "金字塔底層", desc: "遊戲結束時，名下擁有 8 張（或以上）等級 1 的發展卡。", tier: "normal", color: "var(--diff-normal)" },
   
-  { id: 13, symbol: "🥚", name: "打破鴨蛋", desc: "獲得遊戲中的第一張帶有分數的卡片。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 13, symbol: "🧬", name: "打破鴨蛋", desc: "獲得遊戲中的第一張帶有分數的卡片。", tier: "hard", color: "var(--diff-hard)" },
   { id: 14, symbol: "🚀", name: "跨越階級", desc: "首次成功購買一張等級 3（Level 3）的發展卡。", tier: "hard", color: "var(--diff-hard)" },
   { id: 15, symbol: "⚜️", name: "貴族青睞", desc: "滿足貴族條件，獲得第一位貴族板塊的拜訪。", tier: "hard", color: "var(--diff-hard)" },
   { id: 16, symbol: "🔓", name: "清空庫存", desc: "成功將保留區的卡片購買下來，使保留區歸零。", tier: "hard", color: "var(--diff-hard)" },
@@ -1139,13 +1107,12 @@ const ACHIEVEMENT_DEFINITIONS = [
 let state = {};
 let selectedDiff = [];
 let selectedSame = null;
-let isMusicMuted = false;
 
-// 🏆 全新：局內成就觸發追蹤旗標
 let unlockedAchievementIds = new Set();
 let latestAchievementId = null;
+let pendingAchievementsThisAction = [];
+let isShowingAchievementAnimation = false;
 
-// 全局行為歷史紀錄器 (用以審查跨回合極端成就條件)
 let sessionTracker = {
   hasReservedThisGame: false,
   purchasedCardsCount: 0,
@@ -1160,8 +1127,14 @@ const sfxBuyEl = document.getElementById('sfx-buy');
 const sfxReserveEl = document.getElementById('sfx-reserve');
 const sfxSelectEl = document.getElementById('sfx-select');
 const sfxUnselectEl = document.getElementById('sfx-unselect');
-const sfxAchievementEl = document.getElementById('sfx-achievement');
-const musicBtn = document.getElementById('toggle-music-btn');
+
+const sfxAchievementsMap = {
+  easy: document.getElementById('sfx-ach-easy'),
+  normal: document.getElementById('sfx-ach-normal'),
+  hard: document.getElementById('sfx-ach-hard'),
+  expert: document.getElementById('sfx-ach-expert'),
+  master: document.getElementById('sfx-ach-master')
+};
 
 const sfxNobleMale = document.getElementById('sfx-noble-male');
 const sfxNobleFemale = document.getElementById('sfx-noble-female');
@@ -1198,6 +1171,7 @@ document.getElementById('btn-welcome-confirm').addEventListener('click', () => {
 });
 
 function forceStartOverviewTutorial() {
+  document.getElementById('game-options-modal').classList.remove('show');
   document.getElementById('tutorial-start-modal').classList.add('show');
 }
 
@@ -1241,6 +1215,7 @@ window.nextTutorialStep = function() {
 };
 
 document.getElementById('btn-final-t-next').addEventListener('click', () => {
+  playUniformSfx();
   TUTORIAL_STEPS.forEach((s, idx) => {
     const el = document.getElementById(s.elementId);
     const card = document.getElementById(`embed-card-${idx}`);
@@ -1252,58 +1227,231 @@ document.getElementById('btn-final-t-next').addEventListener('click', () => {
 });
 
 
-/* ── 🏆 全新：成就檢定核心運算引擎 ────────────────────────── */
+/* ── ⚙️ 選項彈窗、人才庫、音效控制模組 ────────────────── */
+function openGameOptionsModal() {
+  document.getElementById('menu-toggle-music').textContent = isMusicMuted ? "🔇 背景音樂：靜音" : "🎵 背景音樂：開啟";
+  document.getElementById('menu-toggle-sfx').textContent = isSfxMuted ? "🔇 遊戲音效：靜音" : "🔊 遊戲音效：開啟";
+  
+  document.querySelectorAll('.diff-opt-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-diff') === currentDifficulty) {
+      btn.classList.add('active');
+    }
+  });
+  
+  document.getElementById('game-options-modal').classList.add('show');
+}
+
+function closeGameOptionsModal() {
+  document.getElementById('game-options-modal').classList.remove('show');
+}
+
+function handleMusicToggle() {
+  if (isMusicMuted) {
+    isMusicMuted = false;
+    audioEl.play().catch(err => {});
+  } else {
+    isMusicMuted = true;
+    audioEl.pause();
+  }
+  document.getElementById('menu-toggle-music').textContent = isMusicMuted ? "🔇 背景音樂：靜音" : "🎵 背景音樂：開啟";
+}
+
+function handleSfxToggle() {
+  isSfxMuted = !isSfxMuted;
+  document.getElementById('menu-toggle-sfx').textContent = isSfxMuted ? "🔇 遊戲音效：靜音" : "🔊 遊戲音效：開啟";
+}
+
+function triggerMenuTutorial() {
+  forceStartOverviewTutorial();
+}
+
+/* 🏛️ 人才庫模組視窗內部處理 */
+function openTalentPoolModal() {
+  renderTalentPoolModalUI();
+  document.getElementById('talent-pool-modal').classList.add('show');
+}
+
+function closeTalentPoolModal() {
+  document.getElementById('talent-pool-modal').classList.remove('show');
+  renderActiveAssistantUI(); 
+}
+
+function renderTalentPoolModalUI() {
+  const modalLayer = document.getElementById('talent-pool-modal-layer');
+  if (globalTalentPoolIds.length === 0) {
+    modalLayer.innerHTML = `<p style="font-size:0.75rem; color:var(--text-muted); padding: 20px 0; grid-column: span 2; text-align:center;">人才庫目前空空如也！<br>需在對局限時內成功通關，方可在此保留解鎖隨行貴族。</p>`;
+    return;
+  }
+
+  modalLayer.innerHTML = globalTalentPoolIds.map(id => {
+    const nobleMeta = ALL_NOBLES_POOL.find(n => n.id === id);
+    if (!nobleMeta) return '';
+    const isSelected = selectedAssistantId === id ? 'selected' : '';
+    return `
+      <div class="talent-mini-card ${isSelected}" onclick="playUniformSfx(); selectAssistant('${id}')">
+        <img src="${nobleMeta.img}" alt="${nobleMeta.name}">
+        <span>${nobleMeta.name}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+window.selectAssistant = function(id) {
+  if (selectedAssistantId === id) {
+    selectedAssistantId = null; 
+  } else {
+    selectedAssistantId = id;
+  }
+  renderTalentPoolModalUI();
+};
+
+function renderActiveAssistantUI() {
+  const assistantLayer = document.getElementById('assistant-display-layer');
+  if (!selectedAssistantId) {
+    assistantLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted);">孤軍奮戰中</p>`;
+    return;
+  }
+
+  const nobleMeta = ALL_NOBLES_POOL.find(n => n.id === selectedAssistantId);
+  if (nobleMeta) {
+    assistantLayer.innerHTML = `
+      <div class="earned-noble-mini" style="border-style: solid; background: rgba(212,175,55,0.15); width:100%">
+        <img src="${nobleMeta.img}">
+        <span style="font-weight:700;">${nobleMeta.name} (伴隨中)</span>
+      </div>
+    `;
+  }
+}
+
+/* 🟢 對局難易度切換與警告機制 */
+window.changeGameDifficultyWithWarning = function(diffLevel) {
+  if (currentDifficulty === diffLevel) return;
+
+  const confirmChange = confirm("⚠️ 警告：您正在中途變更皇家貿易商會難易度！\n變更難易度將會徹底清空當前儲存的【皇家貴族人才庫】與重置無名貴族。確定要執行變更嗎？");
+  
+  if (confirmChange) {
+    globalTalentPoolIds = [];
+    selectedAssistantId = null;
+    saveTalentPool();
+    
+    currentDifficulty = diffLevel;
+    localStorage.setItem('splendor_difficulty_2026', diffLevel);
+    
+    document.querySelectorAll('.diff-opt-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-diff') === diffLevel) {
+        btn.classList.add('active');
+      }
+    });
+
+    alert(`難易度已重置變更，人才庫已被清空，無名貴族也已重置。`);
+    renderActiveAssistantUI();
+    initGame(); 
+  }
+};
+
+
+/* ── 🏆 成就檢定核心運算與播放佇列引擎 ────────────────────────── */
 function triggerAchievementUnlock(id) {
   if (unlockedAchievementIds.has(id)) return;
   unlockedAchievementIds.add(id);
-  latestAchievementId = id;
-  playSFX(sfxAchievementEl);
   
-  // 檢查璀璨大師成就 (成就數達 20 個)
+  const def = ACHIEVEMENT_DEFINITIONS.find(d => d.id === id);
+  if (def) {
+    pendingAchievementsThisAction.push(def);
+  }
+  
   if (id !== 30 && unlockedAchievementIds.size >= 20) {
     triggerAchievementUnlock(30);
   }
 }
 
+function processPendingAchievementsQueue(callback) {
+  if (pendingAchievementsThisAction.length === 0) {
+    if (callback) callback();
+    return;
+  }
+
+  document.getElementById('ach-stats-field').textContent = `${unlockedAchievementIds.size} / 30`;
+  
+  if (isShowingAchievementAnimation) {
+    if (callback) callback();
+    return;
+  }
+  
+  isShowingAchievementAnimation = true;
+  const latestField = document.getElementById('ach-latest-field');
+  const achievementsToShow = [...pendingAchievementsThisAction];
+  pendingAchievementsThisAction = [];
+  
+  let currentIdx = 0;
+  
+  function renderNextAch() {
+    if (currentIdx >= achievementsToShow.length) {
+      isShowingAchievementAnimation = false;
+      if (callback) callback();
+      return;
+    }
+    
+    const currentAch = achievementsToShow[currentIdx];
+    latestAchievementId = currentAch.id;
+    
+    let tierText = "簡單";
+    if (currentAch.tier === "normal") tierText = "中階";
+    if (currentAch.tier === "hard") tierText = "進階";
+    if (currentAch.tier === "expert") tierText = "困難";
+    if (currentAch.tier === "master") tierText = "神人";
+    
+    latestField.innerHTML = `<span style="color: ${currentAch.color}; font-weight: 800;">${currentAch.symbol} [${tierText}] ${currentAch.name}</span>`;
+    latestField.classList.remove('has-ach');
+    void latestField.offsetWidth; 
+    latestField.classList.add('has-ach');
+    
+    const targetSFX = sfxAchievementsMap[currentAch.tier] || sfxAchievementsMap['easy'];
+    if (targetSFX && !isSfxMuted) {
+      targetSFX.currentTime = 0;
+      targetSFX.play().catch(e => {});
+    }
+    
+    currentIdx++;
+    
+    if (currentIdx < achievementsToShow.length) {
+      setTimeout(renderNextAch, 1500);
+    } else {
+      isShowingAchievementAnimation = false;
+      if (callback) callback();
+    }
+  }
+  
+  renderNextAch();
+}
+
 function auditInstantAchievements(actionType, meta) {
   const p = state.player;
   
-  // 1. 第一桶金
   if (actionType === "takeDiff" && meta.count === 3) triggerAchievementUnlock(1);
-  // 2. 專一的收藏家
   if (actionType === "takeSame") triggerAchievementUnlock(2);
-  // 4. 黃金儲蓄狂
   if (p.tokens.o >= 3) triggerAchievementUnlock(4);
-  // 5. 滿載而歸
+  
   let totalTokens = 0;
   for (let k in p.tokens) totalTokens += p.tokens[k];
   if (totalTokens === 10) triggerAchievementUnlock(5);
   
-  // 7. 七彩寶石尋寶家
   if (p.tokens.w >= 1 && p.tokens.u >= 1 && p.tokens.g >= 1 && p.tokens.r >= 1 && p.tokens.k >= 1) {
     triggerAchievementUnlock(7);
   }
-  // 9. 先搶先贏
   if (actionType === "reserve") triggerAchievementUnlock(9);
-  // 10. 高瞻遠矚
   if (p.reserved.length === 3) triggerAchievementUnlock(10);
   
   if (actionType === "buy") {
-    // 3. 開張大吉
     triggerAchievementUnlock(3);
-    // 6. 不需找零
     if (!sessionTracker.goldUsedInThisPurchase) triggerAchievementUnlock(6);
-    // 8. 永續發展
     if (meta.totalGemsSpent === 0) triggerAchievementUnlock(8);
-    // 13. 打破鴨蛋
     if (meta.card.points > 0) triggerAchievementUnlock(13);
-    // 14. 跨越階級
     if (meta.level === "lv3") triggerAchievementUnlock(14);
-    // 16. 清空庫存
     if (meta.isReserved && p.reserved.length === 0) triggerAchievementUnlock(16);
-    // 17. 基建大師
     if (p.bonus[meta.card.provides] >= 4) triggerAchievementUnlock(17);
-    // 18. 精準投資
     if (meta.card.points >= 4) triggerAchievementUnlock(18);
   }
 }
@@ -1312,39 +1460,56 @@ function auditEndGameAchievements() {
   const p = state.player;
   const totalTurns = state.turn - 1;
   
-  // 11. 基礎紮實 & 12. 金字塔底層 
-  // (在全域購買卡片處已統計 lv1 總數)
   let lv1Holdings = sessionTracker.purchasedCardsCountLv1 || 0; 
   if (lv1Holdings >= 8) triggerAchievementUnlock(12);
 
-  // 19. 小試身手
   if (totalTurns < 35) triggerAchievementUnlock(19);
-  // 20. 真金不怕火煉
   if (!sessionTracker.hasReservedThisGame) triggerAchievementUnlock(20);
   
-  // 21. 白手起家 & 22. 上流社會 & 25. 雙喜臨門
   const earnedNobles = state.nobles.filter(n => n.completed);
   if (earnedNobles.length === 0) triggerAchievementUnlock(21);
   if (earnedNobles.length * 3 >= 9) triggerAchievementUnlock(22);
   if (earnedNobles.length >= 2) triggerAchievementUnlock(25);
   
-  // 23. 黃金絕緣體
   if (p.tokens.o === 0) triggerAchievementUnlock(23);
   
-  // 24. 全色制霸
   if (p.bonus.w >= 3 && p.bonus.u >= 3 && p.bonus.g >= 3 && p.bonus.r >= 3 && p.bonus.k >= 3) {
     triggerAchievementUnlock(24);
   }
   
-  // 26. 精算大師
   if (totalTurns < 25) triggerAchievementUnlock(26);
-  // 28. 壓軸登場
   if (p.score === 15) triggerAchievementUnlock(28);
-  // 29. 璀璨神速
   if (totalTurns < 20) triggerAchievementUnlock(29);
+
+  let targetLimit = 30; 
+  let diffChineseName = "簡單";
+  if (currentDifficulty === 'easy') { targetLimit = 30; diffChineseName = "簡單"; }
+  else if (currentDifficulty === 'normal') { targetLimit = 28; diffChineseName = "普通"; }
+  else if (currentDifficulty === 'hard') { targetLimit = 25; diffChineseName = "困難"; }
+  else if (currentDifficulty === 'expert') { targetLimit = 22; diffChineseName = "極限"; }
+  else if (currentDifficulty === 'master') { targetLimit = 20; diffChineseName = "神人"; }
+
+  const diffResultTxtEl = document.getElementById('modal-diff-result-txt');
+
+  if (totalTurns <= targetLimit) {
+    let newlySavedCount = 0;
+    earnedNobles.forEach(n => {
+      if (n.id && !n.isNoName && !globalTalentPoolIds.includes(n.id)) {
+        globalTalentPoolIds.push(n.id);
+        newlySavedCount++;
+      }
+    });
+    if (newlySavedCount > 0) saveTalentPool();
+    
+    diffResultTxtEl.innerHTML = `👑 戰局檢定：成功在 <strong>${diffChineseName}模式 (${targetLimit} 回合內)</strong> 通關！<br>已為您永久保留並解鎖本局拜訪的貴族至人才庫。`;
+    diffResultTxtEl.style.color = "#2ecc71";
+  } else {
+    diffResultTxtEl.innerHTML = `⏳ 戰局檢定：本次通關花費了 ${totalTurns} 回合，未能達到 <strong>${diffChineseName}模式 (${targetLimit} 回合)</strong> 保留門檻，貴族返回封地。`;
+    diffResultTxtEl.style.color = "#e67e22";
+  }
 }
 
-/* ── 🏆 成就履歷視窗介面渲染與操控 ────────────────────────── */
+/* ── 🏆 成就履歷視窗介面渲染 ────────────────────────── */
 function openAchievementHistory() {
   const container = document.getElementById('ach-matrix-injector');
   container.innerHTML = ACHIEVEMENT_DEFINITIONS.map(def => {
@@ -1354,7 +1519,7 @@ function openAchievementHistory() {
     if (def.tier === "normal") tierText = "中階";
     if (def.tier === "hard") tierText = "進階";
     if (def.tier === "expert") tierText = "困難";
-    if (def.tier === "master") tierText = "終極";
+    if (def.tier === "master") tierText = "神人";
 
     return `
       <div class="ach-item-row ${isUnlocked ? 'unlocked' : ''}" style="${isUnlocked ? `border-left: 4px solid ${def.color};` : ''}">
@@ -1362,465 +1527,606 @@ function openAchievementHistory() {
           <div class="ach-row-name">${def.symbol} ${def.name}</div>
           <div class="ach-row-desc">${def.desc}</div>
         </div>
-        <div class="ach-row-tag" style="background: ${def.color}; font-weight:900;">${tierText} - ${statusText}</div>
+        <div class="ach-row-tag" style="background: ${def.color};">${tierText} · ${statusText}</div>
       </div>
     `;
   }).join('');
-  document.getElementById('ach-history-modal').classList.add('show');
+  document.getElementById('ach-history-modal-container').classList.add('show');
 }
 
 function closeAchievementHistory() {
-  document.getElementById('ach-history-modal').classList.remove('show');
+  document.getElementById('ach-history-modal-container').classList.remove('show');
 }
 
-
-/* ── 核心主程式邏輯 ────────────────────────────────────────── */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
+/* ── 核心邏輯架構：洗牌與初始化 ──────────────────────────── */
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return arr;
-}
-
-function assignFixedImage(card) {
-  if (!card) return;
-  const pool = CUSTOM_CARD_IMAGES[card.provides];
-  if (!pool) return;
-  let imgIndex = 0;
-  if (card.points === 0) imgIndex = 0;
-  else if (card.points === 1) imgIndex = 1;
-  else if (card.points === 2) imgIndex = 2;
-  else if (card.points === 3) imgIndex = 3;
-  else if (card.points >= 4)  imgIndex = 4;
-  card.bgImage = pool[imgIndex];
+  return array;
 }
 
 function initGame() {
-  const deck1 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv1)));
-  const deck2 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv2)));
-  const deck3 = shuffle(JSON.parse(JSON.stringify(RAW_CARDS.lv3)));
+  loadTalentPool();
   
-  deck1.forEach(assignFixedImage);
-  deck2.forEach(assignFixedImage);
-  deck3.forEach(assignFixedImage);
-  
-  const shuffledNobles = shuffle(JSON.parse(JSON.stringify(ALL_NOBLES_POOL)));
-  lastRenderedCardIds.clear();
-  lastPlayerState = null; 
-
-  unlockedAchievementIds.clear();
-  latestAchievementId = null;
-  sessionTracker = {
-    hasReservedThisGame: false,
-    purchasedCardsCount: 0,
-    purchasedCardsCountLv1: 0,
-    lv1CardsCountBeforeTurn10: 0,
-    singleTurnScoreGained: 0,
-    goldUsedInThisPurchase: false
-  };
-
+  // 規則1: 每個顏色寶石的庫存初始代幣只有 5 個
   state = {
     turn: 1,
-    bank: { w: 5, u: 5, g: 5, r: 5, k: 5, o: 5 },
+    bank: { w: 5, u: 5, g: 5, r: 5, k: 5, o: 5 }, 
     player: {
       tokens: { w: 0, u: 0, g: 0, r: 0, k: 0, o: 0 },
       bonus: { w: 0, u: 0, g: 0, r: 0, k: 0 },
       reserved: [],
       score: 0
     },
-    decks: { lv1: deck1, lv2: deck2, lv3: deck3 },
-    matrix: {
-      lv1: [deck1.pop(), deck1.pop(), deck1.pop(), deck1.pop()],
-      lv2: [deck2.pop(), deck2.pop(), deck2.pop(), deck2.pop()],
-      lv3: [deck3.pop(), deck3.pop(), deck3.pop(), deck3.pop()]
+    decks: {
+      lv1: shuffle([...RAW_CARDS.lv1]),
+      lv2: shuffle([...RAW_CARDS.lv2]),
+      lv3: shuffle([...RAW_CARDS.lv3])
     },
-    nobles: [shuffledNobles[0], shuffledNobles[1], shuffledNobles[2]],
-    isOver: false
+    grid: { lv1: [], lv2: [], lv3: [] },
+    nobles: []
   };
+
+  sessionTracker = {
+    hasReservedThisGame: false,
+    purchasedCardsCount: 0,
+    purchasedCardsCountLv1: 0,
+    singleTurnScoreGained: 0,
+    goldUsedInThisPurchase: false
+  };
+
+  for (let r of ['lv1', 'lv2', 'lv3']) {
+    for (let i = 0; i < 4; i++) {
+      if (state.decks[r].length > 0) {
+        state.grid[r].push(state.decks[r].pop());
+      }
+    }
+  }
+
+  let configCount = 5;
+  if (currentDifficulty === 'normal' || currentDifficulty === 'hard') {
+    configCount = 3;
+  }
+
+  let shuffledNobles = shuffle([...ALL_NOBLES_POOL]);
+  let activeNobles = shuffledNobles.slice(0, configCount);
+
+  if (selectedAssistantId && activeNobles.length > 0) {
+    const isAlreadyPresent = activeNobles.some(n => n.id === selectedAssistantId);
+    if (!isAlreadyPresent) {
+      const assistantMeta = ALL_NOBLES_POOL.find(n => n.id === selectedAssistantId);
+      if (assistantMeta) {
+        activeNobles[activeNobles.length - 1] = assistantMeta;
+      }
+    }
+  }
+
+  state.nobles = activeNobles.map(n => ({
+    ...n,
+    completed: false,
+    isNoName: false
+  }));
 
   selectedDiff = [];
   selectedSame = null;
-  showError("");
-  updateUI();
   
-  setTimeout(checkAndStartTutorial, 600);
+  document.getElementById('error-msg').textContent = '';
+  document.getElementById('ach-stats-field').textContent = `${unlockedAchievementIds.size} / 30`;
+
+  renderActiveAssistantUI();
+  renderBoard();
+  updateActionPanel();
 }
 
-function playSFX(audioComponent) {
-  if (!isMusicMuted && audioComponent) {
-    audioComponent.currentTime = 0;
-    audioComponent.play().catch(err => {});
-  }
-}
-
-musicBtn.addEventListener('click', (e) => {
-  e.stopPropagation(); 
-  if (isMusicMuted) {
-    isMusicMuted = false;
-    musicBtn.textContent = "🎵 音樂：開啟";
-    musicBtn.classList.remove('muted');
-    audioEl.play().catch(err => {});
-  } else {
-    isMusicMuted = true;
-    musicBtn.textContent = "🔇 音樂：靜音";
-    musicBtn.classList.add('muted');
-    audioEl.pause();
-  }
-});
-
-function calculateAffordability(card) {
+/* ── 核心背包上限管制 ────────────────────────── */
+// 規則2: 被包內 10 個 token 的限制必須包含黃金 (o)
+function checkTotalTokensLimit() {
   const p = state.player;
-  let totalGoldNeeded = 0;
-  let breakdown = {};
-  for (let gem of GEM_TYPES) {
-    const rawCost = card.cost[gem] || 0;
-    const afterBonusCost = Math.max(0, rawCost - p.bonus[gem]);
-    let tokenDeducted = Math.min(p.tokens[gem], afterBonusCost);
-    let goldSubstituted = afterBonusCost - tokenDeducted;
-    totalGoldNeeded += goldSubstituted;
-    breakdown[gem] = { tokenDeducted, afterBonusCost, isFreeByBonus: afterBonusCost === 0 && rawCost > 0 };
+  return p.tokens.w + p.tokens.u + p.tokens.g + p.tokens.r + p.tokens.k + p.tokens.o;
+}
+
+/* ── 渲染核心板塊 ────────────────────────────────────────── */
+function renderBoard() {
+  document.getElementById('turn-txt').textContent = state.turn;
+  document.getElementById('score-txt').textContent = state.player.score;
+
+  // 頂部貴族層
+  const noblesLayer = document.getElementById('nobles-layer');
+  noblesLayer.innerHTML = state.nobles.map(n => {
+    let reqHtml = '';
+    for (let k in n.req) {
+      reqHtml += `<div class="noble-req-item"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${n.req[k]}</div>`;
+    }
+    const compClass = n.completed ? 'completed' : '';
+    return `
+      <div class="noble-card ${compClass}">
+        <img class="noble-img" src="${n.img}" alt="${n.name}">
+        <div class="noble-overlay">
+          <div class="card-top">
+            <span class="noble-pts">3</span>
+            <span class="noble-name">${n.name}</span>
+          </div>
+          <div class="noble-reqs">${reqHtml}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 核心資產看板
+  const resLayer = document.getElementById('res-layer');
+  const typesWithGold = [...GEM_TYPES, 'o'];
+  
+  let currentTotalTokens = checkTotalTokensLimit();
+  document.getElementById('cap-txt').textContent = `背包籌碼: ${currentTotalTokens} / 10`;
+
+  resLayer.innerHTML = typesWithGold.map(k => {
+    const isGold = (k === 'o');
+    const count = state.player.tokens[k];
+    const bonus = isGold ? 0 : state.player.bonus[k];
+    
+    let isPulseAnimating = false;
+    if (lastPlayerState) {
+      const prevCount = lastPlayerState.tokens[k] || 0;
+      const prevBonus = lastPlayerState.bonus[k] || 0;
+      if (count > prevCount || bonus > prevBonus) {
+        isPulseAnimating = true;
+      }
+    }
+
+    let diffHtml = '';
+    let permHtml = '';
+    if (lastPlayerState && isPulseAnimating) {
+      const prevCount = lastPlayerState.tokens[k] || 0;
+      const prevBonus = lastPlayerState.bonus[k] || 0;
+      if (count > prevCount) {
+        diffHtml = `<span class="floating-diff plus">+${count - prevCount}</span>`;
+      }
+      if (!isGold && bonus > prevBonus) {
+        permHtml = `<span class="floating-permanent-anim">+${bonus - prevBonus} 永久+1</span>`;
+      }
+    }
+
+    return `
+      <div class="res-block ${isPulseAnimating ? 'animate-pulse-glow' : ''}">
+        ${diffHtml}
+        ${permHtml}
+        <span class="res-circle ${GEM_CLASSES[k]}">${k.toUpperCase()}</span>
+        <div class="res-text-group">
+          <span class="res-count">${count}</span>
+          ${!isGold ? `<span class="res-bonus">+${bonus}</span>` : `<span class="res-bonus" style="opacity:0.3">黃金</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 延遲清除浮動與動畫狀態
+  setTimeout(() => {
+    document.querySelectorAll('.res-block').forEach(el => el.classList.remove('animate-pulse-glow'));
+    document.querySelectorAll('.floating-diff, .floating-permanent-anim').forEach(el => el.remove());
+  }, 1400);
+
+  // 矩陣卡槽與剩餘牌數
+  for (let r of ['lv1', 'lv2', 'lv3']) {
+    document.getElementById(`deck-${r}-txt`).textContent = `剩餘: ${state.decks[r].length}`;
+    const rowEl = document.getElementById(`row-${r}`);
+    
+    rowEl.innerHTML = state.grid[r].map((card, idx) => {
+      if (!card) return `<div class="card empty">已售罄</div>`;
+      
+      const cardImg = getDeterministicCardImage(card.provides, card.id);
+      const canBuy = checkCanAfford(card);
+      const currentCardsInHand = state.player.reserved.length;
+      const canReserve = currentCardsInHand < 3;
+
+      let costHtml = '';
+      for (let k in card.cost) {
+        costHtml += `<div class="cost-dot"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${card.cost[k]}</div>`;
+      }
+
+      const isNewlyDealt = !lastRenderedCardIds.has(card.id);
+
+      return `
+        <div class="card ${isNewlyDealt ? 'animate-deal' : ''}" id="card-node-${card.id}" style="background-image: url('${cardImg}')">
+          <div class="card-content-wrapper">
+            <div class="card-top">
+              <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
+              <span class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</span>
+            </div>
+            <div class="card-costs">${costHtml}</div>
+            <div class="card-actions">
+              <button class="btn-card" ${canBuy ? '' : 'disabled'} onclick="buyCard('${r}', ${idx}, false)">購買</button>
+              <button class="btn-card" style="border-color:#b89742;" ${canReserve ? '' : 'disabled'} onclick="reserveCard('${r}', ${idx})">保留</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
-  return { canAfford: p.tokens.o >= totalGoldNeeded, totalGoldNeeded, breakdown };
+
+  // 同步更新上一次的卡片ID集合
+  const currentCardIds = new Set();
+  for (let r of ['lv1', 'lv2', 'lv3']) {
+    state.grid[r].forEach(c => { if(c) currentCardIds.add(c.id); });
+  }
+  state.player.reserved.forEach(c => { if(c) currentCardIds.add(c.id); });
+  lastRenderedCardIds = currentCardIds;
+
+  // 保留手牌區
+  const resHandLayer = document.getElementById('reserved-layer');
+  if (state.player.reserved.length === 0) {
+    resHandLayer.innerHTML = `<p style="grid-column: span 4; text-align: center; font-size: 0.65rem; color: var(--text-muted); padding: 12px 0;">目前無機密保留發展卡契約</p>`;
+  } else {
+    resHandLayer.innerHTML = state.player.reserved.map((card, idx) => {
+      const cardImg = getDeterministicCardImage(card.provides, card.id);
+      const canBuy = checkCanAfford(card);
+      let costHtml = '';
+      for (let k in card.cost) { costHtml += `<div class="cost-dot"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${card.cost[k]}</div>`; }
+      return `
+        <div class="card" id="card-node-${card.id}" style="background-image: url('${cardImg}'); min-height:85px; height:85px;">
+          <div class="card-content-wrapper">
+            <div class="card-top">
+              <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
+              <span class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</span>
+            </div>
+            <div class="card-costs">${costHtml}</div>
+            <div class="card-actions">
+              <button class="btn-card" style="width:100%" ${canBuy ? '' : 'disabled'} onclick="buyCard('reserved', ${idx}, true)">履行契約購買</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 渲染歷史拜訪貴族
+  const earnedNoblesLayer = document.getElementById('earned-nobles-layer');
+  const completedNobles = state.nobles.filter(n => n.completed);
+  if (completedNobles.length === 0) {
+    earnedNoblesLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>`;
+  } else {
+    earnedNoblesLayer.innerHTML = completedNobles.map(n => `
+      <div class="earned-noble-mini">
+        <img src="${n.img}">
+        <span>${n.name} (+3威望)</span>
+      </div>
+    `).join('');
+  }
 }
 
-function getPlayerTotalTokens() {
-  let total = 0;
-  for(let k in state.player.tokens) total += state.player.tokens[k];
-  return total;
+function getDeterministicCardImage(provides, id) {
+  const imgArr = CUSTOM_CARD_IMAGES[provides] || CUSTOM_CARD_IMAGES['g'];
+  const numericId = parseInt(id) || 0;
+  const index = numericId % imgArr.length;
+  return imgArr[index];
 }
 
-function showError(msg) { document.getElementById('error-msg').textContent = msg; }
+/* ── 核心資源與可購性算法 ────────────────────────── */
+function checkCanAfford(card) {
+  const p = state.player;
+  let goldNeeded = 0;
+  for (let k in card.cost) {
+    const cost = card.cost[k];
+    const buyingPower = p.tokens[k] + p.bonus[k];
+    if (buyingPower < cost) {
+      goldNeeded += (cost - buyingPower);
+    }
+  }
+  return p.tokens.o >= goldNeeded;
+}
 
-function checkNoblesTrigger() {
+/* ── 更新互動面板與籌碼按鈕限制 ────────────────────────── */
+function updateActionPanel() {
+  const diffSelectors = document.getElementById('diff-selectors');
+  const sameSelectors = document.getElementById('same-selectors');
+  const currentTotalTokens = checkTotalTokensLimit();
+
+  // 🟢 渲染 3色不同選擇區
+  diffSelectors.innerHTML = GEM_TYPES.map(k => {
+    const isSelected = selectedDiff.includes(k);
+    const bankCount = state.bank[k];
+    const isBtnDisabled = (!isSelected && (bankCount <= 0 || selectedDiff.length >= 3)) || (currentTotalTokens + selectedDiff.length >= 10 && !isSelected);
+    return `
+      <div class="token-container-cell">
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected ? 'selected' : ''}" ${isBtnDisabled ? 'disabled' : ''} onclick="toggleDiffGem('${k}')"></button>
+        <span class="token-count-label">庫存:${bankCount}</span>
+      </div>
+    `;
+  }).join('');
+
+  // 🟡 渲染 同色2個選擇區
+  sameSelectors.innerHTML = GEM_TYPES.map(k => {
+    const isSelected = (selectedSame === k);
+    const bankCount = state.bank[k];
+    // 同色拿兩顆基本規則：庫存需大於等於2
+    const isBtnDisabled = bankCount < 2 || (currentTotalTokens + 2 > 10 && !isSelected);
+    return `
+      <div class="token-container-cell">
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected ? 'selected' : ''}" ${isBtnDisabled ? 'disabled' : ''} onclick="toggleSameGem('${k}')"></button>
+        <span class="token-count-label">庫存:${bankCount}</span>
+      </div>
+    `;
+  }).join('');
+
+  // 驗證按鈕可用性
+  const btnDiff = document.getElementById('btn-do-diff');
+  // 必須選滿3種，或者在庫存小於3種時將現有可拿的全部選完
+  const totalAvailableColors = GEM_TYPES.filter(c => state.bank[c] > 0).length;
+  const targetCount = Math.min(3, totalAvailableColors);
+  btnDiff.disabled = (selectedDiff.length !== targetCount || targetCount === 0);
+
+  const btnSame = document.getElementById('btn-do-same');
+  btnSame.disabled = (selectedSame === null);
+}
+
+/* ── 籌碼選擇事件（維持基本選擇音效） ────────────────────────── */
+window.toggleDiffGem = function(color) {
+  const idx = selectedDiff.indexOf(color);
+  if (idx > -1) {
+    selectedDiff.splice(idx, 1);
+    if (!isSfxMuted) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+  } else {
+    if (selectedDiff.length < 3) {
+      selectedDiff.push(color);
+      if (!isSfxMuted) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+    }
+  }
+  selectedSame = null; 
+  updateActionPanel();
+}
+
+window.toggleSameGem = function(color) {
+  if (selectedSame === color) {
+    selectedSame = null;
+    if (!isSfxMuted) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+  } else {
+    selectedSame = color;
+    if (!isSfxMuted) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+  }
+  selectedDiff = []; 
+  updateActionPanel();
+}
+
+/* ── 按下確認收下按鈕時：獨立觸發第二種音效與執行 ────────────────────────── */
+function handleDoDiffClick() {
+  playActionGemSfx(); // 收下時播放第二種音效 (sfx-gem)
+  executeTakeDiff();
+}
+
+function handleDoSameClick() {
+  playActionGemSfx(); // 收下時播放第二種音效 (sfx-gem)
+  executeTakeSame();
+}
+
+function executeTakeDiff() {
+  cachePlayerState();
+  const countTaken = selectedDiff.length;
+  
+  selectedDiff.forEach(color => {
+    state.bank[color]--;
+    state.player.tokens[color]++;
+  });
+
+  auditInstantAchievements("takeDiff", { count: countTaken });
+  selectedDiff = [];
+  endTurn();
+}
+
+function executeTakeSame() {
+  cachePlayerState();
+  const color = selectedSame;
+  
+  state.bank[color] -= 2;
+  state.player.tokens[color] += 2;
+
+  auditInstantAchievements("takeSame", { color: color });
+  selectedSame = null;
+  endTurn();
+}
+
+/* ── 保留卡片與購買卡片動作 ────────────────────────── */
+window.reserveCard = function(rowKey, index) {
+  cachePlayerState();
+  const card = state.grid[rowKey][index];
+  
+  // 黃金籌碼納入背包 10 顆上限判斷[cite: 4]
+  let currentTotalTokens = checkTotalTokensLimit();
+  let goldAwarded = 0;
+  if (state.bank.o > 0 && currentTotalTokens < 10) {
+    state.bank.o--;
+    state.player.tokens.o++;
+    goldAwarded = 1;
+  }
+
+  const node = document.getElementById(`card-node-${card.id}`);
+  if (node) {
+    node.classList.add('animate-reserve');
+  }
+
+  setTimeout(() => {
+    state.player.reserved.push(card);
+    sessionTracker.hasReservedThisGame = true;
+
+    // 補牌補缺
+    if (state.decks[rowKey].length > 0) {
+      state.grid[rowKey][index] = state.decks[rowKey].pop();
+    } else {
+      state.grid[rowKey][index] = null;
+    }
+
+    if (!isSfxMuted) {
+      sfxReserveEl.currentTime = 0;
+      sfxReserveEl.play().catch(e => {});
+    }
+
+    auditInstantAchievements("reserve", { goldAwarded: goldAwarded });
+    endTurn();
+  }, 300);
+}
+
+window.buyCard = function(rowKey, index, isFromReserved = false) {
+  cachePlayerState();
+  const card = isFromReserved ? state.player.reserved[index] : state.grid[rowKey][index];
+  
+  const p = state.player;
+  let totalGemsSpent = 0;
+  sessionTracker.goldUsedInThisPurchase = false;
+
+  for (let k in card.cost) {
+    const cost = card.cost[k];
+    const bonusReduction = p.bonus[k];
+    const actualCostNeeded = cost - bonusReduction;
+
+    if (actualCostNeeded > 0) {
+      if (p.tokens[k] >= actualCostNeeded) {
+        p.tokens[k] -= actualCostNeeded;
+        state.bank[k] += actualCostNeeded;
+        totalGemsSpent += actualCostNeeded;
+      } else {
+        const short = actualCostNeeded - p.tokens[k];
+        totalGemsSpent += p.tokens[k];
+        state.bank[k] += p.tokens[k];
+        p.tokens[k] = 0;
+        
+        // 扣除百搭黃金
+        p.tokens.o -= short;
+        state.bank.o += short;
+        totalGemsSpent += short;
+        sessionTracker.goldUsedInThisPurchase = true;
+      }
+    }
+  }
+
+  const node = document.getElementById(`card-node-${card.id}`);
+  if (node) {
+    node.classList.add('animate-buy');
+  }
+
+  setTimeout(() => {
+    p.bonus[card.provides]++;
+    p.score += card.points;
+    sessionTracker.singleTurnScoreGained += card.points;
+
+    sessionTracker.purchasedCardsCount++;
+    if (rowKey === 'lv1') {
+      sessionTracker.purchasedCardsCountLv1 = (sessionTracker.purchasedCardsCountLv1 || 0) + 1;
+      if (state.turn <= 10) {
+        sessionTracker.lv1CardsCountBeforeTurn10++;
+        if (sessionTracker.lv1CardsCountBeforeTurn10 === 5) {
+          triggerAchievementUnlock(11);
+        }
+      }
+    }
+
+    if (isFromReserved) {
+      state.player.reserved.splice(index, 1);
+    } else {
+      if (state.decks[rowKey].length > 0) {
+        state.grid[rowKey][index] = state.decks[rowKey].pop();
+      } else {
+        state.grid[rowKey][index] = null;
+      }
+    }
+
+    if (!isSfxMuted) {
+      sfxBuyEl.currentTime = 0;
+      sfxBuyEl.play().catch(e => {});
+    }
+
+    auditInstantAchievements("buy", { card: card, level: rowKey, totalGemsSpent: totalGemsSpent, isReserved: isFromReserved });
+    endTurn();
+  }, 300);
+}
+
+/* ── 狀態快照暫存與回合結算 ────────────────────────── */
+function cachePlayerState() {
+  lastPlayerState = {
+    tokens: { ...state.player.tokens },
+    bonus: { ...state.player.bonus }
+  };
+}
+
+function endTurn() {
+  sessionTracker.singleTurnScoreGained = 0;
+  
+  // 貴族拜訪自動檢定
+  checkNoblesVisiting();
+
+  if (sessionTracker.singleTurnScoreGained >= 6) {
+    triggerAchievementUnlock(27);
+  }
+
+  processPendingAchievementsQueue(() => {
+    // 檢查終局勝負條件
+    if (state.player.score >= 15) {
+      executeWinGame();
+      return;
+    }
+
+    state.turn++;
+    selectedDiff = [];
+    selectedSame = null;
+    
+    renderBoard();
+    updateActionPanel();
+  });
+}
+
+function checkNoblesVisiting() {
   const p = state.player;
   state.nobles.forEach(n => {
-    if (!n || n.completed) return;
-    let match = true;
-    for (let gem in n.req) { if (p.bonus[gem] < n.req[gem]) match = false; }
-    if (match) { 
-      n.completed = true; 
-      p.score += n.points; 
-      sessionTracker.singleTurnScoreGained += n.points;
-      triggerAchievementUnlock(15); // 15. 貴族青睞
-
-      if (n.gender === 'male') {
-        playSFX(sfxNobleMale);
-      } else if (n.gender === 'female') {
-        playSFX(sfxNobleFemale);
+    if (!n.completed) {
+      let match = true;
+      for (let k in n.req) {
+        if (p.bonus[k] < n.req[k]) { match = false; break; }
+      }
+      if (match) {
+        n.completed = true;
+        p.score += n.points;
+        sessionTracker.singleTurnScoreGained += n.points;
+        triggerAchievementUnlock(15);
+        
+        if (!isSfxMuted) {
+          if (n.gender === 'female' && sfxNobleFemale) {
+            sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(e=>{});
+          } else if (sfxNobleMale) {
+            sfxNobleMale.currentTime = 0; sfxNobleMale.play().catch(e=>{});
+          }
+        }
       }
     }
   });
 }
 
-function nextTurn() {
-  checkNoblesTrigger();
+/* ── 勝利通關結算 ────────────────────────────────────────── */
+function executeWinGame() {
+  renderBoard();
   
-  // 27. 厚積薄發 (單回合斬獲 >=6分)
-  if (sessionTracker.singleTurnScoreGained >= 6) triggerAchievementUnlock(27);
-  sessionTracker.singleTurnScoreGained = 0; // 重置
-
-  state.turn++;
-  selectedDiff = []; selectedSame = null;
-  
-  if (state.player.score >= 15) {
-    state.isOver = true;
-    auditEndGameAchievements(); // 結算賽局成就
-    updateUI();
-    document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，成功突破威望門檻！`;
-    document.getElementById('win-modal').classList.add('show');
-    return;
-  }
-  updateUI();
-}
-
-function takeThreeDiff() {
-  if (getPlayerTotalTokens() + 3 > 10) { showError("超過 10 個上限！"); return; }
-  lastPlayerState = JSON.parse(JSON.stringify(state.player));
-  playSFX(sfxGemEl);
-  selectedDiff.forEach(gem => { state.bank[gem]--; state.player.tokens[gem]++; });
-  
-  auditInstantAchievements("takeDiff", { count: selectedDiff.length });
-  nextTurn();
-}
-
-function takeTwoSame() {
-  if (getPlayerTotalTokens() + 2 > 10) { showError("超過 10 個上限！"); return; }
-  if (state.bank[selectedSame] < 2) { showError("庫存剩餘數量小於 2 顆！"); return; }
-  lastPlayerState = JSON.parse(JSON.stringify(state.player));
-  playSFX(sfxGemEl);
-  state.bank[selectedSame] -= 2; state.player.tokens[selectedSame] += 2;
-  
-  auditInstantAchievements("takeSame", { gem: selectedSame });
-  nextTurn();
-}
-
-function drawNextCard(level) {
-  const nextCard = state.decks[level].pop() || null;
-  if (nextCard) assignFixedImage(nextCard);
-  return nextCard;
-}
-
-window.buyCard = function(level, index, isReserved = false) {
-  let card = isReserved ? state.player.reserved[index] : state.matrix[level][index];
-  if (!card) return;
-  const { canAfford, totalGoldNeeded, breakdown } = calculateAffordability(card);
-  if (!canAfford) return;
-
-  lastPlayerState = JSON.parse(JSON.stringify(state.player));
-  playSFX(sfxBuyEl);
-  const cardEl = document.getElementById(`card-${card.id}`);
-  
-  const finishBuy = () => {
-    const p = state.player;
-    let totalGemsSpent = 0;
-    sessionTracker.goldUsedInThisPurchase = (totalGoldNeeded > 0);
-
-    for (let gem of GEM_TYPES) {
-      p.tokens[gem] -= breakdown[gem].tokenDeducted;
-      state.bank[gem] += breakdown[gem].tokenDeducted;
-      totalGemsSpent += breakdown[gem].tokenDeducted;
-    }
-    if (totalGoldNeeded > 0) { p.tokens.o -= totalGoldNeeded; state.bank.o += totalGoldNeeded; }
-    
-    p.score += card.points; 
-    sessionTracker.singleTurnScoreGained += card.points;
-    p.bonus[card.provides]++;
-    
-    // 統計卡片等級數據
-    sessionTracker.purchasedCardsCount++;
-    if (level === "lv1" || card.id.startsWith("1")) {
-      sessionTracker.purchasedCardsCountLv1 = (sessionTracker.purchasedCardsCountLv1 || 0) + 1;
-      if (state.turn <= 10) {
-        sessionTracker.lv1CardsCountBeforeTurn10++;
-        if (sessionTracker.lv1CardsCountBeforeTurn10 >= 5) triggerAchievementUnlock(11); // 11. 基礎紮實
-      }
-    }
-
-    if (isReserved) state.player.reserved.splice(index, 1);
-    else state.matrix[level][index] = drawNextCard(level);
-    
-    auditInstantAchievements("buy", { card: card, level: level, isReserved: isReserved, totalGemsSpent: totalGemsSpent });
-    nextTurn();
-  };
-
-  if (cardEl) {
-    cardEl.classList.add('animate-buy');
-    cardEl.addEventListener('animationend', finishBuy, {once: true});
-  } else { finishBuy(); }
-};
-
-window.reserveCard = function(level, index) {
-  if (state.player.reserved.length >= 3) return;
-  const card = state.matrix[level][index];
-  if (!card) return;
-
-  lastPlayerState = JSON.parse(JSON.stringify(state.player));
-  playSFX(sfxReserveEl);
-  
-  sessionTracker.hasReservedThisGame = true;
-  const cardEl = document.getElementById(`card-${card.id}`);
-
-  const finishReserve = () => {
-    state.player.reserved.push(card);
-    state.matrix[level][index] = drawNextCard(level);
-    if (state.bank.o > 0 && getPlayerTotalTokens() < 10) { state.bank.o--; state.player.tokens.o++; }
-    
-    auditInstantAchievements("reserve", { card: card, level: level });
-    nextTurn();
-  };
-
-  if (cardEl) {
-    cardEl.classList.add('animate-reserve');
-    cardEl.addEventListener('animationend', finishReserve, {once: true});
-  } else { finishReserve(); }
-};
-
-function renderActionSelectors() {
-  const diffBox = document.getElementById('diff-selectors');
-  const sameBox = document.getElementById('same-selectors');
-  diffBox.innerHTML = GEM_TYPES.map(gem => {
-    const sel = selectedDiff.includes(gem) ? 'selected' : '';
-    const dis = state.bank[gem] <= 0 ? 'disabled' : '';
-    return `<div style="text-align:center;"><button class="token-btn ${sel} ${GEM_BTN_CLASSES[gem]}" ${dis} onclick="toggleSelectDiff('${gem}')"></button><span style="font-size:0.55rem; color:var(--text-muted); font-family:'Orbitron';">${state.bank[gem]}</span></div>`;
-  }).join('');
-  sameBox.innerHTML = GEM_TYPES.map(gem => {
-    const sel = selectedSame === gem ? 'selected' : '';
-    const dis = state.bank[gem] < 2 ? 'disabled' : '';
-    return `<div style="text-align:center;"><button class="token-btn ${sel} ${GEM_BTN_CLASSES[gem]}" ${dis} onclick="selectSameGem('${gem}')"></button><span style="font-size:0.55rem; color:var(--text-muted); font-family:'Orbitron';">${state.bank[gem]}</span></div>`;
-  }).join('');
-  document.getElementById('btn-do-diff').disabled = selectedDiff.length !== 3;
-  document.getElementById('btn-do-same').disabled = !selectedSame;
-}
-
-window.toggleSelectDiff = function(gem) {
-  showError("");
-  if (selectedDiff.includes(gem)) {
-    selectedDiff = selectedDiff.filter(x => x !== gem);
-    playSFX(sfxUnselectEl);
-  } else if (selectedDiff.length < 3) {
-    selectedDiff.push(gem);
-    playSFX(sfxSelectEl);
-  }
-  renderActionSelectors();
-};
-
-window.selectSameGem = function(gem) { 
-  showError(""); 
-  if (selectedSame === gem) {
-    selectedSame = null;
-    playSFX(sfxUnselectEl);
-  } else {
-    selectedSame = gem;
-    playSFX(sfxSelectEl);
-  }
-  renderActionSelectors(); 
-};
-
-function renderCard(card, level, index, isReserved = false) {
-  if (!card) return `<div class="card empty">已抽光</div>`;
-  const { canAfford, breakdown } = calculateAffordability(card);
-  let costHtml = '';
-  for (let gem in card.cost) {
-    costHtml += `<span class="cost-dot ${breakdown[gem].isFreeByBonus ? 'free' : ''}"><span class="cost-dot-circle ${GEM_CLASSES[gem]}"></span>${breakdown[gem].afterBonusCost}</span>`;
-  }
-  const ani = (!isReserved && !lastRenderedCardIds.has(card.id)) ? 'animate-deal' : '';
-  const bg = card.bgImage ? `style="background-image: url('${card.bgImage}');"` : '';
-  return `
-    <div class="card ${ani}" id="card-${card.id}" ${bg}>
-      <div class="card-content-wrapper">
-        <div class="card-top"><span class="card-pts">${card.points || '0'}</span><div class="card-gem-icon ${GEM_CLASSES[card.provides]}"></div></div>
-        <div class="card-costs">${costHtml}</div>
-        <div class="card-actions">
-          <button class="btn-card" onclick="buyCard('${level}', ${index}, ${isReserved})" ${!canAfford ? 'disabled' : ''}>購買</button>
-          ${!isReserved ? `<button class="btn-card" onclick="reserveCard('${level}', ${index})" ${state.player.reserved.length >= 3 ? 'disabled' : ''}>保留</button>` : ''}
-        </div>
-      </div>
-    </div>
+  const totalTurns = state.turn; 
+  document.getElementById('modal-body-txt').innerHTML = `
+    恭喜工藝大師！您在第 <strong>${totalTurns}</strong> 回合成功累積到了 <strong>${state.player.score}分</strong> 的最高榮譽威望值！<br>
+    名下的產業與永久寶石礦脈閃耀璀璨光芒。
   `;
+  
+  auditEndGameAchievements();
+
+  processPendingAchievementsQueue(() => {
+    document.getElementById('win-modal').classList.add('show');
+  });
 }
 
-function updateUI() {
-  document.getElementById('turn-txt').textContent = state.turn;
-  document.getElementById('score-txt').textContent = state.player.score;
-  document.getElementById('deck-lv1-txt').textContent = `剩: ${state.decks.lv1.length}`;
-  document.getElementById('deck-lv2-txt').textContent = `剩: ${state.decks.lv2.length}`;
-  document.getElementById('deck-lv3-txt').textContent = `剩: ${state.decks.lv3.length}`;
+document.getElementById('btn-restart').addEventListener('click', () => {
+  document.getElementById('win-modal').classList.remove('remove');
+  document.getElementById('win-modal').classList.remove('show');
+  initGame();
+});
 
-  const p = state.player;
-  
-  // 更新成就公告欄與計數器
-  const latestField = document.getElementById('ach-latest-field');
-  document.getElementById('ach-stats-field').textContent = `${unlockedAchievementIds.size} / 30`;
-  
-  if (latestAchievementId) {
-    const latestDef = ACHIEVEMENT_DEFINITIONS.find(d => d.id === latestAchievementId);
-    let tierText = "簡單";
-    if (latestDef.tier === "normal") tierText = "中階";
-    if (latestDef.tier === "hard") tierText = "進階";
-    if (latestDef.tier === "expert") tierText = "困難";
-    if (latestDef.tier === "master") tierText = "終極";
-
-    latestField.innerHTML = `
-      <span style="color: ${latestDef.color}; font-weight: 800;">${latestDef.symbol} [${tierText}] ${latestDef.name}</span> 
-      <span style="color: var(--text-muted); font-size: 0.72rem;">- ${latestDef.desc}</span>
-    `;
-    latestField.classList.add('has-ach');
-    // 清除動畫流以利下次重播
-    setTimeout(() => { latestField.classList.remove('has-ach'); }, 600);
-  } else {
-    latestField.innerHTML = `🏆 暫無新成就，繼續努力收購！`;
-  }
-
-  // 更新皇家金庫資產欄
-  document.getElementById('res-layer').innerHTML = [...GEM_TYPES, 'o'].map(k => {
-    let hasChanged = false;
-    let diffText = "";
-    let diffClass = "";
-
-    if (lastPlayerState) {
-      const oldVal = lastPlayerState.tokens[k] || 0;
-      const newVal = p.tokens[k] || 0;
-      const tokenDiff = newVal - oldVal;
-      
-      if (tokenDiff !== 0) {
-        hasChanged = true;
-        if (tokenDiff > 0) {
-          diffText = `+${tokenDiff}`;
-          diffClass = "plus"; 
-        } else {
-          diffText = `${tokenDiff}`;
-          diffClass = "minus";
-        }
-      } else if (k !== 'o' && p.bonus[k] !== lastPlayerState.bonus[k]) {
-        hasChanged = true;
-      }
-    }
-
-    const animClass = hasChanged ? 'animate-pulse-glow' : '';
-    const floatingHtml = diffText ? `<span class="floating-diff ${diffClass}">${diffText}</span>` : '';
-
-    return `
-      <div class="res-block ${animClass}">
-        <div class="res-circle ${GEM_CLASSES[k]}"></div>
-        <div class="res-text-group">
-          ${floatingHtml}
-          <span class="res-count">${p.tokens[k]}</span>
-          <div class="res-bonus">${k !== 'o' ? `+${p.bonus[k]}` : '黃金'}</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  const tot = getPlayerTotalTokens();
-  document.getElementById('cap-txt').textContent = `袋中存貨: ${tot} / 10`;
-  document.getElementById('cap-txt').style.color = tot >= 10 ? '#c94c4c' : '#738a7c';
-
-  // 更新主要貴族覲見區
-  document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
-    let reqsHtml = Object.keys(n.req).map(g => `<div class="noble-req-item"><span class="cost-dot-circle ${GEM_CLASSES[g]}" style="width:9px; height:9px;"></span><span>${n.req[g]}</span></div>`).join('');
-    return `
-      <div class="noble-card ${n.completed?'completed':''}">
-        <img src="${n.img}" class="noble-img">
-        <div class="noble-overlay">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <p class="noble-name">${n.name}</p>
-            <span class="noble-pts">3P</span>
-          </div>
-          <div class="noble-reqs">${reqsHtml}</div>
-        </div>
-      </div>`;
-  }).join('');
-
-  // 渲染右側空間已獲得的貴族
-  const earnedNobles = state.nobles.filter(n => n.completed);
-  const earnedNoblesLayer = document.getElementById('earned-nobles-layer');
-  if (earnedNobles.length === 0) {
-    earnedNoblesLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>`;
-  } else {
-    earnedNoblesLayer.innerHTML = earnedNobles.map(n => `
-      <div class="earned-noble-mini">
-        <img src="${n.img}" alt="${n.name}">
-        <span>${n.name.split(' ')[1]}</span>
-      </div>
-    `).join('');
-  }
-
-  document.getElementById('row-lv3').innerHTML = state.matrix.lv3.map((c, i) => renderCard(c, 'lv3', i)).join('');
-  document.getElementById('row-lv2').innerHTML = state.matrix.lv2.map((c, i) => renderCard(c, 'lv2', i)).join('');
-  document.getElementById('row-lv1').innerHTML = state.matrix.lv1.map((c, i) => renderCard(c, 'lv1', i)).join('');
-  document.getElementById('reserved-layer').innerHTML = p.reserved.length === 0 ? `<p style="font-size:0.6rem; color:var(--text-muted); grid-column:1/-1; text-align:center;">暫無保留的秘密契約</p>` : p.reserved.map((c, i) => renderCard(c, null, i, true)).join('');
-
-  lastRenderedCardIds.clear();
-  ['lv1', 'lv2', 'lv3'].forEach(lv => state.matrix[lv].forEach(c => { if(c) lastRenderedCardIds.add(c.id); }));
-  renderActionSelectors();
-}
-
-document.getElementById('btn-do-diff').addEventListener('click', takeThreeDiff);
-document.getElementById('btn-do-same').addEventListener('click', takeTwoSame);
-document.getElementById('btn-restart').addEventListener('click', () => { document.getElementById('win-modal').classList.remove('show'); initGame(); });
-
+// 初始化載入
+loadTalentPool();
 initGame();
+checkAndStartTutorial();
 </script>
+
 </body>
 </html>
