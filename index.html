@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 安安之家</title>
+<title>璀璨寶石 — 皇家大會堂 (單人成就大師版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -31,6 +31,13 @@
   --c-gold:      url('https://i.ibb.co/PZ1dZDyH/gold.png');
   
   --glow-warm: 0 0 12px rgba(230, 180, 100, 0.35);
+
+  /* 難易度色彩系統 */
+  --diff-easy:    #2ecc71; /* 🟢 簡單 */
+  --diff-normal:  #f1c40f; /* 🟡 中階 */
+  --diff-hard:    #e67e22; /* 🟠 進階 */
+  --diff-expert:  #e74c3c; /* 🔴 困難 */
+  --diff-master:  #9b59b6; /* 🟣 終極 */
 }
 
 html, body {
@@ -58,7 +65,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   background: rgba(0, 0, 0, 0.55);
   padding: 6px 12px;
   border-radius: var(--radius-sm);
@@ -113,6 +120,125 @@ html, body {
   box-shadow: none;
 }
 
+/* ── 🏆 全新：成就顯示欄 UI ────────────────────────────────── */
+.achievement-banner {
+  background: linear-gradient(90deg, rgba(20, 15, 12, 0.95), rgba(35, 28, 22, 0.95));
+  border: 1px dashed rgba(212, 175, 55, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.achievement-banner:hover {
+  border-color: #d4af37;
+  background: linear-gradient(90deg, rgba(30, 22, 18, 0.98), rgba(45, 36, 28, 0.98));
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+.ach-latest-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.ach-badge-title {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+.ach-latest-display {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ach-latest-display.has-ach {
+  animation: achPopGlow 0.5s ease-out forwards;
+}
+@keyframes achPopGlow {
+  0% { transform: scale(0.95); filter: brightness(1.8); }
+  50% { transform: scale(1.03); filter: brightness(2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.ach-stats-summary {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  color: #ffe099;
+  background: rgba(0,0,0,0.3);
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* 成就歷史清單彈窗 */
+.ach-history-modal {
+  max-width: 500px !important;
+}
+.ach-matrix-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+  text-align: left;
+  margin-top: 12px;
+}
+.ach-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0,0,0,0.3);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.03);
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition: all 0.2s;
+}
+.ach-item-row.unlocked {
+  opacity: 1;
+  filter: none;
+  background: rgba(25, 20, 16, 0.8);
+  border-left-width: 4px;
+}
+.ach-row-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ach-row-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+}
+.ach-row-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.ach-row-tag {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: #110e0c;
+  text-transform: uppercase;
+}
+
 /* ── Nobles ────────────────────────────────────────────────── */
 .nobles-section { margin-bottom: 8px; transition: all 0.3s ease; border: 2px solid transparent; border-radius: var(--radius); padding: 2px; }
 .section-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
@@ -148,65 +274,92 @@ html, body {
 .noble-reqs { display: flex; flex-direction: column; gap: 2px; font-size: 0.6rem; font-weight: bold; background: rgba(0,0,0,0.6); padding: 3px; border-radius: 3px; max-width: fit-content; }
 .noble-req-item { display: flex; align-items: center; gap: 3px; color: #fff; text-shadow: 0 1px 2px #000; }
 
-/* ── Player Dashboard ───────────────────────────────────────── */
+/* ── Player Dashboard (更動版面) ───────────────────────────── */
+.dashboard-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
 .dashboard {
+  flex: 3;
   background: rgba(10, 24, 18, 0.85);
   border: 2px solid #2a221b;
   box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), 0 2px 4px rgba(255,255,255,0.05);
   border-radius: var(--radius);
   padding: 8px;
-  margin-bottom: 8px;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.res-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.res-grid { display: flex; justify-content: space-around; align-items: center; gap: 4px; }
 
 .res-block { 
-  background: rgba(0,0,0,0.4); 
-  border: 1px solid rgba(212, 175, 55, 0.1); 
-  border-radius: var(--radius-sm); 
-  padding: 4px 2px; 
+  background: none; 
+  border: none; 
+  padding: 0; 
   text-align: center;
   position: relative;
-  transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .res-circle {
-  width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 3px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
+  width: 22px; height: 22px; border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
   background-size: cover; background-position: center; color: transparent !important;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.res-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+
 @keyframes gemPulseGlow {
-  0% { 
-    box-shadow: 0 0 0px rgba(255, 215, 0, 0), inset 0 1px 2px rgba(255,255,255,0.2);
-    background-color: rgba(212, 175, 55, 0.4);
-    border-color: rgba(212, 175, 55, 0.8);
-  }
-  30% { 
-    box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255, 215, 0, 0.6);
-    background-color: rgba(212, 175, 55, 0.25);
-    border-color: #ffd700;
-  }
-  100% { 
-    box-shadow: 0 0 0px rgba(255, 215, 0, 0);
-    background-color: rgba(0,0,0,0.4);
-    border-color: rgba(212, 175, 55, 0.1);
-  }
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.2); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
 }
 
 @keyframes textPopValue {
   0% { transform: scale(1); color: #fff; }
-  30% { transform: scale(1.4); color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+  30% { transform: scale(1.3); color: #ffd700; text-shadow: 0 0 8px #ffd700; }
   100% { transform: scale(1); color: #FFF; }
 }
 
-.res-block.animate-pulse-glow {
-  animation: gemPulseGlow 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+/* 🎬 背包數字加減與漸漸消失特效 */
+@keyframes floatFadeUp {
+  0% { transform: translateY(0) scale(0.7); opacity: 0; }
+  20% { transform: translateY(-12px) scale(1.1); opacity: 1; }
+  80% { transform: translateY(-16px) scale(1); opacity: 1; }
+  100% { transform: translateY(-24px) scale(0.8); opacity: 0; }
 }
+
+.floating-diff {
+  position: absolute;
+  left: 0;
+  top: -10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  animation: floatFadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.floating-diff.plus { color: #2ecc71; }  /* 綠色字體 */
+.floating-diff.minus { color: #e74c3c; } /* 紅色字體 */
+
 .res-block.animate-pulse-glow .res-circle {
-  transform: scale(1.15);
+  animation: gemPulseGlow 0.6s ease-in-out;
 }
 .res-block.animate-pulse-glow .res-count {
   animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -215,8 +368,8 @@ html, body {
   animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-.res-count { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; display: block; line-height: 1; color: #FFF; text-shadow: 0 2px 2px rgba(0,0,0,0.5); transition: color 0.3s; }
-.res-bonus { font-size: 0.55rem; color: #738a7c; transform: scale(0.85); font-weight: 600; transition: color 0.3s; }
+.res-count { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; line-height: 1; color: #FFF; text-shadow: 0 2px 2px rgba(0,0,0,0.5); transition: color 0.3s; }
+.res-bonus { font-size: 0.55rem; color: #738a7c; font-weight: 600; transition: color 0.3s; line-height: 1; margin-top: 2px; }
 
 .bg-w { background-image: var(--c-diamond); }
 .bg-u { background-image: var(--c-sapphire); }
@@ -225,7 +378,52 @@ html, body {
 .bg-k { background-image: var(--c-onyx); }
 .bg-o { background-image: var(--c-gold); }
 
-.cap-bar { font-size: 0.6rem; color: #738a7c; margin-top: 4px; text-align: right; font-family: 'Orbitron', sans-serif; font-weight: 600; }
+.cap-bar { font-size: 0.6rem; color: #738a7c; margin-top: 4px; text-align: left; font-family: 'Orbitron', sans-serif; font-weight: 600; padding-left: 4px; }
+
+/* ── Earned Nobles ────────────────────────────────────────── */
+.earned-nobles-panel {
+  flex: 1;
+  background: rgba(30, 24, 20, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: var(--radius);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 140px;
+}
+.earned-nobles-title {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  padding-bottom: 2px;
+}
+.earned-nobles-list {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  max-height: 48px;
+}
+.earned-noble-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.4);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.earned-noble-mini img {
+  width: 16px; height: 16px; object-fit: cover; border-radius: 2px;
+}
+.earned-noble-mini span {
+  font-size: 0.55rem; color: #ffe099; white-space: nowrap;
+}
 
 /* ── Action Panel ──────────────────────────────────────────── */
 .action-panel {
@@ -373,7 +571,7 @@ html, body {
 .btn-replay { width: 100%; padding: 10px; background: linear-gradient(180deg, #d4af37, #8a6418); color: #FFF; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: transform 0.1s; font-size:0.85rem; }
 .btn-replay:hover { filter: brightness(1.15); }
 
-/* ── 🎬 結構内嵌式引導系統樣式 ───────────────────────────────── */
+/* ── Tutorial ─────────────────────────────────────────── */
 .tutorial-highlight {
   border: 3px solid #ffcc00 !important;
   box-shadow: 0 0 30px rgba(255, 204, 0, 0.6) !important;
@@ -429,7 +627,7 @@ html, body {
 }
 .btn-tutorial-next:hover { filter: brightness(1.1); }
 
-/* ── 📱 手機版 RWD ────────────────────────────────────────── */
+/* ── RWD ────────────────────────────────────────── */
 @media (max-width: 768px) {
   html, body { padding: 4px; }
   .shell { max-width: 100%; }
@@ -441,9 +639,11 @@ html, body {
   .noble-name { font-size: 0.5rem; }
   .noble-pts { font-size: 0.75rem; }
   .noble-reqs { gap: 1px; padding: 2px; }
-  .res-circle { width: 17px; height: 17px; margin-bottom: 2px; }
+  .dashboard-container { flex-direction: column; gap: 4px; }
+  .res-circle { width: 17px; height: 17px; }
   .res-count { font-size: 0.9rem; }
   .res-bonus { font-size: 0.5rem; }
+  .earned-nobles-panel { min-width: 100%; }
   .action-title { font-size: 0.65rem; margin-bottom: 4px; }
   .act-group { padding: 4px; }
   .token-btn { width: 20px; height: 20px; background-size: 18px 18px; }
@@ -458,6 +658,8 @@ html, body {
   .btn-card { font-size: 0.5rem; padding: 1px 0; }
   .tutorial-embedded-card { padding: 10px 12px; }
   .tutorial-text { font-size: 0.8rem; }
+  .achievement-banner { padding: 6px 8px; }
+  .ach-latest-display { font-size: 0.75rem; }
 }
 </style>
 </head>
@@ -469,6 +671,13 @@ html, body {
 <audio id="sfx-reserve" src="https://assets.mixkit.co/active_storage/sfx/3175/3175-preview.mp3"></audio>
 <audio id="sfx-select" src="https://assets.mixkit.co/active_storage/sfx/2073/2073-preview.mp3"></audio>
 <audio id="sfx-unselect" src="https://assets.mixkit.co/active_storage/sfx/2585/2585-preview.mp3"></audio>
+
+<!-- 👑 貴族拜訪音效更新 ──-->
+<audio id="sfx-noble-male" src="https://files.catbox.moe/q5v1cb.mp3"></audio>
+<audio id="sfx-noble-female" src="https://files.catbox.moe/fjlwtl.mp3"></audio>
+
+<!-- 🎬 新增音效：成就解鎖提示 -->
+<audio id="sfx-achievement" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
 
 <div class="shell">
   <div class="top-meta-wrap">
@@ -483,7 +692,15 @@ html, body {
     </div>
   </div>
 
-  <!-- ⚜️ 貴族區塊 -->
+  <!-- 🏆 全新：最新成就公告欄 (點擊可查看累積歷史紀錄) -->
+  <div class="achievement-banner" id="ach-banner-btn" onclick="openAchievementHistory()">
+    <div class="ach-latest-container">
+      <span class="ach-badge-title">Latest Achievement</span>
+      <div class="ach-latest-display" id="ach-latest-field">🏆 暫無新成就，繼續努力收購！</div>
+    </div>
+    <div class="ach-stats-summary" id="ach-stats-field">0 / 30</div>
+  </div>
+
   <section class="nobles-section" id="guide-nobles">
     <div class="nobles-grid" id="nobles-layer"></div>
     <div class="tutorial-embedded-card" id="embed-card-0">
@@ -496,21 +713,31 @@ html, body {
     </div>
   </section>
 
-  <!-- 🪙 皇家金庫區塊 -->
-  <section class="dashboard" id="guide-dashboard">
-    <div class="res-grid" id="res-layer"></div>
-    <div class="cap-bar" id="cap-txt">背包: 0 / 10</div>
-    <div class="tutorial-embedded-card" id="embed-card-1">
-      <div class="tutorial-header">🪙 皇家金庫 (資產欄)</div>
-      <div class="tutorial-text">顯示您當前建立的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！</div>
+  <div class="dashboard-container" id="guide-dashboard">
+    <section class="dashboard">
+      <div class="res-grid" id="res-layer"></div>
+      <div class="cap-bar" id="cap-txt">背包: 0 / 10</div>
+    </section>
+    
+    <section class="earned-nobles-panel">
+      <div class="earned-nobles-title">👑 已拜訪的貴族</div>
+      <div class="earned-nobles-list" id="earned-nobles-layer">
+        <p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>
+      </div>
+    </section>
+  </div>
+  
+  <div class="shell" style="padding:0;">
+    <div class="tutorial-embedded-card" id="embed-card-1" style="margin-top: -4px; margin-bottom: 8px;">
+      <div class="tutorial-header">🪙 皇家金庫 (資產欄) & 貴族隨行</div>
+      <div class="tutorial-text">左側顯示您當前「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。右側新空間則會即時顯示「已獲得的貴族」！注意：身上籌碼總上限為 10 顆！</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-1"></div>
         <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- 🟢 行動挑選區塊 -->
   <section class="action-panel" id="guide-actions">
     <div class="action-row">
       <div class="act-group">
@@ -535,7 +762,6 @@ html, body {
     </div>
   </section>
 
-  <!-- 💎 發展卡矩陣區塊 -->
   <section class="board-matrix" id="guide-matrix">
     <div class="board-row">
       <div class="row-header lv3">
@@ -571,7 +797,6 @@ html, body {
     </div>
   </section>
 
-  <!-- 🔒 保留契約區塊 -->
   <section class="reserved-section" id="guide-reserved">
     <p class="section-title" style="color:#d4af37">🔒 保密保留區</p>
     <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
@@ -586,7 +811,6 @@ html, body {
   </section>
 </div>
 
-<!-- 📦 完整遊戲流程說明視窗 -->
 <div class="modal-overlay" id="tutorial-start-modal">
   <div class="modal" style="max-width: 460px;">
     <span style="font-size:2.2rem;">📜</span>
@@ -613,7 +837,6 @@ html, body {
   </div>
 </div>
 
-<!-- 📦 老玩家回歸時的「歡迎進入視窗」 -->
 <div class="modal-overlay" id="welcome-back-modal">
   <div class="modal">
     <span style="font-size:2.5rem;">💎</span>
@@ -624,11 +847,20 @@ html, body {
   </div>
 </div>
 
-<!-- 🏆 勝利結算視窗 -->
+<!-- 🏆 全新：成就歷史履歷累積彈窗 (點擊欄位時觸開) -->
+<div class="modal-overlay" id="ach-history-modal">
+  <div class="modal ach-history-modal">
+    <h2 class="modal-title">🏆 皇家榮譽堂</h2>
+    <p style="font-size:0.8rem; color:var(--text-muted);">在此查閱您在本局中所達成的貿易壯舉軌跡</p>
+    <div class="ach-matrix-grid" id="ach-matrix-injector"></div>
+    <button class="btn-replay" style="background: #3a2e22; border: 1px solid #d4af37;" onclick="closeAchievementHistory()">返回大會堂</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="win-modal">
   <div class="modal">
     <span style="font-size:2.5rem;">🏆</span>
-    <h2 class="modal-title">璀璨大師，實至名歸！</h2>
+    <h2 class="modal-title">璀璨大師，實至名規！</h2>
     <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6;" id="modal-body-txt"></p>
     <button class="btn-replay" id="btn-restart">重開新局</button>
   </div>
@@ -692,33 +924,70 @@ const RAW_CARDS = {
   ]
 };
 
-// ⚜️ 替換後的 25 張全新隨機貴族卡（包含性別與名稱標籤，用於配對後續音效）
 const ALL_NOBLES_POOL = [
-  {id:"n1",  name:"男貴族 01", gender:"male",   points:3, img:"https://i.ibb.co/zHGC8vsm/image.png", req:{w:3, u:3, g:3}},
-  {id:"n2",  name:"男貴族 02", gender:"male",   points:3, img:"https://i.ibb.co/QvHvZZWc/image.png", req:{u:3, g:3, r:3}},
-  {id:"n3",  name:"男貴族 03", gender:"male",   points:3, img:"https://i.ibb.co/hzw3Vfm/image.png",  req:{g:3, r:3, k:3}},
-  {id:"n4",  name:"男貴族 04", gender:"male",   points:3, img:"https://i.ibb.co/nNSjxvvd/image.png", req:{w:3, u:3, k:3}},
-  {id:"n5",  name:"男貴族 05", gender:"male",   points:3, img:"https://i.ibb.co/67w5Lbjg/image.png", req:{w:3, r:3, k:3}},
-  {id:"n6",  name:"男貴族 06", gender:"male",   points:3, img:"https://i.ibb.co/8gJK15HN/image.png", req:{w:4, k:4}},
-  {id:"n7",  name:"男貴族 07", gender:"male",   points:3, img:"https://i.ibb.co/DDCcYWwX/image.png", req:{u:4, r:4}},
-  {id:"n8",  name:"男貴族 08", gender:"male",   points:3, img:"https://i.ibb.co/twnJGmm0/image.png", req:{g:4, r:4}},
-  {id:"n9",  name:"男貴族 09", gender:"male",   points:3, img:"https://i.ibb.co/rGGhc41x/image.png", req:{w:4, u:4}},
-  {id:"n10", name:"男貴族 10", gender:"male",   points:3, img:"https://i.ibb.co/JjvCKgMm/image.png", req:{u:4, g:4}},
-  {id:"n11", name:"男貴族 11", gender:"male",   points:3, img:"https://i.ibb.co/xSv0th2K/image.png", req:{g:4, k:4}},
-  {id:"n12", name:"男貴族 12", gender:"male",   points:3, img:"https://i.ibb.co/dwsGHwHv/image.png", req:{r:4, k:4}},
-  {id:"n13", name:"女貴族 01", gender:"female", points:3, img:"https://i.ibb.co/GQ2Yh0yH/image.png", req:{w:3, u:3, g:3}},
-  {id:"n14", name:"女貴族 02", gender:"female", points:3, img:"https://i.ibb.co/C3J5y1YY/image.png", req:{u:3, g:3, r:3}},
-  {id:"n15", name:"女貴族 03", gender:"female", points:3, img:"https://i.ibb.co/zTgwrwjz/image.png", req:{g:3, r:3, k:3}},
-  {id:"n16", name:"女貴族 04", gender:"female", points:3, img:"https://i.ibb.co/Q7zdjpKt/image.png", req:{w:3, r:3, k:3}},
-  {id:"n17", name:"女貴族 05", gender:"female", points:3, img:"https://i.ibb.co/7tghmFD6/image.png", req:{w:4, k:4}},
-  {id:"n18", name:"女貴族 06", gender:"female", points:3, img:"https://i.ibb.co/1tvK72P3/image.png", req:{u:4, r:4}},
-  {id:"n19", name:"女貴族 07", gender:"female", points:3, img:"https://i.ibb.co/0pZCRHx7/image.png", req:{g:4, r:4}},
-  {id:"n20", name:"女貴族 08", gender:"female", points:3, img:"https://i.ibb.co/PsNV1NKC/image.png", req:{w:4, u:4}},
-  {id:"n21", name:"女貴族 09", gender:"female", points:3, img:"https://i.ibb.co/N2g1rhFp/image.png", req:{u:4, g:4}},
-  {id:"n22", name:"女貴族 10", gender:"female", points:3, img:"https://i.ibb.co/KcbQYgmQ/image.png", req:{g:4, k:4}},
-  {id:"n23", name:"女貴族 11", gender:"female", points:3, img:"https://i.ibb.co/PzjqmHYQ/image.png", req:{r:4, k:4}},
-  {id:"n24", name:"女貴族 12", gender:"female", points:3, img:"https://i.ibb.co/xSJsNHRv/image.png", req:{w:3, u:3, r:3}},
-  {id:"n25", name:"女貴族 13", gender:"female", points:3, img:"https://i.ibb.co/N28cjs5Z/image.png", req:{w:3, g:3, k:3}}
+  {id:"n1",  name:"01 赫克特",   gender:"male",   points:3, img:"https://i.ibb.co/zHGC8vsm/image.png", req:{w:3, u:3, g:3}},
+  {id:"n2",  name:"02 羅蘭德",   gender:"male",   points:3, img:"https://i.ibb.co/QvHvZZWc/image.png", req:{u:3, g:3, r:3}},
+  {id:"n3",  name:"03 亞瑟",     gender:"male",   points:3, img:"https://i.ibb.co/hzw3Vfm/image.png",  req:{g:3, r:3, k:3}},
+  {id:"n4",  name:"04 查理曼",   gender:"male",   points:3, img:"https://i.ibb.co/nNSjxvvd/image.png", req:{w:3, u:3, k:3}},
+  {id:"n5",  name:"05 蘭斯洛特", gender:"male",   points:3, img:"https://i.ibb.co/67w5Lbjg/image.png", req:{w:3, r:3, k:3}},
+  {id:"n6",  name:"06 鮑德溫",   gender:"male",   points:3, img:"https://i.ibb.co/8gJK15HN/image.png", req:{w:4, k:4}},
+  {id:"n7",  name:"07 高文",     gender:"male",   points:3, img:"https://i.ibb.co/DDCcYWwX/image.png", req:{u:4, r:4}},
+  {id:"n8",  name:"08 貝德維爾", gender:"male",   points:3, img:"https://i.ibb.co/twnJGmm0/image.png", req:{g:4, r:4}},
+  {id:"n9",  name:"09 珀西瓦里", gender:"male",   points:3, img:"https://i.ibb.co/rGGhc41x/image.png", req:{w:4, u:4}},
+  {id:"n10", name:"10 崔斯坦",   gender:"male",   points:3, img:"https://i.ibb.co/JjvCKgMm/image.png", req:{u:4, g:4}},
+  {id:"n11", name:"11 尤瑟",     gender:"male",   points:3, img:"https://i.ibb.co/xSv0th2K/image.png", req:{g:4, k:4}},
+  {id:"n12", name:"12 艾德華",   gender:"male",   points:3, img:"https://i.ibb.co/dwsGHwHv/image.png", req:{r:4, k:4}},
+  {id:"n13", name:"01 桂妮薇兒", gender:"female", points:3, img:"https://i.ibb.co/GQ2Yh0yH/image.png", req:{w:3, u:3, g:3}},
+  {id:"n14", name:"02 摩根娜",   gender:"female", points:3, img:"https://i.ibb.co/C3J5y1YY/image.png", req:{u:3, g:3, r:3}},
+  {id:"n15", name:"03 薇薇安",   gender:"female", points:3, img:"https://i.ibb.co/zTgwrwjz/image.png", req:{g:3, r:3, k:3}},
+  {id:"n16", name:"04 艾蓮娜",   gender:"female", points:3, img:"https://i.ibb.co/Q7zdjpKt/image.png", req:{w:3, r:3, k:3}},
+  {id:"n17", name:"05 奧古斯塔", gender:"female", points:3, img:"https://i.ibb.co/7tghmFD6/image.png", req:{w:4, k:4}},
+  {id:"n18", name:"06 碧翠絲",   gender:"female", points:3, img:"https://i.ibb.co/1tvK72P3/image.png", req:{u:4, r:4}},
+  {id:"n19", name:"07 凱瑟琳",   gender:"female", points:3, img:"https://i.ibb.co/0pZCRHx7/image.png", req:{g:4, r:4}},
+  {id:"n20", name:"08 瑪格麗特", gender:"female", points:3, img:"https://i.ibb.co/PsNV1NKC/image.png", req:{w:4, u:4}},
+  {id:"n21", name:"09 伊莉莎白", gender:"female", points:3, img:"https://i.ibb.co/N2g1rhFp/image.png", req:{u:4, g:4}},
+  {id:"n22", name:"10 維多利亞", gender:"female", points:3, img:"https://i.ibb.co/KcbQYgmQ/image.png", req:{g:4, k:4}},
+  {id:"n23", name:"11 塞西莉亞", gender:"female", points:3, img:"https://i.ibb.co/PzjqmHYQ/image.png", req:{r:4, k:4}},
+  {id:"n24", name:"12 阿格妮絲", gender:"female", points:3, img:"https://i.ibb.co/xSJsNHRv/image.png", req:{w:3, u:3, r:3}},
+  {id:"n25", name:"13 伊莎貝拉", gender:"female", points:3, img:"https://i.ibb.co/N28cjs5Z/image.png", req:{w:3, g:3, k:3}}
+];
+
+// 🏆 30 項單人模式成就元數據庫
+const ACHIEVEMENT_DEFINITIONS = [
+  { id: 1, symbol: "💰", name: "第一桶金", desc: "在單一回合中，一口氣拿取 3 枚不同顏色的普通寶石。", tier: "easy", color: "var(--diff-easy)" },
+  { id: 2, symbol: "💎", name: "專一的收藏家", desc: "在單一回合中，拿取 2 枚相同顏色的普通寶石。", tier: "easy", color: "var(--diff-easy)" },
+  { id: 3, symbol: "🏪", name: "開張大吉", desc: "成功購買第一張發展卡。", tier: "easy", color: "var(--diff-easy)" },
+  { id: 4, symbol: "🪙", name: "黃金儲蓄狂", desc: "同時持有 3 枚黃金（百搭寶石）。", tier: "easy", color: "var(--diff-easy)" },
+  { id: 5, symbol: "🎒", name: "滿載而歸", desc: "某個回合結束時，手上的寶石數量剛好達到上限 10 枚。", tier: "easy", color: "var(--diff-easy)" },
+  { id: 6, symbol: "🪙", name: "不需找零", desc: "購買一張發展卡時，完全由手牌普通寶石支付，沒用到黃金。", tier: "easy", color: "var(--diff-easy)" },
+  
+  { id: 7, symbol: "🌈", name: "七彩的寶石尋寶家", desc: "玩家背包同時存在 5 種不同顏色的普通寶石各至少 1 枚。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 8, symbol: "🔄", name: "永續發展", desc: "完全不消耗任何實體寶石（僅靠已購卡片的減免功能）購買卡片。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 9, symbol: "⚡", name: "先搶先贏", desc: "執行「保留一張卡片並獲得 1 黃金」的行動。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 10, symbol: "🎯", name: "高瞻遠矚", desc: "成功將保留區的 3 張手牌全部補滿。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 11, symbol: "🏗️", name: "基礎紮實", desc: "成功在遊戲前 10 回合內，購買 5 張等級 1 的發展卡。", tier: "normal", color: "var(--diff-normal)" },
+  { id: 12, symbol: "🧱", name: "金字塔底層", desc: "遊戲結束時，名下擁有 8 張（或以上）等級 1 的發展卡。", tier: "normal", color: "var(--diff-normal)" },
+  
+  { id: 13, symbol: "🥚", name: "打破鴨蛋", desc: "獲得遊戲中的第一張帶有分數的卡片。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 14, symbol: "🚀", name: "跨越階級", desc: "首次成功購買一張等級 3（Level 3）的發展卡。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 15, symbol: "⚜️", name: "貴族青睞", desc: "滿足貴族條件，獲得第一位貴族板塊的拜訪。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 16, symbol: "🔓", name: "清空庫存", desc: "成功將保留區的卡片購買下來，使保留區歸零。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 17, symbol: "🏭", name: "基建大師", desc: "單一顏色的發展卡減免效果達到 4 次。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 18, symbol: "📈", name: "精準投資", desc: "購買一張「價值 4 分以上（含）」的高級發展卡。", tier: "hard", color: "var(--diff-hard)" },
+  { id: 19, symbol: "⏱️", name: "小試身手", desc: "成功通關（達到 15 分），且總消耗回合數小於 35 回合。", tier: "hard", color: "var(--diff-hard)" },
+  
+  { id: 20, symbol: "🔥", name: "真金不怕火煉", desc: "成功通關，且整局遊戲從未執行過「保留卡片」的行動。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 21, symbol: "🪵", name: "白手起家", desc: "成功通關，且名下沒有任何一位貴族拜訪。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 22, symbol: "🥂", name: "上流社會", desc: "成功通關，且分數來源有 9 分（或以上）是來自於貴族板塊。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 23, symbol: "🔋", name: "黃金絕緣體", desc: "成功通關，且通關當下持有的寶石中完全沒有黃金。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 24, symbol: "🗺️", name: "全色制霸", desc: "5 種普通顏色的發展卡，每種顏色都至少擁有 3 張。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 25, symbol: "👥", name: "雙喜臨門", desc: "在單人局遊戲中，成功吸引兩位（或以上）的貴族拜訪。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 26, symbol: "🧠", name: "精算大師", desc: "成功通關，且總消耗回合數小於 25 回合。", tier: "expert", color: "var(--diff-expert)" },
+  
+  { id: 27, symbol: "💥", name: "厚積薄發", desc: "在單一回合內，同時靠購買卡片+貴族拜訪，一舉獲得 6 分以上。", tier: "master", color: "var(--diff-master)" },
+  { id: 28, symbol: "🎯", name: "壓軸登場", desc: "成功通關時，最終分數剛好精準落在 15 分，不多不少。", tier: "master", color: "var(--diff-master)" },
+  { id: 29, symbol: "⚡", name: "璀璨神速", desc: "以極限速度通關，總消耗回合數小於 20 回合。", tier: "master", color: "var(--diff-master)" },
+  { id: 30, symbol: "👑", name: "璀璨大師", desc: "達成上述 29 個成就中的任意 20 個。", tier: "master", color: "var(--diff-master)" }
 ];
 
 let state = {};
@@ -726,15 +995,32 @@ let selectedDiff = [];
 let selectedSame = null;
 let isMusicMuted = false;
 
+// 🏆 全新：局內成就觸發追蹤旗標
+let unlockedAchievementIds = new Set();
+let latestAchievementId = null;
+
+// 全局行為歷史紀錄器 (用以審查跨回合極端成就條件)
+let sessionTracker = {
+  hasReservedThisGame: false,
+  purchasedCardsCount: 0,
+  lv1CardsCountBeforeTurn10: 0,
+  singleTurnScoreGained: 0,
+  goldUsedInThisPurchase: false
+};
+
 const audioEl = document.getElementById('bg-music');
 const sfxGemEl = document.getElementById('sfx-gem');
 const sfxBuyEl = document.getElementById('sfx-buy');
 const sfxReserveEl = document.getElementById('sfx-reserve');
 const sfxSelectEl = document.getElementById('sfx-select');
 const sfxUnselectEl = document.getElementById('sfx-unselect');
+const sfxAchievementEl = document.getElementById('sfx-achievement');
 const musicBtn = document.getElementById('toggle-music-btn');
 
-/* ── 🎬 結構内嵌式教學導覽邏輯 ────────────────────────── */
+const sfxNobleMale = document.getElementById('sfx-noble-male');
+const sfxNobleFemale = document.getElementById('sfx-noble-female');
+
+/* ── 🎬 教學導覽邏輯 ────────────────────────── */
 let currentTutorialStep = 0;
 const TUTORIAL_STEPS = [
   { elementId: 'guide-nobles' },
@@ -820,6 +1106,128 @@ document.getElementById('btn-final-t-next').addEventListener('click', () => {
 });
 
 
+/* ── 🏆 全新：成就檢定核心運算引擎 ────────────────────────── */
+function triggerAchievementUnlock(id) {
+  if (unlockedAchievementIds.has(id)) return;
+  unlockedAchievementIds.add(id);
+  latestAchievementId = id;
+  playSFX(sfxAchievementEl);
+  
+  // 檢查璀璨大師成就 (成就數達 20 個)
+  if (id !== 30 && unlockedAchievementIds.size >= 20) {
+    triggerAchievementUnlock(30);
+  }
+}
+
+function auditInstantAchievements(actionType, meta) {
+  const p = state.player;
+  
+  // 1. 第一桶金
+  if (actionType === "takeDiff" && meta.count === 3) triggerAchievementUnlock(1);
+  // 2. 專一的收藏家
+  if (actionType === "takeSame") triggerAchievementUnlock(2);
+  // 4. 黃金儲蓄狂
+  if (p.tokens.o >= 3) triggerAchievementUnlock(4);
+  // 5. 滿載而歸
+  let totalTokens = 0;
+  for (let k in p.tokens) totalTokens += p.tokens[k];
+  if (totalTokens === 10) triggerAchievementUnlock(5);
+  
+  // 7. 七彩寶石尋寶家
+  if (p.tokens.w >= 1 && p.tokens.u >= 1 && p.tokens.g >= 1 && p.tokens.r >= 1 && p.tokens.k >= 1) {
+    triggerAchievementUnlock(7);
+  }
+  // 9. 先搶先贏
+  if (actionType === "reserve") triggerAchievementUnlock(9);
+  // 10. 高瞻遠矚
+  if (p.reserved.length === 3) triggerAchievementUnlock(10);
+  
+  if (actionType === "buy") {
+    // 3. 開張大吉
+    triggerAchievementUnlock(3);
+    // 6. 不需找零
+    if (!sessionTracker.goldUsedInThisPurchase) triggerAchievementUnlock(6);
+    // 8. 永續發展
+    if (meta.totalGemsSpent === 0) triggerAchievementUnlock(8);
+    // 13. 打破鴨蛋
+    if (meta.card.points > 0) triggerAchievementUnlock(13);
+    // 14. 跨越階級
+    if (meta.level === "lv3") triggerAchievementUnlock(14);
+    // 16. 清空庫存
+    if (meta.isReserved && p.reserved.length === 0) triggerAchievementUnlock(16);
+    // 17. 基建大師
+    if (p.bonus[meta.card.provides] >= 4) triggerAchievementUnlock(17);
+    // 18. 精準投資
+    if (meta.card.points >= 4) triggerAchievementUnlock(18);
+  }
+}
+
+function auditEndGameAchievements() {
+  const p = state.player;
+  const totalTurns = state.turn - 1;
+  
+  // 11. 基礎紮實 & 12. 金字塔底層 
+  // (在全域購買卡片處已統計 lv1 總數)
+  let lv1Holdings = sessionTracker.purchasedCardsCountLv1 || 0; 
+  if (lv1Holdings >= 8) triggerAchievementUnlock(12);
+
+  // 19. 小試身手
+  if (totalTurns < 35) triggerAchievementUnlock(19);
+  // 20. 真金不怕火煉
+  if (!sessionTracker.hasReservedThisGame) triggerAchievementUnlock(20);
+  
+  // 21. 白手起家 & 22. 上流社會 & 25. 雙喜臨門
+  const earnedNobles = state.nobles.filter(n => n.completed);
+  if (earnedNobles.length === 0) triggerAchievementUnlock(21);
+  if (earnedNobles.length * 3 >= 9) triggerAchievementUnlock(22);
+  if (earnedNobles.length >= 2) triggerAchievementUnlock(25);
+  
+  // 23. 黃金絕緣體
+  if (p.tokens.o === 0) triggerAchievementUnlock(23);
+  
+  // 24. 全色制霸
+  if (p.bonus.w >= 3 && p.bonus.u >= 3 && p.bonus.g >= 3 && p.bonus.r >= 3 && p.bonus.k >= 3) {
+    triggerAchievementUnlock(24);
+  }
+  
+  // 26. 精算大師
+  if (totalTurns < 25) triggerAchievementUnlock(26);
+  // 28. 壓軸登場
+  if (p.score === 15) triggerAchievementUnlock(28);
+  // 29. 璀璨神速
+  if (totalTurns < 20) triggerAchievementUnlock(29);
+}
+
+/* ── 🏆 成就履歷視窗介面渲染與操控 ────────────────────────── */
+function openAchievementHistory() {
+  const container = document.getElementById('ach-matrix-injector');
+  container.innerHTML = ACHIEVEMENT_DEFINITIONS.map(def => {
+    const isUnlocked = unlockedAchievementIds.has(def.id);
+    const statusText = isUnlocked ? "已達成" : "未解鎖";
+    let tierText = "簡單";
+    if (def.tier === "normal") tierText = "中階";
+    if (def.tier === "hard") tierText = "進階";
+    if (def.tier === "expert") tierText = "困難";
+    if (def.tier === "master") tierText = "終極";
+
+    return `
+      <div class="ach-item-row ${isUnlocked ? 'unlocked' : ''}" style="${isUnlocked ? `border-left: 4px solid ${def.color};` : ''}">
+        <div class="ach-row-meta">
+          <div class="ach-row-name">${def.symbol} ${def.name}</div>
+          <div class="ach-row-desc">${def.desc}</div>
+        </div>
+        <div class="ach-row-tag" style="background: ${def.color}; font-weight:900;">${tierText} - ${statusText}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('ach-history-modal').classList.add('show');
+}
+
+function closeAchievementHistory() {
+  document.getElementById('ach-history-modal').classList.remove('show');
+}
+
+
 /* ── 核心主程式邏輯 ────────────────────────────────────────── */
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -854,6 +1262,17 @@ function initGame() {
   const shuffledNobles = shuffle(JSON.parse(JSON.stringify(ALL_NOBLES_POOL)));
   lastRenderedCardIds.clear();
   lastPlayerState = null; 
+
+  unlockedAchievementIds.clear();
+  latestAchievementId = null;
+  sessionTracker = {
+    hasReservedThisGame: false,
+    purchasedCardsCount: 0,
+    purchasedCardsCountLv1: 0,
+    lv1CardsCountBeforeTurn10: 0,
+    singleTurnScoreGained: 0,
+    goldUsedInThisPurchase: false
+  };
 
   state = {
     turn: 1,
@@ -936,20 +1355,35 @@ function checkNoblesTrigger() {
     if (match) { 
       n.completed = true; 
       p.score += n.points; 
-      // 💡 提示：此處留給您未來串接男女聲音效。例如：
-      // if (n.gender === 'male') { playSFX(sfxMaleWelcome); } else { playSFX(sfxFemaleWelcome); }
+      sessionTracker.singleTurnScoreGained += n.points;
+      triggerAchievementUnlock(15); // 15. 貴族青睞
+
+      if (n.gender === 'male') {
+        playSFX(sfxNobleMale);
+      } else if (n.gender === 'female') {
+        playSFX(sfxNobleFemale);
+      }
     }
   });
 }
 
 function nextTurn() {
   checkNoblesTrigger();
+  
+  // 27. 厚積薄發 (單回合斬獲 >=6分)
+  if (sessionTracker.singleTurnScoreGained >= 6) triggerAchievementUnlock(27);
+  sessionTracker.singleTurnScoreGained = 0; // 重置
+
   state.turn++;
   selectedDiff = []; selectedSame = null;
+  
   if (state.player.score >= 15) {
     state.isOver = true;
-    document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，突破 15 分門檻！`;
+    auditEndGameAchievements(); // 結算賽局成就
+    updateUI();
+    document.getElementById('modal-body-txt').textContent = `你總共花費了 ${state.turn - 1} 個回合，成功突破威望門檻！`;
     document.getElementById('win-modal').classList.add('show');
+    return;
   }
   updateUI();
 }
@@ -959,6 +1393,8 @@ function takeThreeDiff() {
   lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxGemEl);
   selectedDiff.forEach(gem => { state.bank[gem]--; state.player.tokens[gem]++; });
+  
+  auditInstantAchievements("takeDiff", { count: selectedDiff.length });
   nextTurn();
 }
 
@@ -968,6 +1404,8 @@ function takeTwoSame() {
   lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxGemEl);
   state.bank[selectedSame] -= 2; state.player.tokens[selectedSame] += 2;
+  
+  auditInstantAchievements("takeSame", { gem: selectedSame });
   nextTurn();
 }
 
@@ -989,14 +1427,34 @@ window.buyCard = function(level, index, isReserved = false) {
   
   const finishBuy = () => {
     const p = state.player;
+    let totalGemsSpent = 0;
+    sessionTracker.goldUsedInThisPurchase = (totalGoldNeeded > 0);
+
     for (let gem of GEM_TYPES) {
       p.tokens[gem] -= breakdown[gem].tokenDeducted;
       state.bank[gem] += breakdown[gem].tokenDeducted;
+      totalGemsSpent += breakdown[gem].tokenDeducted;
     }
     if (totalGoldNeeded > 0) { p.tokens.o -= totalGoldNeeded; state.bank.o += totalGoldNeeded; }
-    p.score += card.points; p.bonus[card.provides]++;
+    
+    p.score += card.points; 
+    sessionTracker.singleTurnScoreGained += card.points;
+    p.bonus[card.provides]++;
+    
+    // 統計卡片等級數據
+    sessionTracker.purchasedCardsCount++;
+    if (level === "lv1" || card.id.startsWith("1")) {
+      sessionTracker.purchasedCardsCountLv1 = (sessionTracker.purchasedCardsCountLv1 || 0) + 1;
+      if (state.turn <= 10) {
+        sessionTracker.lv1CardsCountBeforeTurn10++;
+        if (sessionTracker.lv1CardsCountBeforeTurn10 >= 5) triggerAchievementUnlock(11); // 11. 基礎紮實
+      }
+    }
+
     if (isReserved) state.player.reserved.splice(index, 1);
     else state.matrix[level][index] = drawNextCard(level);
+    
+    auditInstantAchievements("buy", { card: card, level: level, isReserved: isReserved, totalGemsSpent: totalGemsSpent });
     nextTurn();
   };
 
@@ -1014,12 +1472,15 @@ window.reserveCard = function(level, index) {
   lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxReserveEl);
   
+  sessionTracker.hasReservedThisGame = true;
   const cardEl = document.getElementById(`card-${card.id}`);
 
   const finishReserve = () => {
     state.player.reserved.push(card);
     state.matrix[level][index] = drawNextCard(level);
     if (state.bank.o > 0 && getPlayerTotalTokens() < 10) { state.bank.o--; state.player.tokens.o++; }
+    
+    auditInstantAchievements("reserve", { card: card, level: level });
     nextTurn();
   };
 
@@ -1102,19 +1563,65 @@ function updateUI() {
 
   const p = state.player;
   
+  // 更新成就公告欄與計數器
+  const latestField = document.getElementById('ach-latest-field');
+  document.getElementById('ach-stats-field').textContent = `${unlockedAchievementIds.size} / 30`;
+  
+  if (latestAchievementId) {
+    const latestDef = ACHIEVEMENT_DEFINITIONS.find(d => d.id === latestAchievementId);
+    let tierText = "簡單";
+    if (latestDef.tier === "normal") tierText = "中階";
+    if (latestDef.tier === "hard") tierText = "進階";
+    if (latestDef.tier === "expert") tierText = "困難";
+    if (latestDef.tier === "master") tierText = "終極";
+
+    latestField.innerHTML = `
+      <span style="color: ${latestDef.color}; font-weight: 800;">${latestDef.symbol} [${tierText}] ${latestDef.name}</span> 
+      <span style="color: var(--text-muted); font-size: 0.72rem;">- ${latestDef.desc}</span>
+    `;
+    latestField.classList.add('has-ach');
+    // 清除動畫流以利下次重播
+    setTimeout(() => { latestField.classList.remove('has-ach'); }, 600);
+  } else {
+    latestField.innerHTML = `🏆 暫無新成就，繼續努力收購！`;
+  }
+
+  // 更新皇家金庫資產欄
   document.getElementById('res-layer').innerHTML = [...GEM_TYPES, 'o'].map(k => {
     let hasChanged = false;
+    let diffText = "";
+    let diffClass = "";
+
     if (lastPlayerState) {
-      const tokenDiff = p.tokens[k] !== lastPlayerState.tokens[k];
-      const bonusDiff = k !== 'o' ? (p.bonus[k] !== lastPlayerState.bonus[k]) : false;
-      if (tokenDiff || bonusDiff) hasChanged = true;
+      const oldVal = lastPlayerState.tokens[k] || 0;
+      const newVal = p.tokens[k] || 0;
+      const tokenDiff = newVal - oldVal;
+      
+      if (tokenDiff !== 0) {
+        hasChanged = true;
+        if (tokenDiff > 0) {
+          diffText = `+${tokenDiff}`;
+          diffClass = "plus"; 
+        } else {
+          diffText = `${tokenDiff}`;
+          diffClass = "minus";
+        }
+      } else if (k !== 'o' && p.bonus[k] !== lastPlayerState.bonus[k]) {
+        hasChanged = true;
+      }
     }
+
     const animClass = hasChanged ? 'animate-pulse-glow' : '';
+    const floatingHtml = diffText ? `<span class="floating-diff ${diffClass}">${diffText}</span>` : '';
+
     return `
       <div class="res-block ${animClass}">
         <div class="res-circle ${GEM_CLASSES[k]}"></div>
-        <span class="res-count">${p.tokens[k]}</span>
-        <div class="res-bonus">${k !== 'o' ? `+${p.bonus[k]}` : '黃金'}</div>
+        <div class="res-text-group">
+          ${floatingHtml}
+          <span class="res-count">${p.tokens[k]}</span>
+          <div class="res-bonus">${k !== 'o' ? `+${p.bonus[k]}` : '黃金'}</div>
+        </div>
       </div>
     `;
   }).join('');
@@ -1123,6 +1630,7 @@ function updateUI() {
   document.getElementById('cap-txt').textContent = `袋中存貨: ${tot} / 10`;
   document.getElementById('cap-txt').style.color = tot >= 10 ? '#c94c4c' : '#738a7c';
 
+  // 更新主要貴族覲見區
   document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
     let reqsHtml = Object.keys(n.req).map(g => `<div class="noble-req-item"><span class="cost-dot-circle ${GEM_CLASSES[g]}" style="width:9px; height:9px;"></span><span>${n.req[g]}</span></div>`).join('');
     return `
@@ -1137,6 +1645,20 @@ function updateUI() {
         </div>
       </div>`;
   }).join('');
+
+  // 渲染右側空間已獲得的貴族
+  const earnedNobles = state.nobles.filter(n => n.completed);
+  const earnedNoblesLayer = document.getElementById('earned-nobles-layer');
+  if (earnedNobles.length === 0) {
+    earnedNoblesLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>`;
+  } else {
+    earnedNoblesLayer.innerHTML = earnedNobles.map(n => `
+      <div class="earned-noble-mini">
+        <img src="${n.img}" alt="${n.name}">
+        <span>${n.name.split(' ')[1]}</span>
+      </div>
+    `).join('');
+  }
 
   document.getElementById('row-lv3').innerHTML = state.matrix.lv3.map((c, i) => renderCard(c, 'lv3', i)).join('');
   document.getElementById('row-lv2').innerHTML = state.matrix.lv2.map((c, i) => renderCard(c, 'lv2', i)).join('');
