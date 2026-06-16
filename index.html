@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>璀璨寶石 — 皇家大會堂 (深度教學層級同步版)</title>
+<title>璀璨寶石 — 安安之家</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -159,15 +159,64 @@ html, body {
   transition: all 0.3s ease;
 }
 .res-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
-.res-block { background: rgba(0,0,0,0.4); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: var(--radius-sm); padding: 4px 2px; text-align: center; }
+
+.res-block { 
+  background: rgba(0,0,0,0.4); 
+  border: 1px solid rgba(212, 175, 55, 0.1); 
+  border-radius: var(--radius-sm); 
+  padding: 4px 2px; 
+  text-align: center;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
 .res-circle {
   width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 3px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
   background-size: cover; background-position: center; color: transparent !important;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.res-count { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; display: block; line-height: 1; color: #FFF; text-shadow: 0 2px 2px rgba(0,0,0,0.5); }
-.res-bonus { font-size: 0.55rem; color: #738a7c; transform: scale(0.85); font-weight: 600; }
+
+@keyframes gemPulseGlow {
+  0% { 
+    box-shadow: 0 0 0px rgba(255, 215, 0, 0), inset 0 1px 2px rgba(255,255,255,0.2);
+    background-color: rgba(212, 175, 55, 0.4);
+    border-color: rgba(212, 175, 55, 0.8);
+  }
+  30% { 
+    box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255, 215, 0, 0.6);
+    background-color: rgba(212, 175, 55, 0.25);
+    border-color: #ffd700;
+  }
+  100% { 
+    box-shadow: 0 0 0px rgba(255, 215, 0, 0);
+    background-color: rgba(0,0,0,0.4);
+    border-color: rgba(212, 175, 55, 0.1);
+  }
+}
+
+@keyframes textPopValue {
+  0% { transform: scale(1); color: #fff; }
+  30% { transform: scale(1.4); color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+  100% { transform: scale(1); color: #FFF; }
+}
+
+.res-block.animate-pulse-glow {
+  animation: gemPulseGlow 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.res-block.animate-pulse-glow .res-circle {
+  transform: scale(1.15);
+}
+.res-block.animate-pulse-glow .res-count {
+  animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.res-block.animate-pulse-glow .res-bonus {
+  animation: textPopValue 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.res-count { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; display: block; line-height: 1; color: #FFF; text-shadow: 0 2px 2px rgba(0,0,0,0.5); transition: color 0.3s; }
+.res-bonus { font-size: 0.55rem; color: #738a7c; transform: scale(0.85); font-weight: 600; transition: color 0.3s; }
 
 .bg-w { background-image: var(--c-diamond); }
 .bg-u { background-image: var(--c-sapphire); }
@@ -303,22 +352,28 @@ html, body {
 /* ── Reserved Hand ────────────────────────────────────────── */
 .reserved-section { margin-top: 6px; background: rgba(0, 0, 0, 0.35); border: 1px dashed #9c7a3c; padding: 6px; border-radius: var(--radius); transition: all 0.3s ease; }
 
-/* ── Modal ── */
+/* ── Modal Popups ─────────────────────────────────────────── */
 .modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.9); backdrop-filter:blur(4px);
-  display:flex; align-items:center; justify-content:center; padding:20px; z-index:100;
-  opacity:0; pointer-events:none; transition:opacity 0.3s;
+  position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(5px);
+  display:flex; align-items:center; justify-content:center; padding:20px; z-index:200;
+  opacity:0; pointer-events:none; transition:opacity 0.3s ease;
 }
 .modal-overlay.show { opacity:1; pointer-events:all; }
-.modal { background:#1e1814; border:2px solid #d4af37; border-radius:8px; padding:24px; max-width:360px; width:100%; text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-.modal-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: #d4af37; margin-bottom: 10px; text-shadow: var(--glow-warm); }
-.btn-replay { width: 100%; padding: 10px; background: linear-gradient(180deg, #d4af37, #8a6418); color: #FFF; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: transform 0.1s; }
+.modal { 
+  background:#1e1814; border:2px solid #d4af37; border-radius:8px; padding:24px; 
+  max-width:420px; width:100%; text-align:center; box-shadow: 0 10px 35px rgba(0,0,0,0.9); 
+  position: relative;
+}
+.modal-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: #d4af37; margin-bottom: 12px; text-shadow: var(--glow-warm); font-weight:900; }
 
+.rule-box { text-align: left; background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.15); padding: 12px; border-radius: 6px; margin: 12px 0; font-size: 0.85rem; line-height: 1.6; }
+.rule-title { font-weight: bold; color: #ffe099; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.rule-step { margin-left: 14px; font-weight: 500; color: #e3ded7; }
+
+.btn-replay { width: 100%; padding: 10px; background: linear-gradient(180deg, #d4af37, #8a6418); color: #FFF; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: transform 0.1s; font-size:0.85rem; }
+.btn-replay:hover { filter: brightness(1.15); }
 
 /* ── 🎬 結構内嵌式引導系統樣式 ───────────────────────────────── */
-/* 核心改動：移除了固定的 fixed 黑色全螢幕遮罩，改由目標區塊「原地渲染」說明面板 */
-
-/* 🎨 與被說明區塊高度整合的「共生高亮框」：亮度、層級與區塊完全一致 */
 .tutorial-highlight {
   border: 3px solid #ffcc00 !important;
   box-shadow: 0 0 30px rgba(255, 204, 0, 0.6) !important;
@@ -326,10 +381,9 @@ html, body {
   transition: all 0.3s ease;
 }
 
-/* 🚀 精緻內嵌導覽卡：直接作為區塊下方子元素或兄弟元素渲染，繼承相同的 z-index 與亮度層級 */
 .tutorial-embedded-card {
-  background: rgba(22, 16, 12, 0.98); /* 極深黑底，確保文字在各區塊背景下都清晰可見 */
-  border-left: 4px solid #ffcc00; /* 與高亮同飽和度的金黃左側條 */
+  background: rgba(22, 16, 12, 0.98);
+  border-left: 4px solid #ffcc00;
   border-top: 1px solid rgba(255, 204, 0, 0.2);
   border-right: 1px solid rgba(255, 204, 0, 0.1);
   border-bottom: 1px solid rgba(255, 204, 0, 0.1);
@@ -337,7 +391,7 @@ html, body {
   padding: 12px 16px;
   margin-top: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-  display: none; /* 預設隱藏，由 JS 控制顯示 */
+  display: none;
   animation: embedFadeIn 0.4s ease forwards;
 }
 
@@ -346,7 +400,6 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 🌟 說明標題：極致高亮金 */
 .tutorial-header { 
   font-family: 'Cinzel', serif; font-size: 1.1rem; 
   color: #ffcc00 !important; 
@@ -355,7 +408,6 @@ html, body {
   text-shadow: 0 0 8px rgba(255, 204, 0, 0.4), 0 1px 2px #000000;
 }
 
-/* 🌟 說明文字：純白高粗體，具備與遊戲同等的分量感，不壓縮視野 */
 .tutorial-text { 
   font-size: 0.88rem; 
   color: #ffffff !important; 
@@ -365,8 +417,6 @@ html, body {
 }
 
 .tutorial-footer { display: flex; justify-content: space-between; align-items: center; }
-
-/* 進度點點發光 */
 .tutorial-dots { display: flex; gap: 6px; }
 .t-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 204, 0, 0.2); }
 .t-dot.active { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
@@ -379,34 +429,25 @@ html, body {
 }
 .btn-tutorial-next:hover { filter: brightness(1.1); }
 
-/* ── 📱 手機版 RWD 防爆、全面微調縮小版面 ────────────────────── */
+/* ── 📱 手機版 RWD ────────────────────────────────────────── */
 @media (max-width: 768px) {
   html, body { padding: 4px; }
   .shell { max-width: 100%; }
-  
   .game-title { font-size: 1.05rem; letter-spacing: 0.1em; }
   .status-bar { gap: 4px; }
   .music-btn { padding: 3px 6px; font-size: 0.68rem; }
   .status-pill { padding: 2px 6px; font-size: 0.68rem; }
-
-  /* 縮小貴族 */
   .noble-card { min-width: 72px; height: 72px; }
   .noble-name { font-size: 0.5rem; }
   .noble-pts { font-size: 0.75rem; }
   .noble-reqs { gap: 1px; padding: 2px; }
-
-  /* 縮小玩家金庫 */
   .res-circle { width: 17px; height: 17px; margin-bottom: 2px; }
   .res-count { font-size: 0.9rem; }
   .res-bonus { font-size: 0.5rem; }
-  
-  /* 縮小行動面板 */
   .action-title { font-size: 0.65rem; margin-bottom: 4px; }
   .act-group { padding: 4px; }
   .token-btn { width: 20px; height: 20px; background-size: 18px 18px; }
   .btn-primary { padding: 4px; font-size: 0.65rem; }
-
-  /* 縮小卡牌矩陣 */
   .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .card { min-height: 92px; }
   .card-content-wrapper { padding: 4px; }
@@ -415,8 +456,6 @@ html, body {
   .cost-dot { font-size: 0.55rem; padding: 0px 2px; }
   .cost-dot-circle { width: 6px; height: 6px; }
   .btn-card { font-size: 0.5rem; padding: 1px 0; }
-  
-  /* 手機版內嵌導覽字體微調 */
   .tutorial-embedded-card { padding: 10px 12px; }
   .tutorial-text { font-size: 0.8rem; }
 }
@@ -427,6 +466,9 @@ html, body {
 <audio id="bg-music" src="https://assets.mixkit.co/music/785/785.mp3" loop></audio>
 <audio id="sfx-gem" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
 <audio id="sfx-buy" src="https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3"></audio>
+<audio id="sfx-reserve" src="https://assets.mixkit.co/active_storage/sfx/3175/3175-preview.mp3"></audio>
+<audio id="sfx-select" src="https://assets.mixkit.co/active_storage/sfx/2073/2073-preview.mp3"></audio>
+<audio id="sfx-unselect" src="https://assets.mixkit.co/active_storage/sfx/2585/2585-preview.mp3"></audio>
 
 <div class="shell">
   <div class="top-meta-wrap">
@@ -435,12 +477,13 @@ html, body {
     </header>
     <div class="status-bar">
       <button id="toggle-music-btn" class="music-btn">🎵 音樂：開啟</button>
-      <button class="music-btn" style="border-color:#8a6418" onclick="forceStartTutorial()">📖 重看教學</button>
+      <button class="music-btn" style="border-color:#8a6418" onclick="forceStartOverviewTutorial()">📖 完整教學</button>
       <div class="status-pill">回合 <strong id="turn-txt">0</strong></div>
       <div class="status-pill">威望 <strong id="score-txt" style="color:#e6b464; text-shadow: var(--glow-warm);">0</strong> / 15</div>
     </div>
   </div>
 
+  <!-- ⚜️ 貴族區塊 -->
   <section class="nobles-section" id="guide-nobles">
     <div class="nobles-grid" id="nobles-layer"></div>
     <div class="tutorial-embedded-card" id="embed-card-0">
@@ -453,12 +496,13 @@ html, body {
     </div>
   </section>
 
+  <!-- 🪙 皇家金庫區塊 -->
   <section class="dashboard" id="guide-dashboard">
     <div class="res-grid" id="res-layer"></div>
     <div class="cap-bar" id="cap-txt">背包: 0 / 10</div>
     <div class="tutorial-embedded-card" id="embed-card-1">
       <div class="tutorial-header">🪙 皇家金庫 (資產欄)</div>
-      <div class="tutorial-text">顯示您當前擁有的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！</div>
+      <div class="tutorial-text">顯示您當前建立的「寶石籌碼袋（數字）」與「發展卡永久產量（加號）」。注意：身上籌碼總上限為 10 顆！</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-1"></div>
         <button class="btn-tutorial-next" onclick="nextTutorialStep()">下一步</button>
@@ -466,6 +510,7 @@ html, body {
     </div>
   </section>
 
+  <!-- 🟢 行動挑選區塊 -->
   <section class="action-panel" id="guide-actions">
     <div class="action-row">
       <div class="act-group">
@@ -490,6 +535,7 @@ html, body {
     </div>
   </section>
 
+  <!-- 💎 發展卡矩陣區塊 -->
   <section class="board-matrix" id="guide-matrix">
     <div class="board-row">
       <div class="row-header lv3">
@@ -525,6 +571,7 @@ html, body {
     </div>
   </section>
 
+  <!-- 🔒 保留契約區塊 -->
   <section class="reserved-section" id="guide-reserved">
     <p class="section-title" style="color:#d4af37">🔒 保密保留區</p>
     <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
@@ -539,6 +586,45 @@ html, body {
   </section>
 </div>
 
+<!-- 📦 完整遊戲流程說明視窗 -->
+<div class="modal-overlay" id="tutorial-start-modal">
+  <div class="modal" style="max-width: 460px;">
+    <span style="font-size:2.2rem;">📜</span>
+    <h2 class="modal-title">皇家大會堂：貿易法則</h2>
+    
+    <div class="rule-box">
+      <div class="rule-title">👑 遊戲目標</div>
+      <p style="margin-bottom: 10px; color:#c7bfb5;">精明地調配資源，透過募集籌碼與收購產業卡，**最先累積達到 15 分威望值** 的工藝大師將獲得最終勝利！</p>
+      
+      <div class="rule-title">🔄 核心遊戲流程 (每回合步驟)</div>
+      <div class="rule-step"><strong>1. 執行動作 (三選一)：</strong></div>
+      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 3 顆不同顏色的寶石籌碼</p>
+      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">• 獲得 2 顆相同顏色的寶石籌碼 (庫存需為 2 顆以上)</p>
+      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">• 支付相應代價 <strong>購買</strong> 或 <strong>保留</strong> 一張發展卡</p>
+      
+      <div class="rule-step"><strong>2. 貴族檢定：</strong></div>
+      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">• 動作用完後，系統將自動檢查您的發展卡產量是否滿足貴族需求。若符合，貴族將自動來訪並賦予分數。</p>
+      
+      <div class="rule-step"><strong>3. 回合結束：</strong></div>
+      <p style="margin-left: 26px; font-size:0.8rem; color:var(--text-muted);">• 移交主控權給下一位，開啟新的回合。</p>
+    </div>
+
+    <button class="btn-replay" id="btn-start-field-tutorial">開始分解欄位教學</button>
+  </div>
+</div>
+
+<!-- 📦 老玩家回歸時的「歡迎進入視窗」 -->
+<div class="modal-overlay" id="welcome-back-modal">
+  <div class="modal">
+    <span style="font-size:2.5rem;">💎</span>
+    <h2 class="modal-title" style="letter-spacing: 0.05em;">璀璨寶石交易殿堂</h2>
+    <p style="font-size:0.95rem; color:#ffe099; line-height:1.6; font-weight:600; margin: 15px 0;">歡迎進入璀璨寶石交易殿堂！</p>
+    <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">皇家金庫已備妥，祝您在今日的貿易戰局中日進斗金、奪得最高榮譽。</p>
+    <button class="btn-replay" id="btn-welcome-confirm">開啟音樂並進入遊戲</button>
+  </div>
+</div>
+
+<!-- 🏆 勝利結算視窗 -->
 <div class="modal-overlay" id="win-modal">
   <div class="modal">
     <span style="font-size:2.5rem;">🏆</span>
@@ -562,6 +648,7 @@ const CUSTOM_CARD_IMAGES = {
 };
 
 let lastRenderedCardIds = new Set();
+let lastPlayerState = null; 
 
 const RAW_CARDS = {
   lv1: [
@@ -605,12 +692,33 @@ const RAW_CARDS = {
   ]
 };
 
+// ⚜️ 替換後的 25 張全新隨機貴族卡（包含性別與名稱標籤，用於配對後續音效）
 const ALL_NOBLES_POOL = [
-  {id:"n1", points:3, img:"https://i.ibb.co/9k5FLXbz/noble1.png", req:{w:3, u:3, g:3}},
-  {id:"n2", points:3, img:"https://i.ibb.co/hF1krHB4/noble2.png", req:{u:3, g:3, r:3}},
-  {id:"n3", points:3, img:"https://i.ibb.co/84P9Kcsm/noble3.png", req:{g:3, r:3, k:3}},
-  {id:"n4", points:3, img:"https://i.ibb.co/99v3Hk2b/noble4.png", req:{w:4, k:4}},
-  {id:"n5", points:3, img:"https://i.ibb.co/nN0XLK1H/noble5.png", req:{u:4, r:4}}
+  {id:"n1",  name:"男貴族 01", gender:"male",   points:3, img:"https://i.ibb.co/zHGC8vsm/image.png", req:{w:3, u:3, g:3}},
+  {id:"n2",  name:"男貴族 02", gender:"male",   points:3, img:"https://i.ibb.co/QvHvZZWc/image.png", req:{u:3, g:3, r:3}},
+  {id:"n3",  name:"男貴族 03", gender:"male",   points:3, img:"https://i.ibb.co/hzw3Vfm/image.png",  req:{g:3, r:3, k:3}},
+  {id:"n4",  name:"男貴族 04", gender:"male",   points:3, img:"https://i.ibb.co/nNSjxvvd/image.png", req:{w:3, u:3, k:3}},
+  {id:"n5",  name:"男貴族 05", gender:"male",   points:3, img:"https://i.ibb.co/67w5Lbjg/image.png", req:{w:3, r:3, k:3}},
+  {id:"n6",  name:"男貴族 06", gender:"male",   points:3, img:"https://i.ibb.co/8gJK15HN/image.png", req:{w:4, k:4}},
+  {id:"n7",  name:"男貴族 07", gender:"male",   points:3, img:"https://i.ibb.co/DDCcYWwX/image.png", req:{u:4, r:4}},
+  {id:"n8",  name:"男貴族 08", gender:"male",   points:3, img:"https://i.ibb.co/twnJGmm0/image.png", req:{g:4, r:4}},
+  {id:"n9",  name:"男貴族 09", gender:"male",   points:3, img:"https://i.ibb.co/rGGhc41x/image.png", req:{w:4, u:4}},
+  {id:"n10", name:"男貴族 10", gender:"male",   points:3, img:"https://i.ibb.co/JjvCKgMm/image.png", req:{u:4, g:4}},
+  {id:"n11", name:"男貴族 11", gender:"male",   points:3, img:"https://i.ibb.co/xSv0th2K/image.png", req:{g:4, k:4}},
+  {id:"n12", name:"男貴族 12", gender:"male",   points:3, img:"https://i.ibb.co/dwsGHwHv/image.png", req:{r:4, k:4}},
+  {id:"n13", name:"女貴族 01", gender:"female", points:3, img:"https://i.ibb.co/GQ2Yh0yH/image.png", req:{w:3, u:3, g:3}},
+  {id:"n14", name:"女貴族 02", gender:"female", points:3, img:"https://i.ibb.co/C3J5y1YY/image.png", req:{u:3, g:3, r:3}},
+  {id:"n15", name:"女貴族 03", gender:"female", points:3, img:"https://i.ibb.co/zTgwrwjz/image.png", req:{g:3, r:3, k:3}},
+  {id:"n16", name:"女貴族 04", gender:"female", points:3, img:"https://i.ibb.co/Q7zdjpKt/image.png", req:{w:3, r:3, k:3}},
+  {id:"n17", name:"女貴族 05", gender:"female", points:3, img:"https://i.ibb.co/7tghmFD6/image.png", req:{w:4, k:4}},
+  {id:"n18", name:"女貴族 06", gender:"female", points:3, img:"https://i.ibb.co/1tvK72P3/image.png", req:{u:4, r:4}},
+  {id:"n19", name:"女貴族 07", gender:"female", points:3, img:"https://i.ibb.co/0pZCRHx7/image.png", req:{g:4, r:4}},
+  {id:"n20", name:"女貴族 08", gender:"female", points:3, img:"https://i.ibb.co/PsNV1NKC/image.png", req:{w:4, u:4}},
+  {id:"n21", name:"女貴族 09", gender:"female", points:3, img:"https://i.ibb.co/N2g1rhFp/image.png", req:{u:4, g:4}},
+  {id:"n22", name:"女貴族 10", gender:"female", points:3, img:"https://i.ibb.co/KcbQYgmQ/image.png", req:{g:4, k:4}},
+  {id:"n23", name:"女貴族 11", gender:"female", points:3, img:"https://i.ibb.co/PzjqmHYQ/image.png", req:{r:4, k:4}},
+  {id:"n24", name:"女貴族 12", gender:"female", points:3, img:"https://i.ibb.co/xSJsNHRv/image.png", req:{w:3, u:3, r:3}},
+  {id:"n25", name:"女貴族 13", gender:"female", points:3, img:"https://i.ibb.co/N28cjs5Z/image.png", req:{w:3, g:3, k:3}}
 ];
 
 let state = {};
@@ -621,6 +729,9 @@ let isMusicMuted = false;
 const audioEl = document.getElementById('bg-music');
 const sfxGemEl = document.getElementById('sfx-gem');
 const sfxBuyEl = document.getElementById('sfx-buy');
+const sfxReserveEl = document.getElementById('sfx-reserve');
+const sfxSelectEl = document.getElementById('sfx-select');
+const sfxUnselectEl = document.getElementById('sfx-unselect');
 const musicBtn = document.getElementById('toggle-music-btn');
 
 /* ── 🎬 結構内嵌式教學導覽邏輯 ────────────────────────── */
@@ -634,22 +745,32 @@ const TUTORIAL_STEPS = [
 ];
 
 function checkAndStartTutorial() {
-  const hasSeen = localStorage.getItem('splendor_tutorial_seen');
+  const hasSeen = localStorage.getItem('splendor_tutorial_seen_2026');
   if (!hasSeen) {
-    startTutorial();
+    document.getElementById('tutorial-start-modal').classList.add('show');
   } else {
-    if (!isMusicMuted) audioEl.play().catch(e => {});
+    document.getElementById('welcome-back-modal').classList.add('show');
   }
 }
 
-function forceStartTutorial() {
-  startTutorial();
+document.getElementById('btn-start-field-tutorial').addEventListener('click', () => {
+  document.getElementById('tutorial-start-modal').classList.remove('show');
+  startFieldTutorial();
+});
+
+document.getElementById('btn-welcome-confirm').addEventListener('click', () => {
+  document.getElementById('welcome-back-modal').classList.remove('show');
+  if (!isMusicMuted) {
+    audioEl.play().catch(e => console.log("音樂播放受限：", e));
+  }
+});
+
+function forceStartOverviewTutorial() {
+  document.getElementById('tutorial-start-modal').classList.add('show');
 }
 
-function startTutorial() {
+function startFieldTutorial() {
   currentTutorialStep = 0;
-  
-  // 初始化所有引導步驟內建的進度小圓點
   TUTORIAL_STEPS.forEach((_, stepIdx) => {
     const dotsLayer = document.getElementById(`dots-${stepIdx}`);
     if (dotsLayer) {
@@ -658,12 +779,10 @@ function startTutorial() {
       ).join('');
     }
   });
-
   showTutorialStep();
 }
 
 function showTutorialStep() {
-  // 先把所有區塊的高亮樣式和內置引導面板隱藏
   TUTORIAL_STEPS.forEach((s, idx) => {
     const el = document.getElementById(s.elementId);
     const card = document.getElementById(`embed-card-${idx}`);
@@ -671,7 +790,6 @@ function showTutorialStep() {
     if (card) card.style.display = 'none';
   });
 
-  // 渲染當前步驟
   const step = TUTORIAL_STEPS[currentTutorialStep];
   const targetEl = document.getElementById(step.elementId);
   const targetCard = document.getElementById(`embed-card-${currentTutorialStep}`);
@@ -679,8 +797,6 @@ function showTutorialStep() {
   if (targetEl && targetCard) {
     targetEl.classList.add('tutorial-highlight');
     targetCard.style.display = 'block';
-    
-    // 平滑滑動至目標區塊，使該區域及其說明的亮度層級完美呈現在視野中央
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
@@ -692,7 +808,6 @@ window.nextTutorialStep = function() {
   }
 };
 
-// 最後一步完成按鈕綁定事件
 document.getElementById('btn-final-t-next').addEventListener('click', () => {
   TUTORIAL_STEPS.forEach((s, idx) => {
     const el = document.getElementById(s.elementId);
@@ -700,14 +815,12 @@ document.getElementById('btn-final-t-next').addEventListener('click', () => {
     if (el) el.classList.remove('tutorial-highlight');
     if (card) card.style.display = 'none';
   });
-  localStorage.setItem('splendor_tutorial_seen', 'true');
-  if (!isMusicMuted) {
-    audioEl.play().catch(err => console.log("音樂播放受阻:", err));
-  }
+  localStorage.setItem('splendor_tutorial_seen_2026', 'true');
+  if (!isMusicMuted) audioEl.play().catch(err => {});
 });
 
 
-/* ── 寶石主程式邏輯 ────────────────────────────────────────── */
+/* ── 核心主程式邏輯 ────────────────────────────────────────── */
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -740,6 +853,7 @@ function initGame() {
   
   const shuffledNobles = shuffle(JSON.parse(JSON.stringify(ALL_NOBLES_POOL)));
   lastRenderedCardIds.clear();
+  lastPlayerState = null; 
 
   state = {
     turn: 1,
@@ -819,7 +933,12 @@ function checkNoblesTrigger() {
     if (!n || n.completed) return;
     let match = true;
     for (let gem in n.req) { if (p.bonus[gem] < n.req[gem]) match = false; }
-    if (match) { n.completed = true; p.score += n.points; }
+    if (match) { 
+      n.completed = true; 
+      p.score += n.points; 
+      // 💡 提示：此處留給您未來串接男女聲音效。例如：
+      // if (n.gender === 'male') { playSFX(sfxMaleWelcome); } else { playSFX(sfxFemaleWelcome); }
+    }
   });
 }
 
@@ -837,6 +956,7 @@ function nextTurn() {
 
 function takeThreeDiff() {
   if (getPlayerTotalTokens() + 3 > 10) { showError("超過 10 個上限！"); return; }
+  lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxGemEl);
   selectedDiff.forEach(gem => { state.bank[gem]--; state.player.tokens[gem]++; });
   nextTurn();
@@ -845,6 +965,7 @@ function takeThreeDiff() {
 function takeTwoSame() {
   if (getPlayerTotalTokens() + 2 > 10) { showError("超過 10 個上限！"); return; }
   if (state.bank[selectedSame] < 2) { showError("庫存剩餘數量小於 2 顆！"); return; }
+  lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxGemEl);
   state.bank[selectedSame] -= 2; state.player.tokens[selectedSame] += 2;
   nextTurn();
@@ -862,6 +983,7 @@ window.buyCard = function(level, index, isReserved = false) {
   const { canAfford, totalGoldNeeded, breakdown } = calculateAffordability(card);
   if (!canAfford) return;
 
+  lastPlayerState = JSON.parse(JSON.stringify(state.player));
   playSFX(sfxBuyEl);
   const cardEl = document.getElementById(`card-${card.id}`);
   
@@ -888,6 +1010,10 @@ window.reserveCard = function(level, index) {
   if (state.player.reserved.length >= 3) return;
   const card = state.matrix[level][index];
   if (!card) return;
+
+  lastPlayerState = JSON.parse(JSON.stringify(state.player));
+  playSFX(sfxReserveEl);
+  
   const cardEl = document.getElementById(`card-${card.id}`);
 
   const finishReserve = () => {
@@ -922,11 +1048,27 @@ function renderActionSelectors() {
 
 window.toggleSelectDiff = function(gem) {
   showError("");
-  if (selectedDiff.includes(gem)) selectedDiff = selectedDiff.filter(x => x !== gem);
-  else if (selectedDiff.length < 3) selectedDiff.push(gem);
+  if (selectedDiff.includes(gem)) {
+    selectedDiff = selectedDiff.filter(x => x !== gem);
+    playSFX(sfxUnselectEl);
+  } else if (selectedDiff.length < 3) {
+    selectedDiff.push(gem);
+    playSFX(sfxSelectEl);
+  }
   renderActionSelectors();
 };
-window.selectSameGem = function(gem) { showError(""); selectedSame = (selectedSame === gem) ? null : gem; renderActionSelectors(); };
+
+window.selectSameGem = function(gem) { 
+  showError(""); 
+  if (selectedSame === gem) {
+    selectedSame = null;
+    playSFX(sfxUnselectEl);
+  } else {
+    selectedSame = gem;
+    playSFX(sfxSelectEl);
+  }
+  renderActionSelectors(); 
+};
 
 function renderCard(card, level, index, isReserved = false) {
   if (!card) return `<div class="card empty">已抽光</div>`;
@@ -959,9 +1101,23 @@ function updateUI() {
   document.getElementById('deck-lv3-txt').textContent = `剩: ${state.decks.lv3.length}`;
 
   const p = state.player;
-  document.getElementById('res-layer').innerHTML = [...GEM_TYPES, 'o'].map(k => `
-    <div class="res-block"><div class="res-circle ${GEM_CLASSES[k]}"></div><span class="res-count">${p.tokens[k]}</span><div class="res-bonus">${k!=='o'?`+${p.bonus[k]}`:'黃金'}</div></div>
-  `).join('');
+  
+  document.getElementById('res-layer').innerHTML = [...GEM_TYPES, 'o'].map(k => {
+    let hasChanged = false;
+    if (lastPlayerState) {
+      const tokenDiff = p.tokens[k] !== lastPlayerState.tokens[k];
+      const bonusDiff = k !== 'o' ? (p.bonus[k] !== lastPlayerState.bonus[k]) : false;
+      if (tokenDiff || bonusDiff) hasChanged = true;
+    }
+    const animClass = hasChanged ? 'animate-pulse-glow' : '';
+    return `
+      <div class="res-block ${animClass}">
+        <div class="res-circle ${GEM_CLASSES[k]}"></div>
+        <span class="res-count">${p.tokens[k]}</span>
+        <div class="res-bonus">${k !== 'o' ? `+${p.bonus[k]}` : '黃金'}</div>
+      </div>
+    `;
+  }).join('');
 
   const tot = getPlayerTotalTokens();
   document.getElementById('cap-txt').textContent = `袋中存貨: ${tot} / 10`;
@@ -969,7 +1125,17 @@ function updateUI() {
 
   document.getElementById('nobles-layer').innerHTML = state.nobles.map(n => {
     let reqsHtml = Object.keys(n.req).map(g => `<div class="noble-req-item"><span class="cost-dot-circle ${GEM_CLASSES[g]}" style="width:9px; height:9px;"></span><span>${n.req[g]}</span></div>`).join('');
-    return `<div class="noble-card ${n.completed?'completed':''}"><img src="${n.img}" class="noble-img"><div class="noble-overlay"><div style="display:flex; justify-content:space-between;"><p class="noble-name">拜訪貴族</p><span class="noble-pts">3P</span></div><div class="noble-reqs">${reqsHtml}</div></div></div>`;
+    return `
+      <div class="noble-card ${n.completed?'completed':''}">
+        <img src="${n.img}" class="noble-img">
+        <div class="noble-overlay">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <p class="noble-name">${n.name}</p>
+            <span class="noble-pts">3P</span>
+          </div>
+          <div class="noble-reqs">${reqsHtml}</div>
+        </div>
+      </div>`;
   }).join('');
 
   document.getElementById('row-lv3').innerHTML = state.matrix.lv3.map((c, i) => renderCard(c, 'lv3', i)).join('');
