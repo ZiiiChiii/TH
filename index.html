@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>寶石交易所 — 皇家大會堂 (單人成就大師版)</title>
+<title>寶石至尊 — 皇家大會堂 (單人成就大師版)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -378,6 +378,27 @@ html, body {
 @keyframes floatFadeUp { 0% { transform: translateY(0) scale(0.7); opacity: 0; } 20% { transform: translateY(-12px) scale(1.1); opacity: 1; } 80% { transform: translateY(-16px) scale(1); opacity: 1; } 100% { transform: translateY(-24px) scale(0.8); opacity: 0; } }
 @keyframes permanentFloatUp { 0% { transform: translateY(5px); opacity: 0; } 15% { transform: translateY(-5px); opacity: 1; } 85% { transform: translateY(-8px); opacity: 1; } 100% { transform: translateY(-15px); opacity: 0; } }
 
+/* ── 🪙 背包籌碼提示特效 ────────────────────────── */
+@keyframes singleFlashWarning {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.3); filter: brightness(1.6); text-shadow: 0 0 12px #f1c40f; }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+@keyframes loopFlashWarning {
+  0% { transform: scale(1); filter: brightness(1); opacity: 1; }
+  50% { transform: scale(1.15); filter: brightness(1.5); text-shadow: 0 0 15px #e74c3c; opacity: 0.8; }
+  100% { transform: scale(1); filter: brightness(1); opacity: 1; }
+}
+.bag-warning-yellow {
+  color: #f1c40f !important;
+  animation: singleFlashWarning 0.5s ease-out 1;
+}
+.bag-danger-red {
+  color: #e74c3c !important;
+  font-weight: 900 !important;
+  animation: loopFlashWarning 1s ease-in-out infinite;
+}
+
 .floating-diff {
   position: absolute; left: 0; top: -10px; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 900; pointer-events: none; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.9); animation: floatFadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
@@ -402,7 +423,7 @@ html, body {
 .bg-k { background-image: var(--c-onyx); }
 .bg-o { background-image: var(--c-gold); }
 
-.cap-bar { font-size: 0.6rem; color: #738a7c; margin-top: 4px; text-align: left; font-family: 'Orbitron', sans-serif; font-weight: 600; padding-left: 4px; }
+.cap-bar { font-size: 0.6rem; color: #738a7c; margin-top: 4px; text-align: left; font-family: 'Orbitron', sans-serif; font-weight: 600; padding-left: 4px; transition: all 0.3s; }
 
 /* ── Earned Nobles & Assistant ────────────────────────────── */
 .earned-nobles-panel {
@@ -792,7 +813,7 @@ html, body {
     <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
     <div class="tutorial-embedded-card" id="embed-card-4">
       <div class="tutorial-header">🔒 機密保留契約</div>
-      <div class="tutorial-text">如果某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。</div>
+      <div class="tutorial-text">如果某張卡片暫時買不起打不開但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。</div>
       <div class="tutorial-footer">
         <div class="tutorial-dots" id="dots-4"></div>
         <button class="btn-tutorial-next" id="btn-final-t-next">進入大會堂</button>
@@ -1456,6 +1477,7 @@ function auditInstantAchievements(actionType, meta) {
   }
 }
 
+/* ── ⚖️ 修正後的難易度通關判定邏輯 ────────────────────────── */
 function auditEndGameAchievements() {
   const p = state.player;
   const totalTurns = state.turn - 1;
@@ -1491,6 +1513,7 @@ function auditEndGameAchievements() {
 
   const diffResultTxtEl = document.getElementById('modal-diff-result-txt');
 
+  /* 核心通關判定機制修復：嚴格限定只有在 totalTurns 小於或等於 targetLimit 時才算過關 */
   if (totalTurns <= targetLimit) {
     let newlySavedCount = 0;
     earnedNobles.forEach(n => {
@@ -1520,14 +1543,14 @@ function openAchievementHistory() {
     if (def.tier === "hard") tierText = "進階";
     if (def.tier === "expert") tierText = "困難";
     if (def.tier === "master") tierText = "神人";
-
+    
     return `
-      <div class="ach-item-row ${isUnlocked ? 'unlocked' : ''}" style="${isUnlocked ? `border-left: 4px solid ${def.color};` : ''}">
+      <div class="ach-item-row ${isUnlocked ? 'unlocked' : ''}" style="border-left: 4px solid ${def.color};">
         <div class="ach-row-meta">
           <div class="ach-row-name">${def.symbol} ${def.name}</div>
           <div class="ach-row-desc">${def.desc}</div>
         </div>
-        <div class="ach-row-tag" style="background: ${def.color};">${tierText} · ${statusText}</div>
+        <div class="ach-row-tag" style="background: ${def.color}; font-weight:800; font-size:0.65rem;">${statusText}</div>
       </div>
     `;
   }).join('');
@@ -1538,114 +1561,197 @@ function closeAchievementHistory() {
   document.getElementById('ach-history-modal-container').classList.remove('show');
 }
 
-/* ── 核心邏輯架構：洗牌與初始化 ──────────────────────────── */
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
+
+/* ── 🎴 遊戲核心邏輯架構 ────────────────────────────────────── */
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return array;
 }
 
 function initGame() {
-  loadTalentPool();
+  selectedDiff = [];
+  selectedSame = null;
+  document.getElementById('error-msg').textContent = '';
   
-  // 規則1: 每個顏色寶石的庫存初始代幣只有 5 個
+  sessionTracker = {
+    hasReservedThisGame: false,
+    purchasedCardsCount: 0,
+    purchasedCardsCountLv1: 0, 
+    lv1CardsCountBeforeTurn10: 0,
+    singleTurnScoreGained: 0,
+    goldUsedInThisPurchase: false
+  };
+
+  const pool1 = deepClone(RAW_CARDS.lv1);
+  const pool2 = deepClone(RAW_CARDS.lv2);
+  const pool3 = deepClone(RAW_CARDS.lv3);
+  shuffle(pool1); shuffle(pool2); shuffle(pool3);
+
+  // 根據難度設定初始貴族數量與回合限額
+  let noblesCount = 3;
+  if (currentDifficulty === 'easy' || currentDifficulty === 'expert' || currentDifficulty === 'master') {
+    noblesCount = 5;
+  }
+
+  const shuffledNoblesPool = deepClone(ALL_NOBLES_POOL);
+  shuffle(shuffledNoblesPool);
+  
+  let gameNobles = [];
+  let addedIds = new Set();
+
+  if (selectedAssistantId) {
+    const assistantMeta = shuffledNoblesPool.find(n => n.id === selectedAssistantId);
+    if (assistantMeta) {
+      gameNobles.push({ ...assistantMeta, completed: false, isNoName: false });
+      addedIds.add(selectedAssistantId);
+    }
+  }
+
+  for (let i = 0; i < shuffledNoblesPool.length; i++) {
+    if (gameNobles.length >= noblesCount) break;
+    const n = shuffledNoblesPool[i];
+    if (!addedIds.has(n.id)) {
+      gameNobles.push({ ...n, completed: false, isNoName: false });
+      addedIds.add(n.id);
+    }
+  }
+
+  while (gameNobles.length < noblesCount) {
+    const randomReq = {};
+    const t1 = GEM_TYPES[Math.floor(Math.random()*5)];
+    let t2 = GEM_TYPES[Math.floor(Math.random()*5)];
+    while(t2 === t1) { t2 = GEM_TYPES[Math.floor(Math.random()*5)]; }
+    randomReq[t1] = 4; randomReq[t2] = 4;
+    
+    gameNobles.push({
+      id: "noname_" + Math.random(),
+      name: "無名貴族爵士",
+      gender: Math.random() > 0.5 ? "male" : "female",
+      points: 3,
+      img: NOON_NOBLE_IMAGES[Math.floor(Math.random() * NOON_NOBLE_IMAGES.length)],
+      req: randomReq,
+      isNoName: true
+    });
+  }
+
   state = {
     turn: 1,
-    bank: { w: 5, u: 5, g: 5, r: 5, k: 5, o: 5 }, 
+    bank: { w: 4, u: 4, g: 4, r: 4, k: 4, o: 5 },
     player: {
       tokens: { w: 0, u: 0, g: 0, r: 0, k: 0, o: 0 },
       bonus: { w: 0, u: 0, g: 0, r: 0, k: 0 },
       reserved: [],
       score: 0
     },
-    decks: {
-      lv1: shuffle([...RAW_CARDS.lv1]),
-      lv2: shuffle([...RAW_CARDS.lv2]),
-      lv3: shuffle([...RAW_CARDS.lv3])
-    },
-    grid: { lv1: [], lv2: [], lv3: [] },
-    nobles: []
+    nobles: gameNobles,
+    decks: { lv1: pool1, lv2: pool2, lv3: pool3 },
+    board: { lv1: [], lv2: [], lv3: [] }
   };
 
-  sessionTracker = {
-    hasReservedThisGame: false,
-    purchasedCardsCount: 0,
-    purchasedCardsCountLv1: 0,
-    singleTurnScoreGained: 0,
-    goldUsedInThisPurchase: false
-  };
-
-  for (let r of ['lv1', 'lv2', 'lv3']) {
-    for (let i = 0; i < 4; i++) {
-      if (state.decks[r].length > 0) {
-        state.grid[r].push(state.decks[r].pop());
-      }
-    }
+  for (let i = 0; i < 4; i++) {
+    if (state.decks.lv1.length) state.board.lv1.push(state.decks.lv1.pop());
+    if (state.decks.lv2.length) state.board.lv2.push(state.decks.lv2.pop());
+    if (state.decks.lv3.length) state.board.lv3.push(state.decks.lv3.pop());
   }
 
-  let configCount = 5;
-  if (currentDifficulty === 'normal' || currentDifficulty === 'hard') {
-    configCount = 3;
-  }
+  lastRenderedCardIds.clear();
+  lastPlayerState = null;
 
-  let shuffledNobles = shuffle([...ALL_NOBLES_POOL]);
-  let activeNobles = shuffledNobles.slice(0, configCount);
-
-  if (selectedAssistantId && activeNobles.length > 0) {
-    const isAlreadyPresent = activeNobles.some(n => n.id === selectedAssistantId);
-    if (!isAlreadyPresent) {
-      const assistantMeta = ALL_NOBLES_POOL.find(n => n.id === selectedAssistantId);
-      if (assistantMeta) {
-        activeNobles[activeNobles.length - 1] = assistantMeta;
-      }
-    }
-  }
-
-  state.nobles = activeNobles.map(n => ({
-    ...n,
-    completed: false,
-    isNoName: false
-  }));
-
-  selectedDiff = [];
-  selectedSame = null;
-  
-  document.getElementById('error-msg').textContent = '';
-  document.getElementById('ach-stats-field').textContent = `${unlockedAchievementIds.size} / 30`;
-
-  renderActiveAssistantUI();
-  renderBoard();
-  updateActionPanel();
+  render();
 }
 
-/* ── 核心背包上限管制 ────────────────────────── */
-// 規則2: 被包內 10 個 token 的限制必須包含黃金 (o)
-function checkTotalTokensLimit() {
+/* ── 🪙 背包籌碼更新與顏色閃爍特效控制器 ────────────────── */
+function renderDashboard() {
   const p = state.player;
-  return p.tokens.w + p.tokens.u + p.tokens.g + p.tokens.r + p.tokens.k + p.tokens.o;
+  const resLayer = document.getElementById('res-layer');
+  
+  let totalTokens = 0;
+  for (let k in p.tokens) totalTokens += p.tokens[k];
+
+  // 計算動態變更的數值差
+  let diffs = { tokens: {}, bonus: {} };
+  if (lastPlayerState) {
+    for (let k in p.tokens) diffs.tokens[k] = p.tokens[k] - lastPlayerState.tokens[k];
+    for (let k in p.bonus) diffs.bonus[k] = p.bonus[k] - lastPlayerState.bonus[k];
+  }
+
+  let html = '';
+  const allKeys = ['w', 'u', 'g', 'r', 'k', 'o'];
+  
+  allKeys.forEach(k => {
+    const tokenVal = p.tokens[k] || 0;
+    const bonusVal = p.bonus[k] || 0;
+    const isGold = (k === 'o');
+    
+    let tDiffHtml = '';
+    if (diffs.tokens[k] > 0) tDiffHtml = `<span class="floating-diff plus">+${diffs.tokens[k]}</span>`;
+    else if (diffs.tokens[k] < 0) tDiffHtml = `<span class="floating-diff minus">${diffs.tokens[k]}</span>`;
+
+    let bDiffHtml = '';
+    if (!isGold && diffs.bonus[k] > 0) {
+      bDiffHtml = `<span class="floating-permanent-anim">+${diffs.bonus[k]} 🛡️</span>`;
+    }
+
+    let pulseClass = '';
+    if (diffs.tokens[k] !== 0 || (!isGold && diffs.bonus[k] !== 0)) {
+      pulseClass = 'animate-pulse-glow';
+    }
+
+    html += `
+      <div class="res-block ${pulseClass}">
+        ${tDiffHtml}
+        ${bDiffHtml}
+        <div class="res-circle ${GEM_CLASSES[k]}"></div>
+        <div class="res-text-group">
+          <span class="res-count">${tokenVal}</span>
+          ${!isGold ? `<span class="res-bonus">+${bonusVal}</span>` : `<span class="res-bonus" style="color:#968a7f; font-size:0.55rem;">百搭</span>`}
+        </div>
+      </div>
+    `;
+  });
+  
+  resLayer.innerHTML = html;
+
+  /* 籌碼數字樣式與閃爍提示核心機制優化 */
+  const capTxtEl = document.getElementById('cap-txt');
+  capTxtEl.textContent = `背包: ${totalTokens} / 10`;
+  
+  // 先移除舊的樣式類別
+  capTxtEl.classList.remove('bag-warning-yellow', 'bag-danger-red');
+  
+  if (totalTokens === 10) {
+    // 背包拿滿 10 個時：強烈紅色並持續無限閃爍提醒
+    capTxtEl.classList.add('bag-danger-red');
+  } else if (totalTokens > 7) {
+    // 背包大於 7 個（8、9個）時：亮眼黃色並閃爍一次提示
+    capTxtEl.classList.add('bag-warning-yellow');
+  }
+
+  lastPlayerState = deepClone(p);
 }
 
-/* ── 渲染核心板塊 ────────────────────────────────────────── */
-function renderBoard() {
-  document.getElementById('turn-txt').textContent = state.turn;
-  document.getElementById('score-txt').textContent = state.player.score;
-
-  // 頂部貴族層
-  const noblesLayer = document.getElementById('nobles-layer');
-  noblesLayer.innerHTML = state.nobles.map(n => {
+function renderNobles() {
+  const layer = document.getElementById('nobles-layer');
+  layer.innerHTML = state.nobles.map(n => {
     let reqHtml = '';
     for (let k in n.req) {
-      reqHtml += `<div class="noble-req-item"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${n.req[k]}</div>`;
+      reqHtml += `
+        <div class="noble-req-item">
+          <span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>
+          <span>${n.req[k]}</span>
+        </div>
+      `;
     }
-    const compClass = n.completed ? 'completed' : '';
     return `
-      <div class="noble-card ${compClass}">
+      <div class="noble-card ${n.completed ? 'completed' : ''}">
         <img class="noble-img" src="${n.img}" alt="${n.name}">
         <div class="noble-overlay">
           <div class="card-top">
-            <span class="noble-pts">3</span>
+            <span class="noble-pts">${n.points}</span>
             <span class="noble-name">${n.name}</span>
           </div>
           <div class="noble-reqs">${reqHtml}</div>
@@ -1654,479 +1760,486 @@ function renderBoard() {
     `;
   }).join('');
 
-  // 核心資產看板
-  const resLayer = document.getElementById('res-layer');
-  const typesWithGold = [...GEM_TYPES, 'o'];
-  
-  let currentTotalTokens = checkTotalTokensLimit();
-  document.getElementById('cap-txt').textContent = `背包籌碼: ${currentTotalTokens} / 10`;
-
-  resLayer.innerHTML = typesWithGold.map(k => {
-    const isGold = (k === 'o');
-    const count = state.player.tokens[k];
-    const bonus = isGold ? 0 : state.player.bonus[k];
-    
-    let isPulseAnimating = false;
-    if (lastPlayerState) {
-      const prevCount = lastPlayerState.tokens[k] || 0;
-      const prevBonus = lastPlayerState.bonus[k] || 0;
-      if (count > prevCount || bonus > prevBonus) {
-        isPulseAnimating = true;
-      }
-    }
-
-    let diffHtml = '';
-    let permHtml = '';
-    if (lastPlayerState && isPulseAnimating) {
-      const prevCount = lastPlayerState.tokens[k] || 0;
-      const prevBonus = lastPlayerState.bonus[k] || 0;
-      if (count > prevCount) {
-        diffHtml = `<span class="floating-diff plus">+${count - prevCount}</span>`;
-      }
-      if (!isGold && bonus > prevBonus) {
-        permHtml = `<span class="floating-permanent-anim">+${bonus - prevBonus} 永久+1</span>`;
-      }
-    }
-
-    return `
-      <div class="res-block ${isPulseAnimating ? 'animate-pulse-glow' : ''}">
-        ${diffHtml}
-        ${permHtml}
-        <span class="res-circle ${GEM_CLASSES[k]}">${k.toUpperCase()}</span>
-        <div class="res-text-group">
-          <span class="res-count">${count}</span>
-          ${!isGold ? `<span class="res-bonus">+${bonus}</span>` : `<span class="res-bonus" style="opacity:0.3">黃金</span>`}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  // 延遲清除浮動與動畫狀態
-  setTimeout(() => {
-    document.querySelectorAll('.res-block').forEach(el => el.classList.remove('animate-pulse-glow'));
-    document.querySelectorAll('.floating-diff, .floating-permanent-anim').forEach(el => el.remove());
-  }, 1400);
-
-  // 矩陣卡槽與剩餘牌數
-  for (let r of ['lv1', 'lv2', 'lv3']) {
-    document.getElementById(`deck-${r}-txt`).textContent = `剩餘: ${state.decks[r].length}`;
-    const rowEl = document.getElementById(`row-${r}`);
-    
-    rowEl.innerHTML = state.grid[r].map((card, idx) => {
-      if (!card) return `<div class="card empty">已售罄</div>`;
-      
-      const cardImg = getDeterministicCardImage(card.provides, card.id);
-      const canBuy = checkCanAfford(card);
-      const currentCardsInHand = state.player.reserved.length;
-      const canReserve = currentCardsInHand < 3;
-
-      let costHtml = '';
-      for (let k in card.cost) {
-        costHtml += `<div class="cost-dot"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${card.cost[k]}</div>`;
-      }
-
-      const isNewlyDealt = !lastRenderedCardIds.has(card.id);
-
-      return `
-        <div class="card ${isNewlyDealt ? 'animate-deal' : ''}" id="card-node-${card.id}" style="background-image: url('${cardImg}')">
-          <div class="card-content-wrapper">
-            <div class="card-top">
-              <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
-              <span class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</span>
-            </div>
-            <div class="card-costs">${costHtml}</div>
-            <div class="card-actions">
-              <button class="btn-card" ${canBuy ? '' : 'disabled'} onclick="buyCard('${r}', ${idx}, false)">購買</button>
-              <button class="btn-card" style="border-color:#b89742;" ${canReserve ? '' : 'disabled'} onclick="reserveCard('${r}', ${idx})">保留</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // 同步更新上一次的卡片ID集合
-  const currentCardIds = new Set();
-  for (let r of ['lv1', 'lv2', 'lv3']) {
-    state.grid[r].forEach(c => { if(c) currentCardIds.add(c.id); });
-  }
-  state.player.reserved.forEach(c => { if(c) currentCardIds.add(c.id); });
-  lastRenderedCardIds = currentCardIds;
-
-  // 保留手牌區
-  const resHandLayer = document.getElementById('reserved-layer');
-  if (state.player.reserved.length === 0) {
-    resHandLayer.innerHTML = `<p style="grid-column: span 4; text-align: center; font-size: 0.65rem; color: var(--text-muted); padding: 12px 0;">目前無機密保留發展卡契約</p>`;
-  } else {
-    resHandLayer.innerHTML = state.player.reserved.map((card, idx) => {
-      const cardImg = getDeterministicCardImage(card.provides, card.id);
-      const canBuy = checkCanAfford(card);
-      let costHtml = '';
-      for (let k in card.cost) { costHtml += `<div class="cost-dot"><span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>${card.cost[k]}</div>`; }
-      return `
-        <div class="card" id="card-node-${card.id}" style="background-image: url('${cardImg}'); min-height:85px; height:85px;">
-          <div class="card-content-wrapper">
-            <div class="card-top">
-              <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
-              <span class="card-gem-icon ${GEM_CLASSES[card.provides]}">${card.provides.toUpperCase()}</span>
-            </div>
-            <div class="card-costs">${costHtml}</div>
-            <div class="card-actions">
-              <button class="btn-card" style="width:100%" ${canBuy ? '' : 'disabled'} onclick="buyCard('reserved', ${idx}, true)">履行契約購買</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // 渲染歷史拜訪貴族
-  const earnedNoblesLayer = document.getElementById('earned-nobles-layer');
+  const earnedLayer = document.getElementById('earned-nobles-layer');
   const completedNobles = state.nobles.filter(n => n.completed);
   if (completedNobles.length === 0) {
-    earnedNoblesLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding: 4px 0;">尚無貴族拜訪</p>`;
+    earnedLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding:4px 0;">尚無貴族拜訪</p>`;
   } else {
-    earnedNoblesLayer.innerHTML = completedNobles.map(n => `
+    earnedLayer.innerHTML = completedNobles.map(n => `
       <div class="earned-noble-mini">
         <img src="${n.img}">
-        <span>${n.name} (+3威望)</span>
+        <span>${n.name}</span>
       </div>
     `).join('');
   }
 }
 
-function getDeterministicCardImage(provides, id) {
-  const imgArr = CUSTOM_CARD_IMAGES[provides] || CUSTOM_CARD_IMAGES['g'];
-  const numericId = parseInt(id) || 0;
-  const index = numericId % imgArr.length;
-  return imgArr[index];
-}
-
-/* ── 核心資源與可購性算法 ────────────────────────── */
-function checkCanAfford(card) {
-  const p = state.player;
-  let goldNeeded = 0;
-  for (let k in card.cost) {
-    const cost = card.cost[k];
-    const buyingPower = p.tokens[k] + p.bonus[k];
-    if (buyingPower < cost) {
-      goldNeeded += (cost - buyingPower);
-    }
-  }
-  return p.tokens.o >= goldNeeded;
-}
-
-/* ── 更新互動面板與籌碼按鈕限制 ────────────────────────── */
-function updateActionPanel() {
+function renderActionPanel() {
   const diffSelectors = document.getElementById('diff-selectors');
-  const sameSelectors = document.getElementById('same-selectors');
-  const currentTotalTokens = checkTotalTokensLimit();
-
-  // 🟢 渲染 3色不同選擇區
   diffSelectors.innerHTML = GEM_TYPES.map(k => {
-    const isSelected = selectedDiff.includes(k);
-    const bankCount = state.bank[k];
-    const isBtnDisabled = (!isSelected && (bankCount <= 0 || selectedDiff.length >= 3)) || (currentTotalTokens + selectedDiff.length >= 10 && !isSelected);
+    const isSelected = selectedDiff.includes(k) ? 'selected' : '';
+    const bankEmpty = (state.bank[k] || 0) <= 0;
+    const disabledAttr = bankEmpty ? 'disabled style="opacity:0.08;"' : '';
     return `
       <div class="token-container-cell">
-        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected ? 'selected' : ''}" ${isBtnDisabled ? 'disabled' : ''} onclick="toggleDiffGem('${k}')"></button>
-        <span class="token-count-label">庫存:${bankCount}</span>
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected}" ${disabledAttr} onclick="toggleSelectDiff('${k}')"></button>
+        <span class="token-count-label">庫存:${state.bank[k]}</span>
       </div>
     `;
   }).join('');
 
-  // 🟡 渲染 同色2個選擇區
+  const sameSelectors = document.getElementById('same-selectors');
   sameSelectors.innerHTML = GEM_TYPES.map(k => {
-    const isSelected = (selectedSame === k);
-    const bankCount = state.bank[k];
-    // 同色拿兩顆基本規則：庫存需大於等於2
-    const isBtnDisabled = bankCount < 2 || (currentTotalTokens + 2 > 10 && !isSelected);
+    const isSelected = selectedSame === k ? 'selected' : '';
+    const canTakeSame = (state.bank[k] || 0) >= 2; 
+    const disabledAttr = !canTakeSame ? 'disabled style="opacity:0.08;"' : '';
     return `
       <div class="token-container-cell">
-        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected ? 'selected' : ''}" ${isBtnDisabled ? 'disabled' : ''} onclick="toggleSameGem('${k}')"></button>
-        <span class="token-count-label">庫存:${bankCount}</span>
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected}" ${disabledAttr} onclick="toggleSelectSame('${k}')"></button>
+        <span class="token-count-label">庫存:${state.bank[k]}</span>
       </div>
     `;
   }).join('');
 
-  // 驗證按鈕可用性
   const btnDiff = document.getElementById('btn-do-diff');
-  // 必須選滿3種，或者在庫存小於3種時將現有可拿的全部選完
-  const totalAvailableColors = GEM_TYPES.filter(c => state.bank[c] > 0).length;
-  const targetCount = Math.min(3, totalAvailableColors);
-  btnDiff.disabled = (selectedDiff.length !== targetCount || targetCount === 0);
-
+  btnDiff.disabled = (selectedDiff.length === 0);
+  
   const btnSame = document.getElementById('btn-do-same');
   btnSame.disabled = (selectedSame === null);
 }
 
-/* ── 籌碼選擇事件（維持基本選擇音效） ────────────────────────── */
-window.toggleDiffGem = function(color) {
+function renderCard(card, level, idx, isReserved = false) {
+  if (!card) {
+    return `<div class="card empty">已全數售罄</div>`;
+  }
+
+  const isNewCard = !lastRenderedCardIds.has(card.id);
+  let animationClass = isNewCard ? 'animate-deal' : '';
+
+  let costHtml = '';
+  for (let k in card.cost) {
+    const reqAmount = card.cost[k];
+    const playerHasBonus = state.player.bonus[k] || 0;
+    const playerHasToken = state.player.tokens[k] || 0;
+    const netCost = Math.max(0, reqAmount - playerHasBonus);
+    
+    let dotStateStyle = '';
+    if (netCost === 0) dotStateStyle = 'free';
+
+    costHtml += `
+      <div class="cost-dot ${dotStateStyle}">
+        <span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>
+        <span>${reqAmount}</span>
+      </div>
+    `;
+  }
+
+  const canBuyResult = canPlayerAffordCard(card);
+  const buyDisabled = !canBuyResult.affordable ? 'disabled' : '';
+  const reserveDisabled = (!isReserved && state.player.reserved.length >= 3) ? 'disabled' : '';
+
+  let imgUrl = "https://i.ibb.co/KxX2gxBP/1.jpg";
+  if (CUSTOM_CARD_IMAGES[card.provides]) {
+    const list = CUSTOM_CARD_IMAGES[card.provides];
+    const hash = parseInt(card.id) || 0;
+    imgUrl = list[hash % list.length];
+  }
+
+  let actionButtonsHtml = '';
+  if (!isReserved) {
+    actionButtonsHtml = `
+      <div class="card-actions">
+        <button class="btn-card" ${buyDisabled} onclick="buyBoardCard('${level}', ${idx})">收購</button>
+        <button class="btn-card" ${reserveDisabled} onclick="reserveBoardCard('${level}', ${idx})">保留</button>
+      </div>
+    `;
+  } else {
+    actionButtonsHtml = `
+      <div class="card-actions">
+        <button class="btn-card" ${buyDisabled} onclick="buyReservedCard(${idx})">簽署收購</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="card ${animationClass}" id="dom-card-${card.id}" style="background-image: url('${imgUrl}');">
+      <div class="card-content-wrapper">
+        <div class="card-top">
+          <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
+          <div class="card-gem-icon ${GEM_CLASSES[card.provides]}"></div>
+        </div>
+        <div>
+          <div class="card-costs">${costHtml}</div>
+          ${actionButtonsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMatrix() {
+  ['lv1', 'lv2', 'lv3'].forEach(level => {
+    const rowEl = document.getElementById(`row-${level}`);
+    const deckCountEl = document.getElementById(`deck-${level}-txt`);
+    deckCountEl.textContent = `剩餘: ${state.decks[level].length}`;
+
+    let html = '';
+    for (let i = 0; i < 4; i++) {
+      html += renderCard(state.board[level][i], level, i, false);
+    }
+    rowEl.innerHTML = html;
+  });
+
+  const reservedLayer = document.getElementById('reserved-layer');
+  if (state.player.reserved.length === 0) {
+    reservedLayer.innerHTML = `
+      <div class="card empty" style="grid-column: span 4; min-height:55px; height:55px;">
+        🔒 當前保密保留區尚無契約手牌 (上限 3 張)
+      </div>
+    `;
+  } else {
+    let rHtml = '';
+    for (let i = 0; i < 4; i++) {
+      if (state.player.reserved[i]) {
+        rHtml += renderCard(state.player.reserved[i], 'reserved', i, true);
+      } else {
+        rHtml += `<div class="card empty" style="min-height:55px; height:55px;">空位</div>`;
+      }
+    }
+    reservedLayer.innerHTML = rHtml;
+  }
+
+  // 記錄已被渲染過的卡片 ID
+  ['lv1', 'lv2', 'lv3'].forEach(lvl => {
+    state.board[lvl].forEach(c => { if(c) lastRenderedCardIds.add(c.id); });
+  });
+  state.player.reserved.forEach(c => { if(c) lastRenderedCardIds.add(c.id); });
+}
+
+function render() {
+  document.getElementById('turn-txt').textContent = state.turn;
+  document.getElementById('score-txt').textContent = state.player.score;
+
+  renderDashboard();
+  renderNobles();
+  renderActionPanel();
+  renderMatrix();
+}
+
+
+/* ── 🪙 行動操控與條件檢定模組 ────────────────────── */
+window.toggleSelectDiff = function(color) {
+  document.getElementById('error-msg').textContent = '';
+  selectedSame = null; 
+
   const idx = selectedDiff.indexOf(color);
   if (idx > -1) {
     selectedDiff.splice(idx, 1);
-    if (!isSfxMuted) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+    if (!isSfxMuted && sfxUnselectEl) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
   } else {
-    if (selectedDiff.length < 3) {
-      selectedDiff.push(color);
-      if (!isSfxMuted) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+    if (selectedDiff.length >= 3) {
+      selectedDiff.shift();
     }
+    selectedDiff.push(color);
+    if (!isSfxMuted && sfxSelectEl) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
   }
-  selectedSame = null; 
-  updateActionPanel();
-}
+  render();
+};
 
-window.toggleSameGem = function(color) {
+window.toggleSelectSame = function(color) {
+  document.getElementById('error-msg').textContent = '';
+  selectedDiff = []; 
+
   if (selectedSame === color) {
     selectedSame = null;
-    if (!isSfxMuted) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+    if (!isSfxMuted && sfxUnselectEl) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
   } else {
     selectedSame = color;
-    if (!isSfxMuted) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+    if (!isSfxMuted && sfxSelectEl) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
   }
-  selectedDiff = []; 
-  updateActionPanel();
+  render();
+};
+
+function checkBackpackCapacityAfterGain(incomingCount) {
+  let currentTotal = 0;
+  for (let k in state.player.tokens) currentTotal += state.player.tokens[k];
+  return (currentTotal + incomingCount <= 10);
 }
 
-/* ── 按下確認收下按鈕時：獨立觸發第二種音效與執行 ────────────────────────── */
-function handleDoDiffClick() {
-  playActionGemSfx(); // 收下時播放第二種音效 (sfx-gem)
-  executeTakeDiff();
-}
-
-function handleDoSameClick() {
-  playActionGemSfx(); // 收下時播放第二種音效 (sfx-gem)
-  executeTakeSame();
-}
-
-function executeTakeDiff() {
-  cachePlayerState();
-  const countTaken = selectedDiff.length;
+window.handleDoDiffClick = function() {
+  if (selectedDiff.length === 0) return;
   
-  selectedDiff.forEach(color => {
-    state.bank[color]--;
-    state.player.tokens[color]++;
+  if (!checkBackpackCapacityAfterGain(selectedDiff.length)) {
+    document.getElementById('error-msg').textContent = '⚠️ 背包容量超出上限！單人版限制至多只能持有 10 顆籌碼，請先收購或保留卡片。';
+    return;
+  }
+
+  playActionGemSfx();
+
+  selectedDiff.forEach(k => {
+    state.bank[k]--;
+    state.player.tokens[k]++;
   });
 
-  auditInstantAchievements("takeDiff", { count: countTaken });
+  auditInstantAchievements("takeDiff", { count: selectedDiff.length });
+  
   selectedDiff = [];
-  endTurn();
-}
+  endTurnFlow();
+};
 
-function executeTakeSame() {
-  cachePlayerState();
-  const color = selectedSame;
-  
-  state.bank[color] -= 2;
-  state.player.tokens[color] += 2;
+window.handleDoSameClick = function() {
+  if (!selectedSame) return;
 
-  auditInstantAchievements("takeSame", { color: color });
+  if (!checkBackpackCapacityAfterGain(2)) {
+    document.getElementById('error-msg').textContent = '⚠️ 背包容量超出上限！單人版限制至多只能持有 10 顆籌碼，請先收購或保留卡片。';
+    return;
+  }
+
+  playActionGemSfx();
+
+  const k = selectedSame;
+  state.bank[k] -= 2;
+  state.player.tokens[k] += 2;
+
+  auditInstantAchievements("takeSame", { color: k });
+
   selectedSame = null;
-  endTurn();
-}
+  endTurnFlow();
+};
 
-/* ── 保留卡片與購買卡片動作 ────────────────────────── */
-window.reserveCard = function(rowKey, index) {
-  cachePlayerState();
-  const card = state.grid[rowKey][index];
-  
-  // 黃金籌碼納入背包 10 顆上限判斷[cite: 4]
-  let currentTotalTokens = checkTotalTokensLimit();
-  let goldAwarded = 0;
-  if (state.bank.o > 0 && currentTotalTokens < 10) {
-    state.bank.o--;
-    state.player.tokens.o++;
-    goldAwarded = 1;
-  }
 
-  const node = document.getElementById(`card-node-${card.id}`);
-  if (node) {
-    node.classList.add('animate-reserve');
-  }
+/* ── 💳 卡片購買、百搭金幣扣抵與保留邏輯 ────────────────── */
+function canPlayerAffordCard(card) {
+  let neededGold = 0;
+  let breakdown = { w: 0, u: 0, g: 0, r: 0, k: 0 };
 
-  setTimeout(() => {
-    state.player.reserved.push(card);
-    sessionTracker.hasReservedThisGame = true;
+  for (let k of GEM_TYPES) {
+    const reqAmount = card.cost[k] || 0;
+    const bonus = state.player.bonus[k] || 0;
+    const net = Math.max(0, reqAmount - bonus);
+    const token = state.player.tokens[k] || 0;
 
-    // 補牌補缺
-    if (state.decks[rowKey].length > 0) {
-      state.grid[rowKey][index] = state.decks[rowKey].pop();
+    if (token < net) {
+      neededGold += (net - token);
+      breakdown[k] = token; 
     } else {
-      state.grid[rowKey][index] = null;
-    }
-
-    if (!isSfxMuted) {
-      sfxReserveEl.currentTime = 0;
-      sfxReserveEl.play().catch(e => {});
-    }
-
-    auditInstantAchievements("reserve", { goldAwarded: goldAwarded });
-    endTurn();
-  }, 300);
-}
-
-window.buyCard = function(rowKey, index, isFromReserved = false) {
-  cachePlayerState();
-  const card = isFromReserved ? state.player.reserved[index] : state.grid[rowKey][index];
-  
-  const p = state.player;
-  let totalGemsSpent = 0;
-  sessionTracker.goldUsedInThisPurchase = false;
-
-  for (let k in card.cost) {
-    const cost = card.cost[k];
-    const bonusReduction = p.bonus[k];
-    const actualCostNeeded = cost - bonusReduction;
-
-    if (actualCostNeeded > 0) {
-      if (p.tokens[k] >= actualCostNeeded) {
-        p.tokens[k] -= actualCostNeeded;
-        state.bank[k] += actualCostNeeded;
-        totalGemsSpent += actualCostNeeded;
-      } else {
-        const short = actualCostNeeded - p.tokens[k];
-        totalGemsSpent += p.tokens[k];
-        state.bank[k] += p.tokens[k];
-        p.tokens[k] = 0;
-        
-        // 扣除百搭黃金
-        p.tokens.o -= short;
-        state.bank.o += short;
-        totalGemsSpent += short;
-        sessionTracker.goldUsedInThisPurchase = true;
-      }
+      breakdown[k] = net; 
     }
   }
 
-  const node = document.getElementById(`card-node-${card.id}`);
-  if (node) {
-    node.classList.add('animate-buy');
+  if (state.player.tokens.o >= neededGold) {
+    return { affordable: true, neededGold: neededGold, breakdown: breakdown };
+  } else {
+    return { affordable: false, neededGold: neededGold };
+  }
+}
+
+function executeCardPurchaseEffects(card, breakdown, neededGold) {
+  sessionTracker.goldUsedInThisPurchase = (neededGold > 0);
+
+  let totalGemsSpent = 0;
+  for (let k of GEM_TYPES) {
+    const spent = breakdown[k] || 0;
+    state.player.tokens[k] -= spent;
+    state.bank[k] += spent;
+    totalGemsSpent += spent;
+  }
+
+  if (neededGold > 0) {
+    state.player.tokens.o -= neededGold;
+    state.bank.o += neededGold;
+    totalGemsSpent += neededGold;
+  }
+
+  state.player.bonus[card.provides]++;
+  state.player.score += card.points;
+  sessionTracker.singleTurnScoreGained += card.points;
+
+  sessionTracker.purchasedCardsCount++;
+  return { totalGemsSpent: totalGemsSpent };
+}
+
+window.buyBoardCard = function(level, idx) {
+  const card = state.board[level][idx];
+  if (!card) return;
+
+  const afford = canPlayerAffordCard(card);
+  if (!afford.affordable) return;
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) {
+    cardDom.classList.add('animate-buy');
   }
 
   setTimeout(() => {
-    p.bonus[card.provides]++;
-    p.score += card.points;
-    sessionTracker.singleTurnScoreGained += card.points;
-
-    sessionTracker.purchasedCardsCount++;
-    if (rowKey === 'lv1') {
+    if (!isSfxMuted && sfxBuyEl) { sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(e=>{}); }
+    
+    const meta = executeCardPurchaseEffects(card, afford.breakdown, afford.neededGold);
+    
+    if (level === 'lv1') {
       sessionTracker.purchasedCardsCountLv1 = (sessionTracker.purchasedCardsCountLv1 || 0) + 1;
       if (state.turn <= 10) {
         sessionTracker.lv1CardsCountBeforeTurn10++;
-        if (sessionTracker.lv1CardsCountBeforeTurn10 === 5) {
-          triggerAchievementUnlock(11);
+        if (sessionTracker.lv1CardsCountBeforeTurn10 === 5) triggerAchievementUnlock(11);
+      }
+    }
+
+    // 補牌
+    let newCard = null;
+    if (state.decks[level].length > 0) {
+      newCard = state.decks[level].pop();
+    }
+    state.board[level][idx] = newCard;
+
+    auditInstantAchievements("buy", { card: card, level: level, totalGemsSpent: meta.totalGemsSpent, isReserved: false });
+    endTurnFlow();
+  }, 280);
+};
+
+window.buyReservedCard = function(idx) {
+  const card = state.player.reserved[idx];
+  if (!card) return;
+
+  const afford = canPlayerAffordCard(card);
+  if (!afford.affordable) return;
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) cardDom.classList.add('animate-buy');
+
+  setTimeout(() => {
+    if (!isSfxMuted && sfxBuyEl) { sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(e=>{}); }
+    
+    const meta = executeCardPurchaseEffects(card, afford.breakdown, afford.neededGold);
+    state.player.reserved.splice(idx, 1);
+
+    auditInstantAchievements("buy", { card: card, level: 'reserved', totalGemsSpent: meta.totalGemsSpent, isReserved: true });
+    endTurnFlow();
+  }, 280);
+};
+
+window.reserveBoardCard = function(level, idx) {
+  if (state.player.reserved.length >= 3) return;
+
+  const card = state.board[level][idx];
+  if (!card) return;
+
+  let currentTokensTotal = 0;
+  for (let k in state.player.tokens) currentTokensTotal += state.player.tokens[k];
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) cardDom.classList.add('animate-reserve');
+
+  setTimeout(() => {
+    if (!isSfxMuted && sfxReserveEl) { sfxReserveEl.currentTime = 0; sfxReserveEl.play().catch(e=>{}); }
+
+    state.player.reserved.push(card);
+    sessionTracker.hasReservedThisGame = true;
+
+    let goldAwarded = false;
+    if (state.bank.o > 0) {
+      if (currentTokensTotal < 10) {
+        state.bank.o--;
+        state.player.tokens.o++;
+        goldAwarded = true;
+      }
+    }
+
+    let newCard = null;
+    if (state.decks[level].length > 0) {
+      newCard = state.decks[level].pop();
+    }
+    state.board[level][idx] = newCard;
+
+    auditInstantAchievements("reserve", { goldAwarded: goldAwarded });
+    endTurnFlow();
+  }, 280);
+};
+
+
+/* ── 🔄 回合遞進、貴族覲見與勝負結算 ────────────────── */
+function checkNoblesVisit() {
+  let newlyEarnedPoints = 0;
+  
+  for (let i = 0; i < state.nobles.length; i++) {
+    const n = state.nobles[i];
+    if (n.completed) continue;
+
+    let satisfy = true;
+    for (let k in n.req) {
+      if ((state.player.bonus[k] || 0) < n.req[k]) {
+        satisfy = false; break;
+      }
+    }
+
+    if (satisfy) {
+      n.completed = true;
+      state.player.score += n.points;
+      sessionTracker.singleTurnScoreGained += n.points;
+      newlyEarnedPoints += n.points;
+
+      triggerAchievementUnlock(15);
+
+      // 依性別播放專屬歡迎音效
+      if (!isSfxMuted) {
+        if (n.gender === 'female' && sfxNobleFemale) {
+          sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(e=>{});
+        } else if (n.gender === 'male' && sfxNobleMale) {
+          sfxNobleMale.currentTime = 0; sfxNobleMale.play().catch(e=>{});
         }
       }
     }
-
-    if (isFromReserved) {
-      state.player.reserved.splice(index, 1);
-    } else {
-      if (state.decks[rowKey].length > 0) {
-        state.grid[rowKey][index] = state.decks[rowKey].pop();
-      } else {
-        state.grid[rowKey][index] = null;
-      }
-    }
-
-    if (!isSfxMuted) {
-      sfxBuyEl.currentTime = 0;
-      sfxBuyEl.play().catch(e => {});
-    }
-
-    auditInstantAchievements("buy", { card: card, level: rowKey, totalGemsSpent: totalGemsSpent, isReserved: isFromReserved });
-    endTurn();
-  }, 300);
-}
-
-/* ── 狀態快照暫存與回合結算 ────────────────────────── */
-function cachePlayerState() {
-  lastPlayerState = {
-    tokens: { ...state.player.tokens },
-    bonus: { ...state.player.bonus }
-  };
-}
-
-function endTurn() {
-  sessionTracker.singleTurnScoreGained = 0;
-  
-  // 貴族拜訪自動檢定
-  checkNoblesVisiting();
+  }
 
   if (sessionTracker.singleTurnScoreGained >= 6) {
     triggerAchievementUnlock(27);
   }
+}
+
+function endTurnFlow() {
+  checkNoblesVisit();
+  sessionTracker.singleTurnScoreGained = 0; 
 
   processPendingAchievementsQueue(() => {
-    // 檢查終局勝負條件
     if (state.player.score >= 15) {
-      executeWinGame();
+      triggerEndGameWin(true);
       return;
     }
 
     state.turn++;
-    selectedDiff = [];
-    selectedSame = null;
-    
-    renderBoard();
-    updateActionPanel();
+    render();
   });
 }
 
-function checkNoblesVisiting() {
-  const p = state.player;
-  state.nobles.forEach(n => {
-    if (!n.completed) {
-      let match = true;
-      for (let k in n.req) {
-        if (p.bonus[k] < n.req[k]) { match = false; break; }
-      }
-      if (match) {
-        n.completed = true;
-        p.score += n.points;
-        sessionTracker.singleTurnScoreGained += n.points;
-        triggerAchievementUnlock(15);
-        
-        if (!isSfxMuted) {
-          if (n.gender === 'female' && sfxNobleFemale) {
-            sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(e=>{});
-          } else if (sfxNobleMale) {
-            sfxNobleMale.currentTime = 0; sfxNobleMale.play().catch(e=>{});
-          }
-        }
-      }
-    }
-  });
-}
-
-/* ── 勝利通關結算 ────────────────────────────────────────── */
-function executeWinGame() {
-  renderBoard();
-  
-  const totalTurns = state.turn; 
-  document.getElementById('modal-body-txt').innerHTML = `
-    恭喜工藝大師！您在第 <strong>${totalTurns}</strong> 回合成功累積到了 <strong>${state.player.score}分</strong> 的最高榮譽威望值！<br>
-    名下的產業與永久寶石礦脈閃耀璀璨光芒。
-  `;
-  
+function triggerEndGameWin(isSuccess) {
+  render();
   auditEndGameAchievements();
 
-  processPendingAchievementsQueue(() => {
-    document.getElementById('win-modal').classList.add('show');
-  });
+  const titleEl = document.querySelector('#win-modal .modal-title');
+  const bodyEl = document.getElementById('modal-body-txt');
+  
+  if (isSuccess) {
+    titleEl.textContent = "璀璨大師，實至名歸！";
+    bodyEl.innerHTML = `恭喜您成功購得皇家產業，累積威望達到 <strong>${state.player.score} 分</strong>！<br>大會堂因您的經商智慧而熠熠生輝，共計耗時 <strong>${state.turn - 1} 回合</strong>。`;
+  }
+  
+  document.getElementById('win-modal').classList.add('show');
 }
 
 document.getElementById('btn-restart').addEventListener('click', () => {
-  document.getElementById('win-modal').classList.remove('remove');
   document.getElementById('win-modal').classList.remove('show');
   initGame();
 });
 
-// 初始化載入
-loadTalentPool();
-initGame();
-checkAndStartTutorial();
-</script>
 
+/* ── 🚀 初始化加載 ────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  loadTalentPool();
+  renderActiveAssistantUI();
+  initGame();
+  checkAndStartTutorial();
+  
+  document.getElementById('ach-stats-field').textContent = `0 / 30`;
+});
+</script>
 </body>
 </html>
