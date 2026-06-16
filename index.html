@@ -762,22 +762,16 @@ html, body {
   .btn-primary { padding: 3px; font-size: 0.58rem; }
   .msg-box { font-size: 0.55rem; min-height: 8px; margin-top: 1px; }
 
-  /* ── 卡牌矩陣：填滿剩餘空間 */
+  /* ── 卡牌矩陣：固定高度確保顯示 */
   .board-matrix {
-    flex: 1;
-    overflow: hidden;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 2px;
     padding: 1px;
     margin-bottom: 2px;
   }
-  .board-row {
-    flex: 1;
-    margin-bottom: 0;
-    display: flex;
-    flex-direction: column;
-  }
+  .board-row { margin-bottom: 0; }
   .row-header { margin-bottom: 2px; padding-left: 4px; }
   .row-header .section-title { font-size: 0.52rem; }
   .deck-count { font-size: 0.48rem; }
@@ -785,14 +779,10 @@ html, body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 3px;
-    flex: 1;
   }
 
-  /* 卡牌本身：動態填滿 */
-  .card {
-    min-height: 0;
-    height: 100%;
-  }
+  /* 卡牌本身：固定高度 */
+  .card { min-height: 72px; height: 72px; }
   .card-content-wrapper { padding: 3px; }
   .card-pts { font-size: 0.72rem; }
   .card-gem-icon { width: 10px; height: 10px; }
@@ -800,7 +790,7 @@ html, body {
   .cost-dot { font-size: 0.48rem; padding: 0px 1px; gap: 1px; }
   .card-actions { gap: 2px; margin-top: 2px; }
   .btn-card { font-size: 0.44rem; padding: 1px 0; }
-  .card.empty { min-height: 0; font-size: 0.48rem; }
+  .card.empty { min-height: 72px; height: 72px; font-size: 0.48rem; }
 
   /* ── 保留區：緊湊 */
   .reserved-section {
@@ -810,7 +800,7 @@ html, body {
   }
   .reserved-section .section-title { font-size: 0.52rem; }
   .reserved-section .grid-4 { gap: 3px; }
-  .reserved-section .card { min-height: 60px; }
+  .reserved-section .card { min-height: 60px; height: 60px; }
 
   /* ── 隱藏教學卡片避免佔空間（教學模式下由 JS 控制顯示） */
   .tutorial-embedded-card { padding: 6px 8px; margin-top: 4px; }
