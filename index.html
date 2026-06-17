@@ -237,7 +237,7 @@
     <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6; margin-bottom:8px;" id="modal-body-txt"></p>
     <p style="font-size:0.8rem; color:#ffe099; line-height:1.4;" id="modal-diff-result-txt"></p>
     
-    <button class="btn-replay" id="btn-restart" onclick="playUniformSfx();">重開新局</button>
+    <button class="btn-replay" id="btn-restart" onclick="playUniformSfx(); ActionDispatcher.dispatch('INIT_GAME');">重開新局</button>
   </div>
 </div>
 
