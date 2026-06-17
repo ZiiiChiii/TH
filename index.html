@@ -50,14 +50,6 @@
 
   <section class="nobles-section" id="guide-nobles">
     <div class="nobles-grid" id="nobles-layer"></div>
-    <div class="tutorial-embedded-card" id="embed-card-0">
-      <div class="tutorial-header">⚜️ 貴族覲見區</div>
-      <div class="tutorial-text">這是尊貴的貴族。當您的發展卡累積到對應的「永久寶石產量」時，貴族將會在回合結束自動拜訪並贈予您 3 分威望值！</div>
-      <div class="tutorial-footer">
-        <div class="tutorial-dots" id="dots-0"></div>
-        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
-      </div>
-    </div>
   </section>
 
   <div class="dashboard-container" id="guide-dashboard">
@@ -80,15 +72,6 @@
       </div>
     </section>
   </div>
-  
-  <div class="tutorial-embedded-card" id="embed-card-1" style="margin-top: -4px; margin-bottom: 8px;">
-    <div class="tutorial-header">🪙 皇家金庫 (資產欄) & 貴族隨行</div>
-    <div class="tutorial-text">左側顯示您當前「寶石籌碼袋（數字）」與「發展卡永久產量（數字）」。右側新空間則會即時顯示「已獲得的貴族」！注意：身上籌碼總上限為 10 顆！</div>
-    <div class="tutorial-footer">
-      <div class="tutorial-dots" id="dots-1"></div>
-      <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
-    </div>
-  </div>
 
   <section class="action-panel" id="guide-actions">
     <div class="action-row">
@@ -104,14 +87,6 @@
       </div>
     </div>
     <div class="msg-box" id="error-msg"></div>
-    <div class="tutorial-embedded-card" id="embed-card-2">
-      <div class="tutorial-header">🟢 行動挑選面板</div>
-      <div class="tutorial-text">輪到你時，可選擇「任選 3 個不同色籌碼」或「若庫存夠則拿 2 個同色籌碼」。</div>
-      <div class="tutorial-footer">
-        <div class="tutorial-dots" id="dots-2"></div>
-        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
-      </div>
-    </div>
   </section>
 
   <section class="board-matrix" id="guide-matrix">
@@ -138,32 +113,14 @@
       </div>
       <div class="grid-4" id="row-lv1"></div>
     </div>
-
-    <div class="tutorial-embedded-card" id="embed-card-3">
-      <div class="tutorial-header">💎 工業與發展卡矩陣</div>
-      <div class="tutorial-text">核心貿易區！您可以使用籌碼購買卡片。卡牌上的大字代表威望分數，右上圓圈是產出的永久寶石，左下角則是購買此卡所需的成本。</div>
-      <div class="tutorial-footer">
-        <div class="tutorial-dots" id="dots-3"></div>
-        <button class="btn-tutorial-next" onclick="playUniformSfx(); nextTutorialStep()">下一步</button>
-      </div>
-    </div>
   </section>
 
   <section class="reserved-section" id="guide-reserved">
     <p class="section-title" style="color:#d4af37">🔒 保密保留區</p>
     <div class="grid-4" id="reserved-layer" style="margin-top:2px;"></div>
-    <div class="tutorial-embedded-card" id="embed-card-4">
-      <div class="tutorial-header">🔒 機密保留契約</div>
-      <div class="tutorial-text">如果某張卡片暫時買不起打不開但不想被搶走，可以點擊「保留」。這會將卡牌放入這裡並獲得 1 顆萬能黃金籌碼。上限保留 3 張。</div>
-      <div class="tutorial-footer">
-        <div class="tutorial-dots" id="dots-4"></div>
-        <button class="btn-tutorial-next" id="btn-final-t-next">進入大會堂</button>
-      </div>
-    </div>
   </section>
 </div>
 
-<!-- ⚙️ 遊戲選項總統合彈窗面 -->
 <div class="modal-overlay" id="game-options-modal">
   <div class="modal" style="max-width:460px;">
     <h2 class="modal-title">⚙️ 皇家貿易商會選項</h2>
@@ -182,14 +139,12 @@
       <button id="menu-toggle-music" class="menu-row-btn" onclick="playUniformSfx(); handleMusicToggle()">🎵 背景音樂：開啟</button>
       <button id="menu-toggle-sfx" class="menu-row-btn" onclick="playUniformSfx(); handleSfxToggle()">🔊 遊戲音效：開啟</button>
       <button class="menu-row-btn" style="border-color:#ffe099;" onclick="playUniformSfx(); openTalentPoolModal()">🏛️ 挑選首席輔助官 (人才庫)</button>
-      <button class="menu-row-btn" style="background:rgba(212,175,55,0.15);" onclick="playUniformSfx(); triggerMenuTutorial()">📖 重新啟動完整欄位教學</button>
     </div>
     
     <button class="btn-replay" style="background:#3a2e22; border:1px solid #d4af37;" onclick="playUniformSfx(); closeGameOptionsModal()">返回大會堂</button>
   </div>
 </div>
 
-<!-- 🏛️ 獨立人才庫人才挑選彈窗面 -->
 <div class="modal-overlay" id="talent-pool-modal">
   <div class="modal" style="max-width:460px;">
     <h2 class="modal-title">🏛️ 皇家貴族人才庫</h2>
@@ -202,7 +157,6 @@
   </div>
 </div>
 
-<!-- 📜 遊戲說明調整 -->
 <div class="modal-overlay" id="tutorial-start-modal">
   <div class="modal" style="max-width: 480px; max-height: 90vh; overflow-y: auto;">
     <span style="font-size:2.2rem;">📜</span>
@@ -219,7 +173,7 @@
       <p style="margin-left: 14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">• 支付相應代價 <strong>購買</strong> 或 <strong>保留</strong> 一張發展卡</p>
       
       <div class="rule-title">🔄 3. 貴族檢定與回合結束</div>
-      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; line-height:1.5;">每個行動結束後，系統將自動檢查名下卡片減免產量。若滿足任何貴族板塊需求，該貴族將永久進駐提供額外威望。隨後本回合正式結束，移交經商主控權。</p>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; line-height:1.5;">每個行動結束後，系統將自動檢查名下卡片減免產量。若滿足任何貴族板塊需求，該貴族將永久進駐提供額外威望。隨後本回合結束。</p>
       
       <div class="rule-title">⚖️ 4. 經商難易度與人才庫規則</div>
       <p style="font-size:0.8rem; color:#ffe099; margin-bottom:4px;">預設為「簡單」模式。您可以在「遊戲選項 ⚙️」中點選進行更動調整：</p>
@@ -228,10 +182,10 @@
       <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>困難</strong>：限制 25 回合內通關，起始貴族板塊 3 塊</p>
       <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:2px;">• <strong>極限</strong>：限制 22 回合內通關，起始貴族板塊 5 塊</p>
       <p style="margin-left: 10px; font-size:0.78rem; color:var(--text-muted); margin-bottom:4px;">• <strong>神人</strong>：限制 20 回合內通關，起始貴族板塊 5 塊</p>
-      <p style="font-size:0.78rem; color:#e67e22; line-height:1.4;">⚠️ 提示：新對局將自動繼承。若在中途變更難易度設定，為求公平，人才庫將被全部重置清空，無名貴族也會全面同步重置。</p>
+      <p style="font-size:0.78rem; color:#e67e22; line-height:1.4;">⚠️ 提示：若在中途變更難易度設定，人才庫將被清空，無名貴族也會全面重置。</p>
     </div>
 
-    <button class="btn-replay" id="btn-start-field-tutorial" onclick="playUniformSfx();">開始分解欄位教學</button>
+    <button class="btn-replay" id="btn-start-field-tutorial" onclick="playUniformSfx(); startFloatingTutorial();">進入交易大會堂</button>
   </div>
 </div>
 
@@ -241,7 +195,16 @@
     <h2 class="modal-title" style="letter-spacing: 0.05em;">璀璨寶石交易殿堂</h2>
     <p style="font-size:0.95rem; color:#ffe099; line-height:1.6; font-weight:600; margin: 15px 0;">歡迎進入璀璨寶石交易殿堂！</p>
     <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">皇家金庫已備妥，祝您在今日的貿易戰局中日進斗金、奪得最高榮譽。</p>
-    <button class="btn-replay" id="btn-welcome-confirm" onclick="playUniformSfx();">開啟音樂並進入遊戲</button>
+    <button class="btn-replay" id="btn-welcome-confirm" onclick="playUniformSfx(); hideWelcomeModal();">開啟音樂並進入遊戲</button>
+  </div>
+</div>
+
+<div id="floating-tutorial-widget" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: rgba(18, 14, 11, 0.98); border: 2px solid #ffcc00; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.85); z-index: 9999; padding: 15px; text-align: left; animation: embedFadeIn 0.3s ease-out;">
+  <div id="floating-tutorial-header" style="font-family: 'Cinzel', serif; font-size: 1.05rem; color: #ffcc00; font-weight: 900; margin-bottom: 6px; letter-spacing: 0.05em; text-shadow: 0 1px 2px #000;"></div>
+  <div id="floating-tutorial-text" style="font-size: 0.85rem; color: #ffffff; line-height: 1.5; margin-bottom: 12px; font-weight: 500;"></div>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div id="floating-tutorial-dots" style="display: flex; gap: 5px;"></div>
+    <button id="floating-tutorial-next-btn" class="btn-tutorial-next" onclick="playUniformSfx(); nextFloatingStep();">下一步</button>
   </div>
 </div>
 
