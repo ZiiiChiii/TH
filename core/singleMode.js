@@ -80,4 +80,103 @@ export const SingleMode = {
     }
     
     // 檢查璀璨大師大成就
-    if (id !==
+    if (id !== 30 && this.unlockedAchievementIds.size >= 20) {
+      this.triggerAchievementUnlock(30);
+    }
+
+    if (typeof window.playAchievementSfx === 'function') {
+      window.playAchievementSfx(found ? found.tier : 'easy');
+    }
+  },
+
+  auditInstantAchievements(actionType, meta) {
+    const state = CoreState.get();
+    if (state.mode !== 'singlePlayer') return; // 僅在單人模式觸發成就檢定
+    const p = state.player;
+
+    if (actionType === "takeDiff" && meta.count === 3) this.triggerAchievementUnlock(1);
+    if (actionType === "takeSame") this.triggerAchievementUnlock(2);
+    if (p.tokens.o >= 3) this.triggerAchievementUnlock(4);
+    
+    let totalTokens = 0;
+    for (let k in p.tokens) totalTokens += p.tokens[k];
+    if (totalTokens === 10) this.triggerAchievementUnlock(5);
+
+    if (p.tokens.w >= 1 && p.tokens.u >= 1 && p.tokens.g >= 1 && p.tokens.r >= 1 && p.tokens.k >= 1) {
+      this.triggerAchievementUnlock(7);
+    }
+    if (actionType === "reserve") this.triggerAchievementUnlock(9);
+    if (p.reserved.length === 3) this.triggerAchievementUnlock(10);
+
+    if (actionType === "buy") {
+      this.triggerAchievementUnlock(3);
+      if (!this.sessionTracker.goldUsedInThisPurchase) this.triggerAchievementUnlock(6);
+      if (meta.totalGemsSpent === 0) this.triggerAchievementUnlock(8);
+      if (meta.card.points > 0) this.triggerAchievementUnlock(13);
+      if (meta.level === "lv3") this.triggerAchievementUnlock(14);
+      if (meta.isReserved && p.reserved.length === 0) this.triggerAchievementUnlock(16);
+      if (p.bonus[meta.card.provides] >= 4) this.triggerAchievementUnlock(17);
+      if (meta.card.points >= 4) this.triggerAchievementUnlock(18);
+    }
+  },
+
+  auditEndGameAchievements() {
+    const state = CoreState.get();
+    if (state.mode !== 'singlePlayer') return;
+    const p = state.player;
+    const totalTurns = state.turn - 1;
+
+    if (this.sessionTracker.purchasedCardsCountLv1 >= 8) this.triggerAchievementUnlock(12);
+    if (totalTurns < 35) this.triggerAchievementUnlock(19);
+    if (!this.sessionTracker.hasReservedThisGame) this.triggerAchievementUnlock(20);
+
+    const earnedNobles = state.nobles.filter(n => n.completed);
+    if (earnedNobles.length === 0) this.triggerAchievementUnlock(21);
+    if (earnedNobles.length * 3 >= 9) this.triggerAchievementUnlock(22);
+    if (earnedNobles.length >= 2) this.triggerAchievementUnlock(25);
+    if (p.tokens.o === 0) this.triggerAchievementUnlock(23);
+
+    if (p.bonus.w >= 3 && p.bonus.u >= 3 && p.bonus.g >= 3 && p.bonus.r >= 3 && p.bonus.k >= 3) {
+      this.triggerAchievementUnlock(24);
+    }
+    if (totalTurns < 25) this.triggerAchievementUnlock(26);
+    if (p.score === 15) this.triggerAchievementUnlock(28);
+    if (totalTurns < 20) this.triggerAchievementUnlock(29);
+
+    const diffResultTxtEl = document.getElementById('modal-diff-result-txt');
+    if (diffResultTxtEl) {
+      diffResultTxtEl.innerHTML = `👑 戰局結算：本次單人成就挑戰共耗時 <strong>${totalTurns}</strong> 回合。`;
+    }
+  },
+
+  openAchievementHistory() {
+    const container = document.getElementById('ach-matrix-injector');
+    if (container) {
+      container.innerHTML = ALL_ACHIEVEMENTS.map(a => {
+        const unlocked = this.unlockedAchievementIds.has(a.id);
+        let tierName = { easy: "簡單", normal: "中階", hard: "進階", expert: "困難", master: "神人" }[a.tier];
+        return `
+          <div class="ach-item-row ${unlocked ? 'unlocked' : ''}" style="border-left: 4px solid ${a.color}; margin-bottom: 6px;">
+            <div class="ach-row-meta">
+              <div class="ach-row-name">${a.symbol} ${unlocked ? a.title : '??聆聽行商規則??'}</div>
+              <div class="ach-row-desc">${unlocked ? a.desc : '此成就尚未解鎖，請重開新局解鎖秘盟。'}</div>
+            </div>
+            <div class="ach-row-tag" style="background: ${unlocked ? a.color : '#332a24'}; color:${unlocked ? '#110e0c' : '#73655c'};">${unlocked ? tierName : '未鎖'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    const statsEl = document.getElementById('ach-stats-field');
+    if (statsEl) { 
+      statsEl.textContent = `${this.unlockedAchievementIds.size} / ${ALL_ACHIEVEMENTS.length}`; 
+      statsEl.style.display = ''; 
+    }
+    document.getElementById('ach-history-modal-container')?.classList.add('show');
+  },
+
+  closeAchievementHistory() {
+    document.getElementById('ach-history-modal-container')?.classList.remove('show');
+    const statsEl = document.getElementById('ach-stats-field');
+    if (statsEl) statsEl.style.display = 'none';
+  }
+};
