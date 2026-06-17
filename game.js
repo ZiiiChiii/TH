@@ -336,22 +336,38 @@ window.toggleSelectSame = function(color) {
   render();
 };
 
+// 【修正 1 & 2】先清空與重置選取狀態、補上拿寶石音效，再 dispatch
 window.handleDoDiffClick = function() {
   if (selectedDiff.length === 0) return;
-  ActionDispatcher.dispatch('TAKE_DIFF', { colors: [...selectedDiff] });
-  selectedDiff = [];
+  if (sfxGemEl && !CoreState.get().settings.isSfxMuted) {
+    sfxGemEl.currentTime = 0; sfxGemEl.play().catch(() => {});
+  }
+  const colors = [...selectedDiff];
+  selectedDiff = [];      
+  selectedSame = null;
+  ActionDispatcher.dispatch('TAKE_DIFF', { colors });
 };
 
+// 【修正 1 & 2】先清空與重置選取狀態、補上拿寶石音效，再 dispatch
 window.handleDoSameClick = function() {
   if (!selectedSame) return;
-  ActionDispatcher.dispatch('TAKE_SAME', { color: selectedSame });
-  selectedSame = null;
+  if (sfxGemEl && !CoreState.get().settings.isSfxMuted) {
+    sfxGemEl.currentTime = 0; sfxGemEl.play().catch(() => {});
+  }
+  const color = selectedSame;
+  selectedSame = null;    
+  selectedDiff = [];
+  ActionDispatcher.dispatch('TAKE_SAME', { color });
 };
 
 window.buyBoardCard = function(level, idx) {
   const card = CoreState.get().board[level][idx];
   if (!card) return;
   animateCardFlightToGoldVault(card.id, card.provides, () => {
+    // 【修正 2】在 animateCardFlightToGoldVault callback 內、dispatch 呼叫前補上購買音效
+    if (sfxBuyEl && !CoreState.get().settings.isSfxMuted) {
+      sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(() => {});
+    }
     ActionDispatcher.dispatch('BUY_BOARD', { level, idx });
   });
 };
@@ -360,11 +376,19 @@ window.buyReservedCard = function(idx) {
   const card = CoreState.get().player.reserved[idx];
   if (!card) return;
   animateCardFlightToGoldVault(card.id, card.provides, () => {
+    // 【修正 2】在 animateCardFlightToGoldVault callback 內、dispatch 呼叫前補上購買音效
+    if (sfxBuyEl && !CoreState.get().settings.isSfxMuted) {
+      sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(() => {});
+    }
     ActionDispatcher.dispatch('BUY_RESERVED', { idx });
   });
 };
 
 window.reserveBoardCard = function(level, idx) {
+  // 【修正 2】在 dispatch 呼叫前補上保留音效
+  if (sfxReserveEl && !CoreState.get().settings.isSfxMuted) {
+    sfxReserveEl.currentTime = 0; sfxReserveEl.play().catch(() => {});
+  }
   ActionDispatcher.dispatch('RESERVE_CARD', { level, idx });
 };
 
