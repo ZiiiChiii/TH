@@ -48,24 +48,27 @@ async function loadCoreModules() {
   AiMode = aiMod.AiMode;
   ActionDispatcher = actionMod.ActionDispatcher;
 
-  // 🚀 修正：將 ActionDispatcher 和 SingleMode 掛載至 window 全域物件，供 HTML 點擊事件存取
+  // 【修正 1】將核心控制器與成就模組掛載到 window，供 HTML 上 onclick 使用
   window.ActionDispatcher = ActionDispatcher;
   window.SingleMode = SingleMode;
 }
 
 window.playUniformSfx = function() {
+  if (!CoreState) return; // 【修正 2】防護模組載入邊界
   if (sfxSelectEl && !CoreState.get().settings.isSfxMuted) {
     sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(() => {});
   }
 }
 
 window.playActionGemSfx = function() {
+  if (!CoreState) return; // 【修正 2】防護模組載入邊界
   if (sfxGemEl && !CoreState.get().settings.isSfxMuted) {
     sfxGemEl.currentTime = 0; sfxGemEl.play().catch(() => {});
   }
 }
 
 window.playNobleSfx = function(gender) {
+  if (!CoreState) return; // 【修正 2】防護模組載入邊界
   if (CoreState.get().settings.isSfxMuted) return;
   if (gender === 'female' && sfxNobleFemale) {
     sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(() => {});
@@ -75,6 +78,7 @@ window.playNobleSfx = function(gender) {
 }
 
 window.playAchievementSfx = function(tier) {
+  if (!CoreState) return; // 【修正 2】防護模組載入邊界
   const targetSFX = sfxAchievementsMap[tier] || sfxAchievementsMap['easy'];
   if (targetSFX && !CoreState.get().settings.isSfxMuted) {
     targetSFX.currentTime = 0; targetSFX.play().catch(() => {});
@@ -419,7 +423,6 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 window.addEventListener('DOMContentLoaded', async () => {
   document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
   
-  // 【修正 1】頂部所有 DOM 查詢移入 DOMContentLoaded 內
   audioEl = document.getElementById('bg-music');
   sfxGemEl = document.getElementById('sfx-gem');
   sfxBuyEl = document.getElementById('sfx-buy');
