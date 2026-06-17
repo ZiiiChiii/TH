@@ -47,6 +47,10 @@ async function loadCoreModules() {
   SingleMode = singleMod.SingleMode;
   AiMode = aiMod.AiMode;
   ActionDispatcher = actionMod.ActionDispatcher;
+
+  // 🚀 修正：將 ActionDispatcher 和 SingleMode 掛載至 window 全域物件，供 HTML 點擊事件存取
+  window.ActionDispatcher = ActionDispatcher;
+  window.SingleMode = SingleMode;
 }
 
 window.playUniformSfx = function() {
