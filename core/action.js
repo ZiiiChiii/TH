@@ -62,7 +62,7 @@ export const ActionDispatcher = {
     switch (actionType) {
       case 'INIT_GAME':
         this.setupNewGame();
-        break; // 【修正 5】加入 break 阻斷 fall-through
+        break;
 
       case 'SWITCH_MODE':
         state.mode = payload.mode;
@@ -87,15 +87,28 @@ export const ActionDispatcher = {
         const card = state.board[level][idx];
         const afford = GameEngine.canAffordCard(p.bonus, p.tokens, card.cost);
         
+        SingleMode.sessionTracker.goldUsedInThisPurchase = (afford.neededGold > 0);
+        let totalGemsSpent = 0;
+
         for (let k in card.cost) {
           const spent = afford.breakdown[k] || 0;
           p.tokens[k] -= spent; state.bank[k] += spent;
+          totalGemsSpent += spent;
         }
-        if (afford.neededGold > 0) { p.tokens.o -= afford.neededGold; state.bank.o += afford.neededGold; }
+        if (afford.neededGold > 0) { p.tokens.o -= afford.neededGold; state.bank.o += afford.neededGold; totalGemsSpent += afford.neededGold; }
         
         p.bonus[card.provides]++;
         p.score += card.points;
+        
+        if (level === 'lv1') {
+          SingleMode.sessionTracker.purchasedCardsCountLv1++;
+          if (state.turn <= 10 && SingleMode.sessionTracker.purchasedCardsCountLv1 === 5) {
+            SingleMode.triggerAchievementUnlock(11);
+          }
+        }
+        
         state.board[level][idx] = state.decks[level].length > 0 ? state.decks[level].pop() : null;
+        SingleMode.auditInstantAchievements("buy", { card, level, totalGemsSpent, isReserved: false });
         
         this.finalizeTurn('player');
         break;
@@ -106,16 +119,21 @@ export const ActionDispatcher = {
         const card = p.reserved[idx];
         const afford = GameEngine.canAffordCard(p.bonus, p.tokens, card.cost);
         
+        SingleMode.sessionTracker.goldUsedInThisPurchase = (afford.neededGold > 0);
+        let totalGemsSpent = 0;
+
         for (let k in card.cost) {
           const spent = afford.breakdown[k] || 0;
           p.tokens[k] -= spent; state.bank[k] += spent;
+          totalGemsSpent += spent;
         }
-        if (afford.neededGold > 0) { p.tokens.o -= afford.neededGold; state.bank.o += afford.neededGold; }
+        if (afford.neededGold > 0) { p.tokens.o -= afford.neededGold; state.bank.o += afford.neededGold; totalGemsSpent += afford.neededGold; }
         
         p.bonus[card.provides]++;
         p.score += card.points;
         p.reserved.splice(idx, 1);
         
+        SingleMode.auditInstantAchievements("buy", { card, level: 'reserved', totalGemsSpent, isReserved: true });
         this.finalizeTurn('player');
         break;
       }
@@ -124,10 +142,14 @@ export const ActionDispatcher = {
         const { level, idx } = payload;
         const card = state.board[level][idx];
         p.reserved.push(card);
+        SingleMode.sessionTracker.hasReservedThisGame = true;
+
         let currentTokens = 0;
         for (let k in p.tokens) currentTokens += p.tokens[k];
         if (state.bank.o > 0 && currentTokens < 10) { state.bank.o--; p.tokens.o++; }
         state.board[level][idx] = state.decks[level].length > 0 ? state.decks[level].pop() : null;
+        
+        SingleMode.auditInstantAchievements("reserve", {});
         this.finalizeTurn('player');
         break;
       }
@@ -157,7 +179,11 @@ export const ActionDispatcher = {
     
     earnedNobles.forEach(n => {
       n.completed = true;
-      if (actor === 'player') { state.player.score += n.points; window.playNobleSfx(n.gender); }
+      if (actor === 'player') { 
+        state.player.score += n.points; 
+        window.playNobleSfx(n.gender); 
+        SingleMode.triggerAchievementUnlock(15);
+      }
       else state.ai.score += n.points;
     });
 
@@ -202,6 +228,15 @@ export const ActionDispatcher = {
     
     state.player = { tokens: { w: 0, u: 0, g: 0, r: 0, k: 0, o: 0 }, bonus: { w: 0, u: 0, g: 0, r: 0, k: 0 }, reserved: [], score: 0 };
     state.ai = { tokens: { w: 0, u: 0, g: 0, r: 0, k: 0, o: 0 }, bonus: { w: 0, u: 0, g: 0, r: 0, k: 0 }, reserved: [], score: 0 };
+
+    SingleMode.sessionTracker = {
+      hasReservedThisGame: false,
+      purchasedCardsCount: 0,
+      purchasedCardsCountLv1: 0, 
+      lv1CardsCountBeforeTurn10: 0,
+      singleTurnScoreGained: 0,
+      goldUsedInThisPurchase: false
+    };
 
     state.decks.lv1 = JSON.parse(JSON.stringify(RAW_CARDS.lv1));
     state.decks.lv2 = JSON.parse(JSON.stringify(RAW_CARDS.lv2));
