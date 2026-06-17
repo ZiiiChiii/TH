@@ -22,7 +22,7 @@ const TUTORIAL_STEPS_DATA = [
 ];
 
 // ==========================================
-// 2. 音效組件參照 (由 DOMContentLoaded 初始化)
+// 2. 音效與動畫全域追蹤暫存器
 // ==========================================
 let audioEl, sfxGemEl, sfxBuyEl, sfxReserveEl, sfxSelectEl, sfxUnselectEl, sfxNobleMale, sfxNobleFemale;
 let sfxAchievementsMap = {};
@@ -32,6 +32,9 @@ let lastPlayerState = null;
 let selectedDiff = [];
 let selectedSame = null;
 let currentTutorialStep = 0;
+
+// 動態追蹤目前正在進行飛行的卡牌 ID 鎖，防止被 render() 重複綁定干擾
+let activeFlyingCardIds = new Set();
 
 let CoreState, GameEngine, SingleMode, AiMode, ActionDispatcher;
 
@@ -85,24 +88,31 @@ window.playAchievementSfx = function(tier) {
 }
 
 // ==========================================
-// 3. 【修改二】完整替換為 GSAP 版本飛行動畫
+// 3. GSAP 3D 拋物線飛行大師特效
 // ==========================================
 function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   const sourceDom = document.getElementById(`dom-card-${cardId}`);
   const vaultDom = document.getElementById(`vault-target-${providesColor}`);
-  if (!sourceDom || !vaultDom) { if (callback) callback(); return; }
+  const fxContainer = document.getElementById('effects-layer');
+
+  if (!sourceDom || !vaultDom || !fxContainer) { 
+    if (callback) callback(); return; 
+  }
+
+  // 將此卡鎖定，防止其 DOM 被 render() 的呼吸重新洗掉
+  activeFlyingCardIds.add(cardId);
 
   const start = sourceDom.getBoundingClientRect();
   const end = vaultDom.getBoundingClientRect();
 
-  // 停止這張卡的 idle tween
+  // 1. 殺掉這張卡本來的 Idle 呼吸，釋放掌控權
   if (window._idleTweens) {
     window._idleTweens.forEach(t => {
       if (t.targets().includes(sourceDom)) t.kill();
     });
   }
 
-  // clone 進 effects-layer
+  // 2. 複製節點並壓入特效層
   const flyCard = sourceDom.cloneNode(true);
   flyCard.removeAttribute('id');
   flyCard.style.position = 'fixed';
@@ -114,12 +124,11 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   flyCard.style.zIndex = '10000';
   flyCard.style.pointerEvents = 'none';
 
-  // 注意：設定 3D 翻轉必需的核心樣式
-  gsap.set(flyCard, { transformOrigin: "center center", transformStyle: "preserve-3d" });
-  
-  document.getElementById('effects-layer').appendChild(flyCard);
+  // 3. 注入 GSAP 3D 核心矩陣與透視
+  gsap.set(flyCard, { transformOrigin: "center center", transformStyle: "preserve-3d", perspective: 800 }); 
+  fxContainer.appendChild(flyCard);
 
-  // 原始卡牌淡出
+  // 原始卡牌在原位進入虛化防重疊
   sourceDom.style.opacity = '0.15';
 
   const deltaX = (end.left + end.width / 2) - (start.left + start.width / 2);
@@ -127,35 +136,37 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
 
   const tl = gsap.timeline();
 
-  // 蓄力放大
+  // 階段 A: 抽離蓄力
   tl.to(flyCard, {
     duration: 0.15,
-    scale: 1.15,
+    scale: 1.12,
     ease: "power2.out"
   })
-  // 飛行 + 3D 翻轉 (帶有拋物線高低差效果)
+  // 階段 B: 3D 翻轉 + 弧形高空拋射
   .to(flyCard, {
-    duration: 0.7,
+    duration: 0.65,
     x: deltaX,
-    y: deltaY - 80,   // 拋物線弧度
-    rotationY: 360,
-    rotationX: 20,
-    scale: 0.2,
-    ease: "power3.inOut"
+    y: deltaY - 90, // 高峰拋物線
+    rotationY: 180, // 改為 180 度，展現卡背翻轉張力
+    rotationX: 15,
+    scale: 0.15,
+    ease: "power2.inOut"
   })
-  // 落袋消失
+  // 階段 C: 縮小吸入金庫
   .to(flyCard, {
-    duration: 0.18,
+    duration: 0.15,
     scale: 0,
     opacity: 0,
+    ease: "power1.in",
     onComplete: () => {
       flyCard.remove();
       sourceDom.style.opacity = '';
+      activeFlyingCardIds.delete(cardId); // 解鎖
 
-      // 背包金庫 bounce 特效回饋
+      // 金庫產生 Bounce 彈跳震撼回饋
       gsap.fromTo(vaultDom,
         { scale: 1 },
-        { scale: 1.3, duration: 0.1, yoyo: true, repeat: 1,
+        { scale: 1.35, duration: 0.12, yoyo: true, repeat: 1, ease: "back.out(2)",
           onComplete: () => { gsap.set(vaultDom, { scale: 1 }); }
         }
       );
@@ -165,9 +176,6 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   });
 }
 
-// ==========================================
-// 4. 其他渲染與控制邏輯
-// ==========================================
 function renderDashboardGems(targetElementId, actorData, diffs) {
   const container = document.getElementById(targetElementId);
   if (!container) return;
@@ -200,6 +208,9 @@ function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+// ==========================================
+// 4. 全域 Render 控制器 (含修正後的 GSAP 呼吸模組)
+// ==========================================
 window.render = function() {
   const fullState = CoreState.get();
   const player = fullState.player;
@@ -352,20 +363,23 @@ window.render = function() {
   ['lv1', 'lv2', 'lv3'].forEach(l => fullState.board[l]?.forEach(c => { if(c) lastRenderedCardIds.add(c.id); }));
 
   // ==========================================
-  // 5. 【修改一】在 render() 函數最末尾，加入 idle 漂浮動畫
+  // 【修改一】全自動防疊加之錯時 GSAP Idle 呼吸
   // ==========================================
-  // 殺掉前一輪的所有 idle tween，避免重複疊加
   if (window._idleTweens) {
     window._idleTweens.forEach(t => t.kill());
   }
   window._idleTweens = [];
 
-  // 對所有目前在矩陣（board-matrix）上的卡牌啟動 idle 漂浮
+  // 只允許對「目前沒有在進行飛行（activeFlyingCardIds）」的正常物業卡牌進行呼吸
   document.querySelectorAll('.board-matrix .card:not(.empty)').forEach((el, i) => {
+    // 從 id 取出 cardId，判斷是否鎖定中
+    const cardIdAttr = el.id ? el.id.replace('dom-card-', '') : '';
+    if (activeFlyingCardIds.has(cardIdAttr)) return;
+
     const tween = gsap.to(el, {
       y: -6,
-      rotation: 1,
-      duration: 1.8 + (i % 4) * 0.15,  // 每張稍微錯開避免同步
+      rotation: 0.8,
+      duration: 1.6 + (i % 4) * 0.18, 
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut"
@@ -374,6 +388,9 @@ window.render = function() {
   });
 }
 
+// ==========================================
+// 5. 其餘事件分發代理 (保持不變)
+// ==========================================
 window.toggleSelectDiff = function(color) {
   if(CoreState.get().currentTurnOwner !== 'player') return;
   document.getElementById('error-msg').textContent = ''; selectedSame = null;
@@ -460,15 +477,8 @@ window.openGameOptionsModal = () => {
 };
 
 window.closeGameOptionsModal = () => document.getElementById('game-options-modal').classList.remove('show');
-
-window.closeWinModal = () => {
-  document.getElementById('win-modal').classList.remove('show');
-};
-
-window.restartGame = () => {
-  document.getElementById('win-modal').classList.remove('show');
-  ActionDispatcher.dispatch('INIT_GAME');
-};
+window.closeWinModal = () => { document.getElementById('win-modal').classList.remove('show'); };
+window.restartGame = () => { document.getElementById('win-modal').classList.remove('show'); ActionDispatcher.dispatch('INIT_GAME'); };
 
 window.openTalentPoolModal = () => { SingleMode.renderTalentPoolModalUI(); document.getElementById('talent-pool-modal').classList.add('show'); };
 window.closeTalentPoolModal = () => { document.getElementById('talent-pool-modal').classList.remove('show'); SingleMode.renderActiveAssistantUI(); };
