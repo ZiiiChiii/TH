@@ -84,6 +84,9 @@ window.playAchievementSfx = function(tier) {
   }
 }
 
+// ==========================================
+// 3. 3D 旋轉翻面與拋物飛行震撼視覺特效
+// ==========================================
 function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   const sourceDom = document.getElementById(`dom-card-${cardId}`);
   const vaultTargetId = `vault-target-${providesColor}`;
@@ -94,6 +97,7 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
     if (callback) callback(); return;
   }
 
+  // ── 第一階段：浮起 + 準備 (150ms) ──
   sourceDom.style.transition = 'transform 150ms ease-out';
   sourceDom.style.transform = 'scale(1.08)';
 
@@ -110,8 +114,12 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   animCard.style.margin = '0';
   animCard.style.pointerEvents = 'none';
   animCard.style.transformOrigin = 'center center';
-  animCard.style.zIndex = '10000';
   
+  // 【修正 1】在指定位置加入 3D 立體保護渲染與 GPU 預先聲明
+  animCard.style.transformStyle = 'preserve-3d';
+  animCard.style.willChange = 'transform, opacity';
+  
+  animCard.style.zIndex = '10000';
   animCard.style.transform = 'perspective(800px) scale(1)';
   
   const actions = animCard.querySelector('.card-actions');
@@ -119,6 +127,7 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
   
   fxContainer.appendChild(animCard);
 
+  // ── 第二階段：飛行 (650ms) ──
   setTimeout(() => {
     const dstRect = targetDom.getBoundingClientRect();
     const deltaX = (dstRect.left + dstRect.width / 2) - (srcRect.left + srcRect.width / 2);
@@ -129,6 +138,7 @@ function animateCardFlightToGoldVault(cardId, providesColor, callback) {
     animCard.style.opacity = '0';
   }, 150);
 
+  // ── 第三階段：動畫結束處理 ──
   setTimeout(() => {
     animCard.remove(); 
     sourceDom.style.transform = ''; 
@@ -169,7 +179,6 @@ function renderDashboardGems(targetElementId, actorData, diffs) {
   container.innerHTML = html;
 }
 
-// 🚀 新增：在 window.render 定義上方加入安全的全域深拷貝函數
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
