@@ -234,150 +234,1086 @@ const sfxAchievementsMap = {
 const sfxNobleMale = document.getElementById('sfx-noble-male');
 const sfxNobleFemale = document.getElementById('sfx-noble-female');
 
-/* ── 🎬 局部更換：全新 5 步浮動說明卡邏輯 ────────────────────────── */
+/* ── 🎬 教學導覽邏輯 ────────────────────────── */
 let currentTutorialStep = 0;
-
-// 根據你的新設計：開場直接進遊戲，點擊才亮起對應欄位，文字簡短直接
 const TUTORIAL_STEPS = [
-  { 
-    elementId: 'guide-actions', 
-    title: '① 行動面板', 
-    text: '核心行動區。每回合可選：拿3個不同色籌碼、拿2個同色籌碼，或者在此確認收下。',
-    align: 'bottom'
-  },
-  { 
-    elementId: 'guide-dashboard', 
-    title: '② 皇家金庫', 
-    text: '檢視您的資產背包。上半部顯示目前持有的籌碼（上限10顆），下半部是購得卡片提供的永久寶石減免。',
-    align: 'bottom'
-  },
-  { 
-    elementId: 'guide-matrix', 
-    title: '③ 卡牌矩陣', 
-    text: '核心貿易區。分為三種產業等級，卡片左下角為所需籌碼成本，產出威望分數與永久寶石。',
-    align: 'top'
-  },
-  { 
-    elementId: 'guide-nobles', 
-    title: '④ 貴族覲見區', 
-    text: '展示當前賽局中注視著您的五位無名貴族。當名下發展卡的永久寶石加總滿足其條件，貴族會主動拜訪移居。',
-    align: 'bottom'
-  },
-  { 
-    elementId: 'guide-reserved', 
-    title: '⑤ 保留區', 
-    text: '展示您目前保密暫扣的發展卡契約（上限3張）。扣留時會附贈1顆萬能黃金籌碼。',
-    align: 'top'
-  }
+  { elementId: 'guide-nobles' },
+  { elementId: 'guide-dashboard' },
+  { elementId: 'guide-actions' },
+  { elementId: 'guide-matrix' },
+  { elementId: 'guide-reserved' }
 ];
 
-// 覆蓋原本舊的開場檢查，改成直接進遊戲
 function checkAndStartTutorial() {
   const hasSeen = localStorage.getItem('splendor_tutorial_seen_2026');
   if (!hasSeen) {
-    startFieldTutorial();
+    document.getElementById('tutorial-start-modal').classList.add('show');
+  } else {
+    document.getElementById('welcome-back-modal').classList.add('show');
   }
+}
+
+document.getElementById('btn-start-field-tutorial').addEventListener('click', () => {
+  document.getElementById('tutorial-start-modal').classList.remove('show');
+  startFieldTutorial();
+});
+
+document.getElementById('btn-welcome-confirm').addEventListener('click', () => {
+  document.getElementById('welcome-back-modal').classList.remove('show');
+  if (!isMusicMuted) {
+    audioEl.play().catch(e => console.log("音樂播放受限：", e));
+  }
+});
+
+function forceStartOverviewTutorial() {
+  document.getElementById('game-options-modal').classList.remove('show');
+  document.getElementById('tutorial-start-modal').classList.add('show');
 }
 
 function startFieldTutorial() {
   currentTutorialStep = 0;
-  const overlay = document.getElementById('tutorial-floating-overlay');
-  if (overlay) overlay.style.display = 'block';
+  TUTORIAL_STEPS.forEach((_, stepIdx) => {
+    const dotsLayer = document.getElementById(`dots-${stepIdx}`);
+    if (dotsLayer) {
+      dotsLayer.innerHTML = TUTORIAL_STEPS.map((_, i) => 
+        `<div class="t-dot ${i === stepIdx ? 'active' : ''}"></div>`
+      ).join('');
+    }
+  });
   showTutorialStep();
 }
 
 function showTutorialStep() {
-  // 1. 先清除所有舊的高亮狀態
-  TUTORIAL_STEPS.forEach(s => {
+  TUTORIAL_STEPS.forEach((s, idx) => {
     const el = document.getElementById(s.elementId);
+    const card = document.getElementById(`embed-card-${idx}`);
     if (el) el.classList.remove('tutorial-highlight');
+    if (card) card.style.display = 'none';
   });
-
-  // 如果 5 步都走完了，就關閉導覽
-  if (currentTutorialStep >= TUTORIAL_STEPS.length) {
-    const overlay = document.getElementById('tutorial-floating-overlay');
-    if (overlay) overlay.style.display = 'none';
-    localStorage.setItem('splendor_tutorial_seen_2026', 'true');
-    return;
-  }
 
   const step = TUTORIAL_STEPS[currentTutorialStep];
   const targetEl = document.getElementById(step.elementId);
-  const card = document.getElementById('tutorial-floating-card');
+  const targetCard = document.getElementById(`embed-card-${currentTutorialStep}`);
+  
+  if (targetEl && targetCard) {
+    targetEl.classList.add('tutorial-highlight');
+    targetCard.style.display = 'block';
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
 
-  if (!targetEl) {
-    nextTutorialStep();
+window.nextTutorialStep = function() {
+  if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
+    currentTutorialStep++;
+    showTutorialStep();
+  }
+};
+
+document.getElementById('btn-final-t-next').addEventListener('click', () => {
+  playUniformSfx();
+  TUTORIAL_STEPS.forEach((s, idx) => {
+    const el = document.getElementById(s.elementId);
+    const card = document.getElementById(`embed-card-${idx}`);
+    if (el) el.classList.remove('tutorial-highlight');
+    if (card) card.style.display = 'none';
+  });
+  localStorage.setItem('splendor_tutorial_seen_2026', 'true');
+  if (!isMusicMuted) audioEl.play().catch(err => {});
+});
+
+
+/* ── ⚙️ 選項彈窗、人才庫、音效控制模組 ────────────────── */
+function openGameOptionsModal() {
+  document.getElementById('menu-toggle-music').textContent = isMusicMuted ? "🔇 背景音樂：靜音" : "🎵 背景音樂：開啟";
+  document.getElementById('menu-toggle-sfx').textContent = isSfxMuted ? "🔇 遊戲音效：靜音" : "🔊 遊戲音效：開啟";
+  
+  document.querySelectorAll('.diff-opt-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-diff') === currentDifficulty) {
+      btn.classList.add('active');
+    }
+  });
+  
+  document.getElementById('game-options-modal').classList.add('show');
+}
+
+function closeGameOptionsModal() {
+  document.getElementById('game-options-modal').classList.remove('show');
+}
+
+function handleMusicToggle() {
+  if (isMusicMuted) {
+    isMusicMuted = false;
+    audioEl.play().catch(err => {});
+  } else {
+    isMusicMuted = true;
+    audioEl.pause();
+  }
+  document.getElementById('menu-toggle-music').textContent = isMusicMuted ? "🔇 背景音樂：靜音" : "🎵 背景音樂：開啟";
+}
+
+function handleSfxToggle() {
+  isSfxMuted = !isSfxMuted;
+  document.getElementById('menu-toggle-sfx').textContent = isSfxMuted ? "🔇 遊戲音效：靜音" : "🔊 遊戲音效：開啟";
+}
+
+function triggerMenuTutorial() {
+  forceStartOverviewTutorial();
+}
+
+/* 🏛️ 人才庫模組視窗內部處理 */
+function openTalentPoolModal() {
+  renderTalentPoolModalUI();
+  document.getElementById('talent-pool-modal').classList.add('show');
+}
+
+function closeTalentPoolModal() {
+  document.getElementById('talent-pool-modal').classList.remove('show');
+  renderActiveAssistantUI(); 
+}
+
+function renderTalentPoolModalUI() {
+  const modalLayer = document.getElementById('talent-pool-modal-layer');
+  if (globalTalentPoolIds.length === 0) {
+    modalLayer.innerHTML = `<p style="font-size:0.75rem; color:var(--text-muted); padding: 20px 0; grid-column: span 2; text-align:center;">人才庫目前空空如也！<br>需在對局限時內成功通關，方可在此保留解鎖隨行貴族。</p>`;
     return;
   }
 
-  // 2. 幫當前步驟的欄位加上高亮外框
-  targetEl.classList.add('tutorial-highlight');
+  modalLayer.innerHTML = globalTalentPoolIds.map(id => {
+    const nobleMeta = ALL_NOBLES_POOL.find(n => n.id === id);
+    if (!nobleMeta) return '';
+    const isSelected = selectedAssistantId === id ? 'selected' : '';
+    return `
+      <div class="talent-mini-card ${isSelected}" onclick="playUniformSfx(); selectAssistant('${id}')">
+        <img src="${nobleMeta.img}" alt="${nobleMeta.name}">
+        <span>${nobleMeta.name}</span>
+      </div>
+    `;
+  }).join('');
+}
 
-  // 3. 填入簡短直接的文字與標題
-  const headerEl = document.getElementById('floating-tutorial-header');
-  const textEl = document.getElementById('floating-tutorial-text');
-  if (headerEl) headerEl.textContent = step.title;
-  if (textEl) textEl.textContent = step.text;
-
-  // 4. 渲染進度小圓點
-  const dotsLayer = document.getElementById('floating-tutorial-dots');
-  if (dotsLayer) {
-    dotsLayer.innerHTML = TUTORIAL_STEPS.map((_, i) => 
-      `<div style="width:6px; height:6px; border-radius:50%; background:${i === currentTutorialStep ? '#d4af37' : '#554a3a'}; transition:all 0.2s;"></div>`
-    ).join('');
-  }
-
-  // 5. 自動計算高亮欄位的位置，把浮動小卡「飄移」到它旁邊
-  const rect = targetEl.getBoundingClientRect();
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  
-  let leftPos = rect.left + (rect.width / 2) - 140; // 居中對齊
-  if (leftPos < 10) leftPos = 10;
-  if (leftPos + 290 > window.innerWidth) leftPos = window.innerWidth - 290;
-
-  let topPos = 0;
-  if (step.align === 'bottom') {
-    topPos = rect.bottom + scrollTop + 10;
+window.selectAssistant = function(id) {
+  if (selectedAssistantId === id) {
+    selectedAssistantId = null; 
   } else {
-    topPos = rect.top + scrollTop - 160;
-    if (topPos < 10) topPos = rect.bottom + scrollTop + 10;
+    selectedAssistantId = id;
+  }
+  renderTalentPoolModalUI();
+};
+
+function renderActiveAssistantUI() {
+  const assistantLayer = document.getElementById('assistant-display-layer');
+  if (!selectedAssistantId) {
+    assistantLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted);">孤軍奮戰中</p>`;
+    return;
   }
 
-  if (card) {
-    card.style.left = leftPos + 'px';
-    card.style.top = topPos + 'px';
+  const nobleMeta = ALL_NOBLES_POOL.find(n => n.id === selectedAssistantId);
+  if (nobleMeta) {
+    assistantLayer.innerHTML = `
+      <div class="earned-noble-mini" style="border-style: solid; background: rgba(212,175,55,0.15); width:100%">
+        <img src="${nobleMeta.img}">
+        <span style="font-weight:700;">${nobleMeta.name} (伴隨中)</span>
+      </div>
+    `;
   }
-
-  // 畫面自動平滑滾動到焦點區域
-  targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-function nextTutorialStep() {
-  currentTutorialStep++;
-  showTutorialStep();
-}
+/* 🟢 對局難易度切換與警告機制 */
+window.changeGameDifficultyWithWarning = function(diffLevel) {
+  if (currentDifficulty === diffLevel) return;
 
-// 供選單按鈕重新呼叫
-function forceStartOverviewTutorial() {
-  const menuModal = document.getElementById('game-options-modal');
-  if (menuModal) menuModal.classList.remove('show');
-  startFieldTutorial();
-}
+  const confirmChange = confirm("⚠️ 警告：您正在中途變更皇家貿易商會難易度！\n變更難易度將會徹底清空當前儲存的【皇家貴族人才庫】與重置無名貴族。確定要執行變更嗎？");
+  
+  if (confirmChange) {
+    globalTalentPoolIds = [];
+    selectedAssistantId = null;
+    saveTalentPool();
+    
+    currentDifficulty = diffLevel;
+    localStorage.setItem('splendor_difficulty_2026', diffLevel);
+    
+    document.querySelectorAll('.diff-opt-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-diff') === diffLevel) {
+        btn.classList.add('active');
+      }
+    });
 
-// 確保開局時防死機並啟動渲染
-window.addEventListener('DOMContentLoaded', () => {
-  try {
-    initGame();
-  } catch(e) {
-    console.error("Init crash:", e);
+    alert(`難易度已重置變更，人才庫已被清空，無名貴族也已重置。`);
+    renderActiveAssistantUI();
+    initGame(); 
+  }
+};
+
+
+/* ── 🏆 成就檢定核心運算與播放佇列引擎 ────────────────────────── */
+function triggerAchievementUnlock(id) {
+  if (unlockedAchievementIds.has(id)) return;
+  unlockedAchievementIds.add(id);
+  
+  const def = ACHIEVEMENT_DEFINITIONS.find(d => d.id === id);
+  if (def) {
+    pendingAchievementsThisAction.push(def);
   }
   
+  if (id !== 30 && unlockedAchievementIds.size >= 20) {
+    triggerAchievementUnlock(30);
+  }
+}
+
+function processPendingAchievementsQueue(callback) {
+  if (pendingAchievementsThisAction.length === 0) {
+    if (callback) callback();
+    return;
+  }
+
+  // 成就數字只在點開歷史彈窗時才顯示
+  if (isShowingAchievementAnimation) {
+    if (callback) callback();
+    return;
+  }
+  
+  isShowingAchievementAnimation = true;
+  const latestField = document.getElementById('ach-latest-field');
+  const achievementsToShow = [...pendingAchievementsThisAction];
+  pendingAchievementsThisAction = [];
+  
+  let currentIdx = 0;
+  
+  function renderNextAch() {
+    if (currentIdx >= achievementsToShow.length) {
+      isShowingAchievementAnimation = false;
+      if (callback) callback();
+      return;
+    }
+    
+    const currentAch = achievementsToShow[currentIdx];
+    latestAchievementId = currentAch.id;
+    
+    let tierText = "簡單";
+    if (currentAch.tier === "normal") tierText = "中階";
+    if (currentAch.tier === "hard") tierText = "進階";
+    if (currentAch.tier === "expert") tierText = "困難";
+    if (currentAch.tier === "master") tierText = "神人";
+    
+    latestField.innerHTML = `<span style="color: ${currentAch.color}; font-weight: 800;">${currentAch.symbol} [${tierText}] ${currentAch.name}</span>`;
+    latestField.classList.remove('has-ach');
+    void latestField.offsetWidth; 
+    latestField.classList.add('has-ach');
+    
+    const targetSFX = sfxAchievementsMap[currentAch.tier] || sfxAchievementsMap['easy'];
+    if (targetSFX && !isSfxMuted) {
+      targetSFX.currentTime = 0;
+      targetSFX.play().catch(e => {});
+    }
+    
+    currentIdx++;
+    
+    if (currentIdx < achievementsToShow.length) {
+      setTimeout(renderNextAch, 1500);
+    } else {
+      isShowingAchievementAnimation = false;
+      if (callback) callback();
+    }
+  }
+  
+  renderNextAch();
+}
+
+function auditInstantAchievements(actionType, meta) {
+  const p = state.player;
+  
+  if (actionType === "takeDiff" && meta.count === 3) triggerAchievementUnlock(1);
+  if (actionType === "takeSame") triggerAchievementUnlock(2);
+  if (p.tokens.o >= 3) triggerAchievementUnlock(4);
+  
+  let totalTokens = 0;
+  for (let k in p.tokens) totalTokens += p.tokens[k];
+  if (totalTokens === 10) triggerAchievementUnlock(5);
+  
+  if (p.tokens.w >= 1 && p.tokens.u >= 1 && p.tokens.g >= 1 && p.tokens.r >= 1 && p.tokens.k >= 1) {
+    triggerAchievementUnlock(7);
+  }
+  if (actionType === "reserve") triggerAchievementUnlock(9);
+  if (p.reserved.length === 3) triggerAchievementUnlock(10);
+  
+  if (actionType === "buy") {
+    triggerAchievementUnlock(3);
+    if (!sessionTracker.goldUsedInThisPurchase) triggerAchievementUnlock(6);
+    if (meta.totalGemsSpent === 0) triggerAchievementUnlock(8);
+    if (meta.card.points > 0) triggerAchievementUnlock(13);
+    if (meta.level === "lv3") triggerAchievementUnlock(14);
+    if (meta.isReserved && p.reserved.length === 0) triggerAchievementUnlock(16);
+    if (p.bonus[meta.card.provides] >= 4) triggerAchievementUnlock(17);
+    if (meta.card.points >= 4) triggerAchievementUnlock(18);
+  }
+}
+
+/* ── ⚖️ 修正後的難易度通關判定邏輯 ────────────────────────── */
+function auditEndGameAchievements() {
+  const p = state.player;
+  const totalTurns = state.turn - 1;
+  
+  let lv1Holdings = sessionTracker.purchasedCardsCountLv1 || 0; 
+  if (lv1Holdings >= 8) triggerAchievementUnlock(12);
+
+  if (totalTurns < 35) triggerAchievementUnlock(19);
+  if (!sessionTracker.hasReservedThisGame) triggerAchievementUnlock(20);
+  
+  const earnedNobles = state.nobles.filter(n => n.completed);
+  if (earnedNobles.length === 0) triggerAchievementUnlock(21);
+  if (earnedNobles.length * 3 >= 9) triggerAchievementUnlock(22);
+  if (earnedNobles.length >= 2) triggerAchievementUnlock(25);
+  
+  if (p.tokens.o === 0) triggerAchievementUnlock(23);
+  
+  if (p.bonus.w >= 3 && p.bonus.u >= 3 && p.bonus.g >= 3 && p.bonus.r >= 3 && p.bonus.k >= 3) {
+    triggerAchievementUnlock(24);
+  }
+  
+  if (totalTurns < 25) triggerAchievementUnlock(26);
+  if (p.score === 15) triggerAchievementUnlock(28);
+  if (totalTurns < 20) triggerAchievementUnlock(29);
+
+  let targetLimit = 30; 
+  let diffChineseName = "簡單";
+  if (currentDifficulty === 'easy') { targetLimit = 30; diffChineseName = "簡單"; }
+  else if (currentDifficulty === 'normal') { targetLimit = 28; diffChineseName = "普通"; }
+  else if (currentDifficulty === 'hard') { targetLimit = 25; diffChineseName = "困難"; }
+  else if (currentDifficulty === 'expert') { targetLimit = 22; diffChineseName = "極限"; }
+  else if (currentDifficulty === 'master') { targetLimit = 20; diffChineseName = "神人"; }
+
+  const diffResultTxtEl = document.getElementById('modal-diff-result-txt');
+
+  /* 核心通關判定機制修復：嚴格限定只有在 totalTurns 小於或等於 targetLimit 時才算過關 */
+  if (totalTurns <= targetLimit) {
+    let newlySavedCount = 0;
+    earnedNobles.forEach(n => {
+      if (n.id && !n.isNoName && !globalTalentPoolIds.includes(n.id)) {
+        globalTalentPoolIds.push(n.id);
+        newlySavedCount++;
+      }
+    });
+    if (newlySavedCount > 0) saveTalentPool();
+    
+    diffResultTxtEl.innerHTML = `👑 戰局檢定：成功在 <strong>${diffChineseName}模式 (${targetLimit} 回合內)</strong> 通關！<br>已為您永久保留並解鎖本局拜訪的貴族至人才庫。`;
+    diffResultTxtEl.style.color = "#2ecc71";
+  } else {
+    diffResultTxtEl.innerHTML = `⏳ 戰局檢定：本次通關花費了 ${totalTurns} 回合，未能達到 <strong>${diffChineseName}模式 (${targetLimit} 回合)</strong> 保留門檻，貴族返回封地。`;
+    diffResultTxtEl.style.color = "#e67e22";
+  }
+}
+
+/* ── 🏆 成就履歷視窗介面渲染 ────────────────────────── */
+function openAchievementHistory() {
+  const statsEl = document.getElementById('ach-stats-field');
+  if (statsEl) { statsEl.textContent = `${unlockedAchievementIds.size} / 30`; statsEl.style.display = ''; }
+  const container = document.getElementById('ach-matrix-injector');
+  container.innerHTML = ACHIEVEMENT_DEFINITIONS.map(def => {
+    const isUnlocked = unlockedAchievementIds.has(def.id);
+    const statusText = isUnlocked ? "已達成" : "未解鎖";
+    let tierText = "簡單";
+    if (def.tier === "normal") tierText = "中階";
+    if (def.tier === "hard") tierText = "進階";
+    if (def.tier === "expert") tierText = "困難";
+    if (def.tier === "master") tierText = "神人";
+    
+    return `
+      <div class="ach-item-row ${isUnlocked ? 'unlocked' : ''}" style="border-left: 4px solid ${def.color};">
+        <div class="ach-row-meta">
+          <div class="ach-row-name">${def.symbol} ${def.name}</div>
+          <div class="ach-row-desc">${def.desc}</div>
+        </div>
+        <div class="ach-row-tag" style="background: ${def.color}; font-weight:800; font-size:0.65rem;">${statusText}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('ach-history-modal-container').classList.add('show');
+}
+
+function closeAchievementHistory() {
+  document.getElementById('ach-history-modal-container').classList.remove('show');
+  const statsEl = document.getElementById('ach-stats-field');
+  if (statsEl) statsEl.style.display = 'none';
+}
+
+
+/* ── 🎴 遊戲核心邏輯架構 ────────────────────────────────────── */
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function initGame() {
+  selectedDiff = [];
+  selectedSame = null;
+  document.getElementById('error-msg').textContent = '';
+  
+  sessionTracker = {
+    hasReservedThisGame: false,
+    purchasedCardsCount: 0,
+    purchasedCardsCountLv1: 0, 
+    lv1CardsCountBeforeTurn10: 0,
+    singleTurnScoreGained: 0,
+    goldUsedInThisPurchase: false
+  };
+
+  const pool1 = deepClone(RAW_CARDS.lv1);
+  const pool2 = deepClone(RAW_CARDS.lv2);
+  const pool3 = deepClone(RAW_CARDS.lv3);
+  shuffle(pool1); shuffle(pool2); shuffle(pool3);
+
+  // 根據難度設定初始貴族數量與回合限額
+  let noblesCount = 3;
+  if (currentDifficulty === 'easy' || currentDifficulty === 'expert' || currentDifficulty === 'master') {
+    noblesCount = 5;
+  }
+
+  const shuffledNoblesPool = deepClone(ALL_NOBLES_POOL);
+  shuffle(shuffledNoblesPool);
+  
+  let gameNobles = [];
+  let addedIds = new Set();
+
+  if (selectedAssistantId) {
+    const assistantMeta = shuffledNoblesPool.find(n => n.id === selectedAssistantId);
+    if (assistantMeta) {
+      gameNobles.push({ ...assistantMeta, completed: false, isNoName: false });
+      addedIds.add(selectedAssistantId);
+    }
+  }
+
+  for (let i = 0; i < shuffledNoblesPool.length; i++) {
+    if (gameNobles.length >= noblesCount) break;
+    const n = shuffledNoblesPool[i];
+    if (!addedIds.has(n.id)) {
+      gameNobles.push({ ...n, completed: false, isNoName: false });
+      addedIds.add(n.id);
+    }
+  }
+
+  while (gameNobles.length < noblesCount) {
+    const randomReq = {};
+    const t1 = GEM_TYPES[Math.floor(Math.random()*5)];
+    let t2 = GEM_TYPES[Math.floor(Math.random()*5)];
+    while(t2 === t1) { t2 = GEM_TYPES[Math.floor(Math.random()*5)]; }
+    randomReq[t1] = 4; randomReq[t2] = 4;
+    
+    gameNobles.push({
+      id: "noname_" + Math.random(),
+      name: "無名貴族爵士",
+      gender: Math.random() > 0.5 ? "male" : "female",
+      points: 3,
+      img: NOON_NOBLE_IMAGES[Math.floor(Math.random() * NOON_NOBLE_IMAGES.length)],
+      req: randomReq,
+      isNoName: true
+    });
+  }
+
+  state = {
+    turn: 1,
+    bank: { w: 5, u: 5, g: 5, r: 5, k: 5, o: 5 },
+    player: {
+      tokens: { w: 0, u: 0, g: 0, r: 0, k: 0, o: 0 },
+      bonus: { w: 0, u: 0, g: 0, r: 0, k: 0 },
+      reserved: [],
+      score: 0
+    },
+    nobles: gameNobles,
+    decks: { lv1: pool1, lv2: pool2, lv3: pool3 },
+    board: { lv1: [], lv2: [], lv3: [] }
+  };
+
+  for (let i = 0; i < 4; i++) {
+    if (state.decks.lv1.length) state.board.lv1.push(state.decks.lv1.pop());
+    if (state.decks.lv2.length) state.board.lv2.push(state.decks.lv2.pop());
+    if (state.decks.lv3.length) state.board.lv3.push(state.decks.lv3.pop());
+  }
+
+  lastRenderedCardIds.clear();
+  lastPlayerState = null;
+
+  render();
+}
+
+/* ── 🪙 背包籌碼更新與顏色閃爍特效控制器 ────────────────── */
+function renderDashboard() {
+  const p = state.player;
+  const resLayer = document.getElementById('res-layer');
+  
+  let totalTokens = 0;
+  for (let k in p.tokens) totalTokens += p.tokens[k];
+
+  // 計算動態變更的數值差
+  let diffs = { tokens: {}, bonus: {} };
+  if (lastPlayerState) {
+    for (let k in p.tokens) diffs.tokens[k] = p.tokens[k] - lastPlayerState.tokens[k];
+    for (let k in p.bonus) diffs.bonus[k] = p.bonus[k] - lastPlayerState.bonus[k];
+  }
+
+  let html = '';
+  const allKeys = ['w', 'u', 'g', 'r', 'k', 'o'];
+  
+  allKeys.forEach(k => {
+    const tokenVal = p.tokens[k] || 0;
+    const bonusVal = p.bonus[k] || 0;
+    const isGold = (k === 'o');
+    
+    let tDiffHtml = '';
+    if (diffs.tokens[k] > 0) tDiffHtml = `<span class="floating-diff plus">+${diffs.tokens[k]}</span>`;
+    else if (diffs.tokens[k] < 0) tDiffHtml = `<span class="floating-diff minus">${diffs.tokens[k]}</span>`;
+
+    let bDiffHtml = '';
+    if (!isGold && diffs.bonus[k] > 0) {
+      bDiffHtml = `<span class="floating-permanent-anim">+${diffs.bonus[k]} 🛡️</span>`;
+    }
+
+    let pulseClass = '';
+    if (diffs.tokens[k] !== 0 || (!isGold && diffs.bonus[k] !== 0)) {
+      pulseClass = 'animate-pulse-glow';
+    }
+
+    html += `
+      <div class="res-block ${pulseClass}">
+        ${tDiffHtml}
+        ${bDiffHtml}
+        <div class="res-circle ${GEM_CLASSES[k]}"></div>
+        <div class="res-text-group">
+          <span class="res-count">${tokenVal}</span>
+          ${!isGold ? (bonusVal > 0 ? `<span class="res-bonus">+${bonusVal}</span>` : `<span class="res-bonus" style="visibility:hidden;">+0</span>`) : `<span class="res-bonus" style="color:#968a7f; font-size:0.55rem;">百搭</span>`}
+        </div>
+      </div>
+    `;
+  });
+  
+  resLayer.innerHTML = html;
+
+  /* 籌碼數字樣式與閃爍提示核心機制優化 */
+  const capTxtEl = document.getElementById('cap-txt');
+  capTxtEl.textContent = `背包: ${totalTokens} / 10`;
+  
+  // 先移除舊的樣式類別
+  capTxtEl.classList.remove('bag-warning-yellow', 'bag-danger-red');
+  
+  if (totalTokens === 10) {
+    // 背包拿滿 10 個時：強烈紅色並持續無限閃爍提醒
+    capTxtEl.classList.add('bag-danger-red');
+  } else if (totalTokens > 7) {
+    // 背包大於 7 個（8、9個）時：亮眼黃色並閃爍一次提示
+    capTxtEl.classList.add('bag-warning-yellow');
+  }
+
+  lastPlayerState = deepClone(p);
+}
+
+function renderNobles() {
+  const layer = document.getElementById('nobles-layer');
+  layer.innerHTML = state.nobles.map(n => {
+    let reqHtml = '';
+    for (let k in n.req) {
+      reqHtml += `
+        <div class="noble-req-item">
+          <span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>
+          <span>${n.req[k]}</span>
+        </div>
+      `;
+    }
+    return `
+      <div class="noble-card ${n.completed ? 'completed' : ''}">
+        <img class="noble-img" src="${n.img}" alt="${n.name}">
+        <div class="noble-overlay">
+          <div class="card-top">
+            <span class="noble-pts">${n.points}</span>
+            <span class="noble-name">${n.name}</span>
+          </div>
+          <div class="noble-reqs">${reqHtml}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const earnedLayer = document.getElementById('earned-nobles-layer');
+  const completedNobles = state.nobles.filter(n => n.completed);
+  if (completedNobles.length === 0) {
+    earnedLayer.innerHTML = `<p style="font-size:0.55rem; color:var(--text-muted); padding:4px 0;">尚無貴族拜訪</p>`;
+  } else {
+    earnedLayer.innerHTML = completedNobles.map(n => `
+      <div class="earned-noble-mini">
+        <img src="${n.img}">
+        <span>${n.name}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function renderActionPanel() {
+  const diffSelectors = document.getElementById('diff-selectors');
+  diffSelectors.innerHTML = GEM_TYPES.map(k => {
+    const isSelected = selectedDiff.includes(k) ? 'selected' : '';
+    const bankEmpty = (state.bank[k] || 0) <= 0;
+    const disabledAttr = bankEmpty ? 'disabled style="opacity:0.08;"' : '';
+    return `
+      <div class="token-container-cell">
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected}" ${disabledAttr} onclick="toggleSelectDiff('${k}')"></button>
+        <span class="token-count-label">庫存:${state.bank[k]}</span>
+      </div>
+    `;
+  }).join('');
+
+  const sameSelectors = document.getElementById('same-selectors');
+  sameSelectors.innerHTML = GEM_TYPES.map(k => {
+    const isSelected = selectedSame === k ? 'selected' : '';
+    const canTakeSame = (state.bank[k] || 0) >= 2; 
+    const disabledAttr = !canTakeSame ? 'disabled style="opacity:0.08;"' : '';
+    return `
+      <div class="token-container-cell">
+        <button class="token-btn ${GEM_BTN_CLASSES[k]} ${isSelected}" ${disabledAttr} onclick="toggleSelectSame('${k}')"></button>
+        <span class="token-count-label">庫存:${state.bank[k]}</span>
+      </div>
+    `;
+  }).join('');
+
+  const btnDiff = document.getElementById('btn-do-diff');
+  btnDiff.disabled = (selectedDiff.length === 0);
+  
+  const btnSame = document.getElementById('btn-do-same');
+  btnSame.disabled = (selectedSame === null);
+}
+
+function renderCard(card, level, idx, isReserved = false) {
+  if (!card) {
+    return `<div class="card empty">已全數售罄</div>`;
+  }
+
+  const isNewCard = !lastRenderedCardIds.has(card.id);
+  let animationClass = isNewCard ? 'animate-deal' : '';
+
+  let costHtml = '';
+  for (let k in card.cost) {
+    const reqAmount = card.cost[k];
+    const playerHasBonus = state.player.bonus[k] || 0;
+    const playerHasToken = state.player.tokens[k] || 0;
+    const netCost = Math.max(0, reqAmount - playerHasBonus);
+    
+    let dotStateStyle = '';
+    if (netCost === 0) dotStateStyle = 'free';
+
+    costHtml += `
+      <div class="cost-dot ${dotStateStyle}">
+        <span class="cost-dot-circle ${GEM_CLASSES[k]}"></span>
+        <span>${reqAmount}</span>
+      </div>
+    `;
+  }
+
+  const canBuyResult = canPlayerAffordCard(card);
+  const buyDisabled = !canBuyResult.affordable ? 'disabled' : '';
+  const reserveDisabled = (!isReserved && state.player.reserved.length >= 3) ? 'disabled' : '';
+
+  let imgUrl = "https://i.ibb.co/KxX2gxBP/1.jpg";
+  if (CUSTOM_CARD_IMAGES[card.provides]) {
+    const list = CUSTOM_CARD_IMAGES[card.provides];
+    const hash = parseInt(card.id) || 0;
+    imgUrl = list[hash % list.length];
+  }
+
+  let actionButtonsHtml = '';
+  if (!isReserved) {
+    actionButtonsHtml = `
+      <div class="card-actions">
+        <button class="btn-card" ${buyDisabled} onclick="buyBoardCard('${level}', ${idx})">收購</button>
+        <button class="btn-card" ${reserveDisabled} onclick="reserveBoardCard('${level}', ${idx})">保留</button>
+      </div>
+    `;
+  } else {
+    actionButtonsHtml = `
+      <div class="card-actions">
+        <button class="btn-card" ${buyDisabled} onclick="buyReservedCard(${idx})">簽署收購</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="card ${animationClass}" id="dom-card-${card.id}" style="background-image: url('${imgUrl}');">
+      <div class="card-content-wrapper">
+        <div class="card-top">
+          <span class="card-pts">${card.points > 0 ? card.points : ''}</span>
+          <div class="card-gem-icon ${GEM_CLASSES[card.provides]}"></div>
+        </div>
+        <div>
+          <div class="card-costs">${costHtml}</div>
+          ${actionButtonsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMatrix() {
+  ['lv1', 'lv2', 'lv3'].forEach(level => {
+    const rowEl = document.getElementById(`row-${level}`);
+    const deckCountEl = document.getElementById(`deck-${level}-txt`);
+    deckCountEl.textContent = `剩餘: ${state.decks[level].length}`;
+
+    let html = '';
+    for (let i = 0; i < 4; i++) {
+      html += renderCard(state.board[level][i], level, i, false);
+    }
+    rowEl.innerHTML = html;
+  });
+
+  const reservedLayer = document.getElementById('reserved-layer');
+  if (state.player.reserved.length === 0) {
+    reservedLayer.innerHTML = `
+      <div class="card empty" style="grid-column: span 4; min-height:55px; height:55px;">
+        🔒 當前保密保留區尚無契約手牌 (上限 3 張)
+      </div>
+    `;
+  } else {
+    let rHtml = '';
+    for (let i = 0; i < 4; i++) {
+      if (state.player.reserved[i]) {
+        rHtml += renderCard(state.player.reserved[i], 'reserved', i, true);
+      } else {
+        rHtml += `<div class="card empty" style="min-height:55px; height:55px;">空位</div>`;
+      }
+    }
+    reservedLayer.innerHTML = rHtml;
+  }
+
+  // 記錄已被渲染過的卡片 ID
+  ['lv1', 'lv2', 'lv3'].forEach(lvl => {
+    state.board[lvl].forEach(c => { if(c) lastRenderedCardIds.add(c.id); });
+  });
+  state.player.reserved.forEach(c => { if(c) lastRenderedCardIds.add(c.id); });
+}
+
+function render() {
+  document.getElementById('turn-txt').textContent = state.turn;
+  document.getElementById('score-txt').textContent = state.player.score;
+
+  renderDashboard();
+  renderNobles();
+  renderActionPanel();
+  renderMatrix();
+}
+
+
+/* ── 🪙 行動操控與條件檢定模組 ────────────────────── */
+window.toggleSelectDiff = function(color) {
+  document.getElementById('error-msg').textContent = '';
+  selectedSame = null; 
+
+  const idx = selectedDiff.indexOf(color);
+  if (idx > -1) {
+    selectedDiff.splice(idx, 1);
+    if (!isSfxMuted && sfxUnselectEl) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+  } else {
+    if (selectedDiff.length >= 3) {
+      selectedDiff.shift();
+    }
+    selectedDiff.push(color);
+    if (!isSfxMuted && sfxSelectEl) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+  }
+  render();
+};
+
+window.toggleSelectSame = function(color) {
+  document.getElementById('error-msg').textContent = '';
+  selectedDiff = []; 
+
+  if (selectedSame === color) {
+    selectedSame = null;
+    if (!isSfxMuted && sfxUnselectEl) { sfxUnselectEl.currentTime = 0; sfxUnselectEl.play().catch(e=>{}); }
+  } else {
+    selectedSame = color;
+    if (!isSfxMuted && sfxSelectEl) { sfxSelectEl.currentTime = 0; sfxSelectEl.play().catch(e=>{}); }
+  }
+  render();
+};
+
+function checkBackpackCapacityAfterGain(incomingCount) {
+  let currentTotal = 0;
+  for (let k in state.player.tokens) currentTotal += state.player.tokens[k];
+  return (currentTotal + incomingCount <= 10);
+}
+
+window.handleDoDiffClick = function() {
+  if (selectedDiff.length === 0) return;
+  
+  if (!checkBackpackCapacityAfterGain(selectedDiff.length)) {
+    document.getElementById('error-msg').textContent = '⚠️ 背包容量超出上限！單人版限制至多只能持有 10 顆籌碼，請先收購或保留卡片。';
+    return;
+  }
+
+  playActionGemSfx();
+
+  selectedDiff.forEach(k => {
+    state.bank[k]--;
+    state.player.tokens[k]++;
+  });
+
+  auditInstantAchievements("takeDiff", { count: selectedDiff.length });
+  
+  selectedDiff = [];
+  endTurnFlow();
+};
+
+window.handleDoSameClick = function() {
+  if (!selectedSame) return;
+
+  if (!checkBackpackCapacityAfterGain(2)) {
+    document.getElementById('error-msg').textContent = '⚠️ 背包容量超出上限！單人版限制至多只能持有 10 顆籌碼，請先收購或保留卡片。';
+    return;
+  }
+
+  playActionGemSfx();
+
+  const k = selectedSame;
+  state.bank[k] -= 2;
+  state.player.tokens[k] += 2;
+
+  auditInstantAchievements("takeSame", { color: k });
+
+  selectedSame = null;
+  endTurnFlow();
+};
+
+
+/* ── 💳 卡片購買、百搭金幣扣抵與保留邏輯 ────────────────── */
+function canPlayerAffordCard(card) {
+  let neededGold = 0;
+  let breakdown = { w: 0, u: 0, g: 0, r: 0, k: 0 };
+
+  for (let k of GEM_TYPES) {
+    const reqAmount = card.cost[k] || 0;
+    const bonus = state.player.bonus[k] || 0;
+    const net = Math.max(0, reqAmount - bonus);
+    const token = state.player.tokens[k] || 0;
+
+    if (token < net) {
+      neededGold += (net - token);
+      breakdown[k] = token; 
+    } else {
+      breakdown[k] = net; 
+    }
+  }
+
+  if (state.player.tokens.o >= neededGold) {
+    return { affordable: true, neededGold: neededGold, breakdown: breakdown };
+  } else {
+    return { affordable: false, neededGold: neededGold };
+  }
+}
+
+function executeCardPurchaseEffects(card, breakdown, neededGold) {
+  sessionTracker.goldUsedInThisPurchase = (neededGold > 0);
+
+  let totalGemsSpent = 0;
+  for (let k of GEM_TYPES) {
+    const spent = breakdown[k] || 0;
+    state.player.tokens[k] -= spent;
+    state.bank[k] += spent;
+    totalGemsSpent += spent;
+  }
+
+  if (neededGold > 0) {
+    state.player.tokens.o -= neededGold;
+    state.bank.o += neededGold;
+    totalGemsSpent += neededGold;
+  }
+
+  state.player.bonus[card.provides]++;
+  state.player.score += card.points;
+  sessionTracker.singleTurnScoreGained += card.points;
+
+  sessionTracker.purchasedCardsCount++;
+  return { totalGemsSpent: totalGemsSpent };
+}
+
+window.buyBoardCard = function(level, idx) {
+  const card = state.board[level][idx];
+  if (!card) return;
+
+  const afford = canPlayerAffordCard(card);
+  if (!afford.affordable) return;
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) {
+    cardDom.classList.add('animate-buy');
+  }
+
   setTimeout(() => {
-    if (typeof state !== 'undefined' && typeof render === 'function') {
-      render();
+    if (!isSfxMuted && sfxBuyEl) { sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(e=>{}); }
+    
+    const meta = executeCardPurchaseEffects(card, afford.breakdown, afford.neededGold);
+    
+    if (level === 'lv1') {
+      sessionTracker.purchasedCardsCountLv1 = (sessionTracker.purchasedCardsCountLv1 || 0) + 1;
+      if (state.turn <= 10) {
+        sessionTracker.lv1CardsCountBeforeTurn10++;
+        if (sessionTracker.lv1CardsCountBeforeTurn10 === 5) triggerAchievementUnlock(11);
+      }
     }
-    if (typeof checkAndStartTutorial === 'function') {
-      checkAndStartTutorial();
+
+    // 補牌
+    let newCard = null;
+    if (state.decks[level].length > 0) {
+      newCard = state.decks[level].pop();
     }
-  }, 100);
+    state.board[level][idx] = newCard;
+
+    auditInstantAchievements("buy", { card: card, level: level, totalGemsSpent: meta.totalGemsSpent, isReserved: false });
+    endTurnFlow();
+  }, 280);
+};
+
+window.buyReservedCard = function(idx) {
+  const card = state.player.reserved[idx];
+  if (!card) return;
+
+  const afford = canPlayerAffordCard(card);
+  if (!afford.affordable) return;
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) cardDom.classList.add('animate-buy');
+
+  setTimeout(() => {
+    if (!isSfxMuted && sfxBuyEl) { sfxBuyEl.currentTime = 0; sfxBuyEl.play().catch(e=>{}); }
+    
+    const meta = executeCardPurchaseEffects(card, afford.breakdown, afford.neededGold);
+    state.player.reserved.splice(idx, 1);
+
+    auditInstantAchievements("buy", { card: card, level: 'reserved', totalGemsSpent: meta.totalGemsSpent, isReserved: true });
+    endTurnFlow();
+  }, 280);
+};
+
+window.reserveBoardCard = function(level, idx) {
+  if (state.player.reserved.length >= 3) return;
+
+  const card = state.board[level][idx];
+  if (!card) return;
+
+  let currentTokensTotal = 0;
+  for (let k in state.player.tokens) currentTokensTotal += state.player.tokens[k];
+
+  const cardDom = document.getElementById(`dom-card-${card.id}`);
+  if (cardDom) cardDom.classList.add('animate-reserve');
+
+  setTimeout(() => {
+    if (!isSfxMuted && sfxReserveEl) { sfxReserveEl.currentTime = 0; sfxReserveEl.play().catch(e=>{}); }
+
+    state.player.reserved.push(card);
+    sessionTracker.hasReservedThisGame = true;
+
+    let goldAwarded = false;
+    if (state.bank.o > 0) {
+      if (currentTokensTotal < 10) {
+        state.bank.o--;
+        state.player.tokens.o++;
+        goldAwarded = true;
+      }
+    }
+
+    let newCard = null;
+    if (state.decks[level].length > 0) {
+      newCard = state.decks[level].pop();
+    }
+    state.board[level][idx] = newCard;
+
+    auditInstantAchievements("reserve", { goldAwarded: goldAwarded });
+    endTurnFlow();
+  }, 280);
+};
+
+
+/* ── 🔄 回合遞進、貴族覲見與勝負結算 ────────────────── */
+function checkNoblesVisit() {
+  let newlyEarnedPoints = 0;
+  
+  for (let i = 0; i < state.nobles.length; i++) {
+    const n = state.nobles[i];
+    if (n.completed) continue;
+
+    let satisfy = true;
+    for (let k in n.req) {
+      if ((state.player.bonus[k] || 0) < n.req[k]) {
+        satisfy = false; break;
+      }
+    }
+
+    if (satisfy) {
+      n.completed = true;
+      state.player.score += n.points;
+      sessionTracker.singleTurnScoreGained += n.points;
+      newlyEarnedPoints += n.points;
+
+      triggerAchievementUnlock(15);
+
+      // 依性別播放專屬歡迎音效
+      if (!isSfxMuted) {
+        if (n.gender === 'female' && sfxNobleFemale) {
+          sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(e=>{});
+        } else if (n.gender === 'male' && sfxNobleMale) {
+          sfxNobleMale.currentTime = 0; sfxNobleMale.play().catch(e=>{});
+        }
+      }
+    }
+  }
+
+  if (sessionTracker.singleTurnScoreGained >= 6) {
+    triggerAchievementUnlock(27);
+  }
+}
+
+function endTurnFlow() {
+  checkNoblesVisit();
+  sessionTracker.singleTurnScoreGained = 0; 
+
+  processPendingAchievementsQueue(() => {
+    if (state.player.score >= 15) {
+      triggerEndGameWin(true);
+      return;
+    }
+
+    state.turn++;
+    render();
+  });
+}
+
+function triggerEndGameWin(isSuccess) {
+  render();
+  auditEndGameAchievements();
+
+  const titleEl = document.querySelector('#win-modal .modal-title');
+  const bodyEl = document.getElementById('modal-body-txt');
+  
+  if (isSuccess) {
+    titleEl.textContent = "璀璨大師，實至名歸！";
+    bodyEl.innerHTML = `恭喜您成功購得皇家產業，累積威望達到 <strong>${state.player.score} 分</strong>！<br>大會堂因您的經商智慧而熠熠生輝，共計耗時 <strong>${state.turn - 1} 回合</strong>。`;
+  }
+  
+  document.getElementById('win-modal').classList.add('show');
+}
+
+document.getElementById('btn-restart').addEventListener('click', () => {
+  document.getElementById('win-modal').classList.remove('show');
+  initGame();
+});
+
+
+/* ── 🚀 初始化加載 ────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  loadTalentPool();
+  renderActiveAssistantUI();
+  initGame();
+  checkAndStartTutorial();
+  
+  // 成就數字隱藏，點開成就歷史才顯示
 });
