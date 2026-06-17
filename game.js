@@ -1,4 +1,3 @@
-
 const GEM_TYPES = ['w', 'u', 'g', 'r', 'k']; 
 const GEM_CLASSES = { w: 'bg-w', u: 'bg-u', g: 'bg-g', r: 'bg-r', k: 'bg-k', o: 'bg-o' };
 const GEM_BTN_CLASSES = { w: 'token-btn-w', u: 'token-btn-u', g: 'token-btn-g', r: 'token-btn-r', k: 'token-btn-k' };
@@ -102,7 +101,7 @@ let currentDifficulty = 'easy';
 let isMusicMuted = false;
 let isSfxMuted = false; 
 
-// 統一按鈕與選單點擊基本音效 (不影響核心動作確認音效)
+// 統一按鈕與選單點擊基本音效
 function playUniformSfx() {
   const uniformSfx = document.getElementById('sfx-select');
   if (uniformSfx && !isSfxMuted) {
@@ -111,7 +110,7 @@ function playUniformSfx() {
   }
 }
 
-// 專門播放按下確認拿取籌碼時的音效
+// 專門播放確認拿取籌碼時的音效
 function playActionGemSfx() {
   const gemSfx = document.getElementById('sfx-gem');
   if (gemSfx && !isSfxMuted) {
@@ -186,7 +185,7 @@ const ACHIEVEMENT_DEFINITIONS = [
   { id: 19, symbol: "⏱️", name: "小試身手", desc: "成功通關（達到 15 分），且總消耗回合數小於 35 回合。", tier: "hard", color: "var(--diff-hard)" },
   
   { id: 20, symbol: "🔥", name: "真金不怕火煉", desc: "成功通關，且整局遊戲從未執行過「保留卡片」的行動。", tier: "expert", color: "var(--diff-expert)" },
-  { id: 21, symbol: "🪵", name: "白手起家", desc: "成功通關，且名下沒有任何一位貴族拜訪。", tier: "expert", color: "var(--diff-expert)" },
+  { id: 21, symbol: "🔓", name: "白手起家", desc: "成功通關，且名下沒有任何一位貴族拜訪。", tier: "expert", color: "var(--diff-expert)" },
   { id: 22, symbol: "🥂", name: "上流社會", desc: "成功通關，且分數來源有 9 分（或以上）是來自於貴族板塊。", tier: "expert", color: "var(--diff-expert)" },
   { id: 23, symbol: "🔋", name: "黃金絕緣體", desc: "成功通關，且通關當下持有的寶石中完全沒有黃金。", tier: "expert", color: "var(--diff-expert)" },
   { id: 24, symbol: "🗺️", name: "全色制霸", desc: "5 種普通顏色的發展卡，每種顏色都至少擁有 3 張。", tier: "expert", color: "var(--diff-expert)" },
@@ -234,93 +233,6 @@ const sfxAchievementsMap = {
 const sfxNobleMale = document.getElementById('sfx-noble-male');
 const sfxNobleFemale = document.getElementById('sfx-noble-female');
 
-/* ── 🎬 教學導覽邏輯 ────────────────────────── */
-let currentTutorialStep = 0;
-const TUTORIAL_STEPS = [
-  { elementId: 'guide-nobles' },
-  { elementId: 'guide-dashboard' },
-  { elementId: 'guide-actions' },
-  { elementId: 'guide-matrix' },
-  { elementId: 'guide-reserved' }
-];
-
-function checkAndStartTutorial() {
-  const hasSeen = localStorage.getItem('splendor_tutorial_seen_2026');
-  if (!hasSeen) {
-    document.getElementById('tutorial-start-modal').classList.add('show');
-  } else {
-    document.getElementById('welcome-back-modal').classList.add('show');
-  }
-}
-
-document.getElementById('btn-start-field-tutorial').addEventListener('click', () => {
-  document.getElementById('tutorial-start-modal').classList.remove('show');
-  startFieldTutorial();
-});
-
-document.getElementById('btn-welcome-confirm').addEventListener('click', () => {
-  document.getElementById('welcome-back-modal').classList.remove('show');
-  if (!isMusicMuted) {
-    audioEl.play().catch(e => console.log("音樂播放受限：", e));
-  }
-});
-
-function forceStartOverviewTutorial() {
-  document.getElementById('game-options-modal').classList.remove('show');
-  document.getElementById('tutorial-start-modal').classList.add('show');
-}
-
-function startFieldTutorial() {
-  currentTutorialStep = 0;
-  TUTORIAL_STEPS.forEach((_, stepIdx) => {
-    const dotsLayer = document.getElementById(`dots-${stepIdx}`);
-    if (dotsLayer) {
-      dotsLayer.innerHTML = TUTORIAL_STEPS.map((_, i) => 
-        `<div class="t-dot ${i === stepIdx ? 'active' : ''}"></div>`
-      ).join('');
-    }
-  });
-  showTutorialStep();
-}
-
-function showTutorialStep() {
-  TUTORIAL_STEPS.forEach((s, idx) => {
-    const el = document.getElementById(s.elementId);
-    const card = document.getElementById(`embed-card-${idx}`);
-    if (el) el.classList.remove('tutorial-highlight');
-    if (card) card.style.display = 'none';
-  });
-
-  const step = TUTORIAL_STEPS[currentTutorialStep];
-  const targetEl = document.getElementById(step.elementId);
-  const targetCard = document.getElementById(`embed-card-${currentTutorialStep}`);
-  
-  if (targetEl && targetCard) {
-    targetEl.classList.add('tutorial-highlight');
-    targetCard.style.display = 'block';
-    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}
-
-window.nextTutorialStep = function() {
-  if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
-    currentTutorialStep++;
-    showTutorialStep();
-  }
-};
-
-document.getElementById('btn-final-t-next').addEventListener('click', () => {
-  playUniformSfx();
-  TUTORIAL_STEPS.forEach((s, idx) => {
-    const el = document.getElementById(s.elementId);
-    const card = document.getElementById(`embed-card-${idx}`);
-    if (el) el.classList.remove('tutorial-highlight');
-    if (card) card.style.display = 'none';
-  });
-  localStorage.setItem('splendor_tutorial_seen_2026', 'true');
-  if (!isMusicMuted) audioEl.play().catch(err => {});
-});
-
 
 /* ── ⚙️ 選項彈窗、人才庫、音效控制模組 ────────────────── */
 function openGameOptionsModal() {
@@ -355,10 +267,6 @@ function handleMusicToggle() {
 function handleSfxToggle() {
   isSfxMuted = !isSfxMuted;
   document.getElementById('menu-toggle-sfx').textContent = isSfxMuted ? "🔇 遊戲音效：靜音" : "🔊 遊戲音效：開啟";
-}
-
-function triggerMenuTutorial() {
-  forceStartOverviewTutorial();
 }
 
 /* 🏛️ 人才庫模組視窗內部處理 */
@@ -468,7 +376,6 @@ function processPendingAchievementsQueue(callback) {
     return;
   }
 
-  // 成就數字只在點開歷史彈窗時才顯示
   if (isShowingAchievementAnimation) {
     if (callback) callback();
     return;
@@ -550,7 +457,7 @@ function auditInstantAchievements(actionType, meta) {
   }
 }
 
-/* ── ⚖️ 修正後的難易度通關判定邏輯 ────────────────────────── */
+/* ── 難易度通關判定邏輯 ────────────────────────── */
 function auditEndGameAchievements() {
   const p = state.player;
   const totalTurns = state.turn - 1;
@@ -586,7 +493,6 @@ function auditEndGameAchievements() {
 
   const diffResultTxtEl = document.getElementById('modal-diff-result-txt');
 
-  /* 核心通關判定機制修復：嚴格限定只有在 totalTurns 小於或等於 targetLimit 時才算過關 */
   if (totalTurns <= targetLimit) {
     let newlySavedCount = 0;
     earnedNobles.forEach(n => {
@@ -668,7 +574,6 @@ function initGame() {
   const pool3 = deepClone(RAW_CARDS.lv3);
   shuffle(pool1); shuffle(pool2); shuffle(pool3);
 
-  // 根據難度設定初始貴族數量與回合限額
   let noblesCount = 3;
   if (currentDifficulty === 'easy' || currentDifficulty === 'expert' || currentDifficulty === 'master') {
     noblesCount = 5;
@@ -749,7 +654,6 @@ function renderDashboard() {
   let totalTokens = 0;
   for (let k in p.tokens) totalTokens += p.tokens[k];
 
-  // 計算動態變更的數值差
   let diffs = { tokens: {}, bonus: {} };
   if (lastPlayerState) {
     for (let k in p.tokens) diffs.tokens[k] = p.tokens[k] - lastPlayerState.tokens[k];
@@ -793,18 +697,13 @@ function renderDashboard() {
   
   resLayer.innerHTML = html;
 
-  /* 籌碼數字樣式與閃爍提示核心機制優化 */
   const capTxtEl = document.getElementById('cap-txt');
   capTxtEl.textContent = `背包: ${totalTokens} / 10`;
   
-  // 先移除舊的樣式類別
   capTxtEl.classList.remove('bag-warning-yellow', 'bag-danger-red');
-  
   if (totalTokens === 10) {
-    // 背包拿滿 10 個時：強烈紅色並持續無限閃爍提醒
     capTxtEl.classList.add('bag-danger-red');
   } else if (totalTokens > 7) {
-    // 背包大於 7 個（8、9個）時：亮眼黃色並閃爍一次提示
     capTxtEl.classList.add('bag-warning-yellow');
   }
 
@@ -986,7 +885,6 @@ function renderMatrix() {
     reservedLayer.innerHTML = rHtml;
   }
 
-  // 記錄已被渲染過的卡片 ID
   ['lv1', 'lv2', 'lv3'].forEach(lvl => {
     state.board[lvl].forEach(c => { if(c) lastRenderedCardIds.add(c.id); });
   });
@@ -1161,7 +1059,6 @@ window.buyBoardCard = function(level, idx) {
       }
     }
 
-    // 補牌
     let newCard = null;
     if (state.decks[level].length > 0) {
       newCard = state.decks[level].pop();
@@ -1256,7 +1153,6 @@ function checkNoblesVisit() {
 
       triggerAchievementUnlock(15);
 
-      // 依性別播放專屬歡迎音效
       if (!isSfxMuted) {
         if (n.gender === 'female' && sfxNobleFemale) {
           sfxNobleFemale.currentTime = 0; sfxNobleFemale.play().catch(e=>{});
@@ -1308,12 +1204,118 @@ document.getElementById('btn-restart').addEventListener('click', () => {
 });
 
 
-/* ── 🚀 初始化加載 ────────────────────────────────────────── */
+/* ── 🚀 全新重構：浮動分解欄位教學導覽引擎 ────────────────────── */
+let currentTutorialStep = 0;
+const TUTORIAL_STEPS_DATA = [
+  {
+    elementId: "guide-actions",
+    title: "🟢 第一步：行動挑選面板",
+    text: "輪到您的回合時，可以選擇「任選 3 個不同顏色籌碼」或「若金庫庫存足夠（≥2）則拿取 2 個同色籌碼」。"
+  },
+  {
+    elementId: "guide-dashboard",
+    title: "🪙 第二步：皇家金庫資產欄",
+    text: "左側為您持有的籌碼數量與卡片提供的減免產量；右側為已來訪隨行的貴族。請隨時注意，背包籌碼總上限為 10 顆！"
+  },
+  {
+    elementId: "guide-matrix",
+    title: "💎 第三步：核心產業卡片矩陣",
+    text: "這是大會堂核心區！可在此花費籌碼收購或保留卡片。卡牌左上為威望分數，右上是產出的永久寶石，左下角則為購買此卡所需的原料成本。"
+  },
+  {
+    elementId: "guide-nobles",
+    title: "⚜️ 第四步：貴族覲見區",
+    text: "當您名下的發展卡累積達到貴族所需的「永久寶石產量」時，貴族將會在回合結束自動前來拜訪，並贈予您 3 分威望！"
+  },
+  {
+    elementId: "guide-reserved",
+    title: "🔒 第五步：機密保留契約",
+    text: "若某張卡片暫時買不起但不想被搶走，可以點擊「保留」。這會將卡牌秘密存入此區，並獲得 1 顆萬能黃金籌碼（百搭）。保留上限為 3 張。"
+  }
+];
+
+function checkAndStartTutorial() {
+  const isTutorialDone = localStorage.getItem('splendor_tutorial_completed_2026');
+  if (!isTutorialDone) {
+    document.getElementById('tutorial-start-modal').classList.add('show');
+  } else {
+    document.getElementById('welcome-back-modal').classList.add('show');
+  }
+}
+
+function hideWelcomeModal() {
+  document.getElementById('welcome-back-modal').classList.remove('remove');
+  document.getElementById('welcome-back-modal').classList.add('hide'); // 相容舊樣式
+  document.getElementById('welcome-back-modal').style.display = 'none';
+  
+  if (!isMusicMuted && audioEl) {
+    audioEl.play().catch(e => console.log("音樂啟動受瀏覽器限制: ", e));
+  }
+}
+
+window.startFloatingTutorial = function() {
+  document.getElementById('tutorial-start-modal').classList.remove('show');
+  hideWelcomeModal();
+  
+  currentTutorialStep = 0;
+  document.getElementById('floating-tutorial-widget').style.display = 'block';
+  showStepData(currentTutorialStep);
+};
+
+function showStepData(stepIdx) {
+  // 清除前一個高亮
+  TUTORIAL_STEPS_DATA.forEach(step => {
+    const el = document.getElementById(step.elementId);
+    if (el) el.classList.remove('tutorial-highlight');
+  });
+
+  const stepData = TUTORIAL_STEPS_DATA[stepIdx];
+  const targetEl = document.getElementById(stepData.elementId);
+  
+  if (targetEl) {
+    targetEl.classList.add('tutorial-highlight');
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // 更新浮動卡內容
+  document.getElementById('floating-tutorial-header').textContent = stepData.title;
+  document.getElementById('floating-tutorial-text').textContent = stepData.text;
+
+  // 更新點點指示器
+  const dotsContainer = document.getElementById('floating-tutorial-dots');
+  dotsContainer.innerHTML = TUTORIAL_STEPS_DATA.map((_, idx) => 
+    `<div class="t-dot ${idx === stepIdx ? 'active' : ''}"></div>`
+  ).join('');
+
+  // 變更按鈕文字
+  const nextBtn = document.getElementById('floating-tutorial-next-btn');
+  if (stepIdx === TUTORIAL_STEPS_DATA.length - 1) {
+    nextBtn.textContent = "進入大會堂";
+  } else {
+    nextBtn.textContent = "下一步";
+  }
+}
+
+window.nextFloatingStep = function() {
+  if (currentTutorialStep < TUTORIAL_STEPS_DATA.length - 1) {
+    currentTutorialStep++;
+    showStepData(currentTutorialStep);
+  } else {
+    // 教學結束
+    TUTORIAL_STEPS_DATA.forEach(step => {
+      const el = document.getElementById(step.elementId);
+      if (el) el.classList.remove('tutorial-highlight');
+    });
+    document.getElementById('floating-tutorial-widget').style.display = 'none';
+    localStorage.setItem('splendor_tutorial_completed_2026', 'true');
+  }
+};
+
+
+/* ── 初始化加載 ────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
   loadTalentPool();
   renderActiveAssistantUI();
   initGame();
   checkAndStartTutorial();
-  
-  // 成就數字隱藏，點開成就歷史才顯示
 });
