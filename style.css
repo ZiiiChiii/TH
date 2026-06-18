@@ -1,0 +1,154 @@
+/* ==========================================================================
+   【修改二】新增 375px 斷點處理最小機型（置於 430px 前方，確保優先級）
+   ========================================================================== */
+@media (max-width: 375px) {
+  .game-title { font-size: 0.75rem !important; }
+  .noble-card { min-width: 46px !important; height: 46px !important; }
+  .res-circle { width: 11px !important; height: 11px !important; }
+  .res-count { font-size: 0.6rem !important; }
+  .token-btn { width: 14px !important; height: 14px !important; background-size: 11px 11px !important; }
+  .reserved-section { width: 62px !important; }
+  .card-pts { font-size: 0.65rem !important; }
+  .btn-card { font-size: 0.38rem !important; }
+}
+
+/* ==========================================================================
+   【修改一】替換現有的 @media (max-width: 430px)
+   ========================================================================== */
+@media (max-width: 430px) {
+
+  /* ── 基礎：固定視窗，全面禁止捲動 ── */
+  html, body {
+    padding: 2px !important;
+    overflow: hidden !important;
+    margin: 0;
+    /* 優先使用動態 JS 計算的 vh，次之 dvh，最後 fallback vh */
+    height: calc(var(--vh, 1vh) * 100) !important;
+    height: 100dvh !important;
+  }
+
+  .shell {
+    height: calc(100% - 4px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* ── 頂部標題列 ── */
+  .top-meta-wrap { padding: 3px 6px !important; margin-bottom: 2px !important; }
+  .game-title { font-size: 0.82rem; letter-spacing: 0.05em; }
+  .status-bar { gap: 3px !important; }
+  .music-btn { padding: 2px 5px !important; font-size: 0.58rem !important; }
+  .status-pill { padding: 2px 5px !important; font-size: 0.58rem !important; }
+
+  /* ── 成就欄 ── */
+  .achievement-banner { padding: 3px 8px !important; margin-bottom: 2px !important; }
+  .ach-badge-title { font-size: 0.52rem; }
+  .ach-latest-display { font-size: 0.6rem; }
+  .ach-stats-summary { font-size: 0.58rem; }
+
+  /* ── 貴族區 ── */
+  .nobles-section { margin-bottom: 2px !important; padding: 1px !important; flex-shrink: 0 !important; }
+  .section-title { font-size: 0.52rem !important; margin-bottom: 2px !important; }
+  .noble-card { min-width: 52px; height: 52px; flex-shrink: 0; }
+  .noble-name { font-size: 0.4rem; }
+  .noble-pts { font-size: 0.62rem; }
+  .noble-reqs { gap: 1px !important; padding: 1px 2px !important; }
+  .cost-dot-circle { width: 5px; height: 5px; }
+
+  /* ── 玩家與 AI 資產欄：橫排 ── */
+  .dashboard-container { gap: 4px !important; margin-bottom: 2px !important; flex-shrink: 0 !important; }
+  .dashboard { padding: 4px 6px !important; }
+  .res-grid { gap: 2px !important; }
+  .res-circle { width: 13px; height: 13px; }
+  .res-count { font-size: 0.68rem; }
+  .res-bonus { font-size: 0.4rem; margin-top: 1px; }
+  .cap-bar { font-size: 0.48rem; margin-top: 2px; }
+  .earned-nobles-panel { padding: 4px !important; min-width: 0; }
+  .earned-nobles-title { font-size: 0.48rem; }
+  .ai-dashboard-box { padding: 3px 6px !important; }
+
+  /* ── 行動面板 ── */
+  .action-panel { padding: 4px 6px !important; margin-bottom: 2px !important; flex-shrink: 0 !important; }
+  .action-row { gap: 3px !important; }
+  .act-group { padding: 3px !important; }
+  .action-title { font-size: 0.52rem; margin-bottom: 2px; }
+  .token-btn { width: 16px; height: 16px; background-size: 12px 12px; }
+  .btn-primary { padding: 3px !important; font-size: 0.56rem !important; }
+  .msg-box { font-size: 0.52rem !important; }
+
+  /* ── 卡牌矩陣與保留區：彈性比例分配 ── */
+  .matrix-reserved-wrapper {
+    display: flex !important;
+    flex-direction: row !important;    /* 保持左右並排 */
+    flex: 1 !important;                 /* 自動吞噬剩餘的所有高度空間 */
+    min-height: 0 !important;           /* 關鍵：防止內容撐開高度 */
+    overflow: hidden !important;
+    gap: 3px !important;
+  }
+
+  .board-matrix {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .board-row {
+    flex: 1 !important;                 /* 三個等級矩陣均分賸餘高度 */
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    margin-bottom: 2px !important;
+  }
+
+  .grid-4 { 
+    display: flex !important;
+    flex-direction: row !important;
+    flex: 1 !important;
+    gap: 2px !important; 
+  }
+
+  /* ── 卡牌細節彈性縮放 ── */
+  .card { 
+    flex: 1 !important;
+    min-height: 0 !important; 
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .card-content-wrapper { 
+    padding: 3px !important; 
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  .card-pts { font-size: 0.72rem; }
+  .card-gem-icon { width: 10px; height: 10px; }
+  .card-costs { gap: 1px !important; padding-top: 1px !important; }
+  .cost-dot { font-size: 0.45rem; gap: 1px !important; }
+  .card-actions { gap: 1px !important; margin-top: auto !important; }
+  .btn-card { font-size: 0.42rem; padding: 1px 0 !important; line-height: 1 !important; }
+  .card.empty { font-size: 0.45rem; }
+
+  /* ── 保留區：右側窄欄直排 ── */
+  .reserved-section {
+    width: 70px !important;
+    flex-shrink: 0 !important;
+    padding: 3px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .reserved-section .section-title { font-size: 0.45rem; }
+  .reserved-section .grid-4 {
+    flex-direction: column !important;
+    gap: 3px !important;
+    flex: 1 !important;
+  }
+  .reserved-section .card { min-height: 55px !important; }
+
+  /* ── 成就彈窗 ── */
+  .ach-modal { max-height: 85vh !important; width: 95% !important; }
+}
